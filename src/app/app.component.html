@@ -1,0 +1,23 @@
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h1 class="ims">TRACKER</h1>
+    <ul class="nav-links">
+      <li *ngIf="isAuth()"><a routerLink="/dashboard">Dashbaord</a></li>
+      <li *ngIf="isAuth()"><a routerLink="/transaction">Transactions</a></li>
+      <li *ngIf="isAuth()"><a routerLink="/all-question">All Question</a></li>
+      <li *ngIf="isAuth()"><a routerLink="/add-question">Add Question</a></li>
+      <li *ngIf="isAdmin()"><a routerLink="/all-category">All Category</a></li>
+      <li *ngIf="isAdmin()"><a routerLink="/add-category">Add Category</a></li>
+      <li *ngIf="isAuth()"><a routerLink="/profile">Profile</a></li>
+      <li *ngIf="!isAuth()"><a routerLink="/login">Login</a></li>
+      <li *ngIf="!isAuth()"><a routerLink="/register">Register</a></li>
+      <li *ngIf="isAuth()"><a (click)="logOut()" >Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- MAIN CONTENT Area-->
+   <div class="main-content">
+      <router-outlet></router-outlet>
+   </div>
+</div>

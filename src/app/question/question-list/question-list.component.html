@@ -1,0 +1,57 @@
+<div class="product-page">
+  <p class="message" *ngIf="message">{{ message }}</p>
+
+  <!-- PRODUCT HEADER -->
+  <div class="product-header">
+    <h1>Question List</h1>
+    <button class="add-product-btn" (click)="navigateToAddQuestionPage()">
+      Add New Question
+    </button>
+  </div>
+
+  <!-- PRODUCT LIST -->
+  <div class="product-list" *ngIf="products.length > 0">
+    <div class="product-item" *ngFor="let product of products">
+      <img [src]="getImageSrc(product.image)" 
+      [alt]="product.category" 
+      class="product-image"/>
+      <div class="product-info">
+        <h3 class="name">{{ product.question }}</h3>
+        <p class="sku">Type: {{ product.type }}</p>
+        <p class="sku">Level: {{ product.level }}</p>
+        <p class="sku">Modified Date: {{ product.modifiedDate | date:'dd MMM, yyyy' }}
+</p>
+      </div>
+
+      <!-- PRODUCT ACTIONS -->
+      <div class="product-actions">
+        <button (click)="navigateToViewQuestionDetails(product.id)" class="view-btn">
+          View
+        </button>
+        <button (click)="navigateToEditProductPage(product.id)" class="edt-btn">
+          Edit
+        </button>
+        <button (click)="handleProductDelete(product.id)" class="delete-btn">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="pagination">
+  <button (click)="changePage(page-1)" [disabled]="page===0">Prev</button>
+  <span>Page {{page+1}} of {{totalPages}}</span>
+  <button (click)="changePage(page+1)" [disabled]="page+1>=totalPages">Next</button>
+
+  <label>
+    Page Size:
+    <select (change)="changeSize($event)" [value]="size">
+      <option *ngFor="let s of [5,10,20]" [value]="s">{{s}}</option>
+    </select>
+  </label>
+</div>
+
+
+

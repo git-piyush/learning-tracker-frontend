@@ -1,0 +1,61 @@
+<div class="purchase-form-page">
+    <p *ngIf="message" class="message">{{ message }}</p>
+    <h1>Update Category</h1>
+
+    <form (ngSubmit)="handleSubmit()">
+      <div class="form-group">
+          <label for="">Reference Code</label>
+          <input type="text" 
+          [(ngModel)]="formData.refCode" 
+          name="refCode" 
+          class="form-control"/>
+        </div>
+  
+  
+      <div class="form-group">
+          <label for="">Ref Code Long Name</label>
+          <input type="text" 
+          [(ngModel)]="formData.refCodeLongName"
+          name="refCodeLongName" 
+          class="form-control"/>
+      </div>
+
+       <div class="form-group">
+            <label for="">Select Category</label>
+            <select
+              name="category"
+              class="form-control"
+              [(ngModel)]="formData.category"
+              id=""
+            >
+              <option value="">Select a product</option>
+              <option *ngFor="let category of categoryList" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+        </div>
+      <div class="form-group">
+        <label for="">Active</label>
+        <select
+          name="active"
+          class="form-control"
+          [(ngModel)]="formData.active"
+          id=""
+        >
+          <option value="">Select a product</option>
+          <option value="Yes">
+            Yes
+          </option>
+          <option value="No">
+            No
+          </option>
+        </select>
+      </div>
+   
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
+
+    </form>
+  </div>
+  

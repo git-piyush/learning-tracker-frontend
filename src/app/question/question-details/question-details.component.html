@@ -1,0 +1,42 @@
+<div class="page-container">
+  <div class="question-card">
+
+    <!-- Question -->
+    <h1 class="question-title">
+      Q.{{question.question}}
+    </h1>
+
+    <hr class="divider" />
+
+    <!-- Meta Information -->
+    <div class="question-meta">
+      <p><strong>Type:</strong>{{question.type}}</p>
+      <p><strong>Added By:</strong>{{question.createdBy}}</p>
+      <p><strong>Last Modified:</strong> {{ question.modifiedDate | date:'dd MMM, yyyy' }}</p>
+    </div>
+
+    <!-- Answer Section -->
+    <div class="answer-section">
+      <h2>Answer</h2>
+      <p>
+        {{question.answer}}
+      </p>
+    </div>
+
+    <!-- Image -->
+    <div class="image-container">
+      <img [src]="getImageSrc(question.image)" 
+            [alt]="question.category" 
+            class="question-image"/>
+    </div>
+
+    <div class="pagination">
+        <button (click)="prevQuestion(question.id)">Prev</button>
+        <span></span>
+        <button (click)="nextQuestion(question.id)">Next</button>
+        <button class="edit-btn">Edit</button>
+    </div>
+
+  </div>
+</div>
+
