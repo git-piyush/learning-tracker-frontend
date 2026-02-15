@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import CryptoJS from "crypto-js";
+import { environment } from '../environments/environment';
 
 
 
@@ -12,8 +13,10 @@ import CryptoJS from "crypto-js";
 
 export class ApiService {
 
+
+
   authStatuschanged = new EventEmitter<void>();
-  private static BASE_URL = 'http://localhost:5050/api';
+  private static BASE_URL = `${environment.apiUrl}/questions`;
   constructor(private http: HttpClient) {}
 
     // Encrypt data and save to localStorage
