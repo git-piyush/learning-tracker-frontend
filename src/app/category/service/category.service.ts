@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class CategoryService {
   authStatuschanged = new EventEmitter<void>();
-  private static BASE_URL = `${environment.apiUrl}/questions`;
+  private static BASE_URL = environment.apiUrl;
 
 
   constructor(private http: HttpClient) {}

@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class QuestionService {
 
   authStatuschanged = new EventEmitter<void>();
-  private static BASE_URL = environment.apiUrl+'/questions';
+  private static BASE_URL = environment.apiUrl;
   private static ENCRYPTION_KEY = "phegon-dev-inventory";
 
 
