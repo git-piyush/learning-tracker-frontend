@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { Observable } from 'rxjs';
 export class QuestionService {
 
   authStatuschanged = new EventEmitter<void>();
-  private static BASE_URL = 'http://localhost:5050/api';
+  private static BASE_URL = `${environment.apiUrl}/questions`;
   private static ENCRYPTION_KEY = "phegon-dev-inventory";
 
 
@@ -106,7 +107,6 @@ export class QuestionService {
 
 
   addQuestion(formData: any): Observable<any> {
-    alert('imageFile'+formData);
     return this.http.post(`${QuestionService.BASE_URL}/question/add-question`, formData, {
       headers: this.getHeader(),
     });

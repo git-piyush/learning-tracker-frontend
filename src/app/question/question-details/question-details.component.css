@@ -72,6 +72,8 @@
 
 .answer-section p {
   line-height: 1.6;
+  white-space: pre-wrap;   /* respects \n and wraps long lines */
+  font-family: monospace;  /* optional, makes it look like code */
 }
 
 /* Image */

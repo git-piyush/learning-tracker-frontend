@@ -18,6 +18,20 @@ export class DashboardComponent implements OnInit{
 
   activeMonth: string = '';
   dashboardData:any='';
+  subCategoryCountMap: Map<string, number> = new Map();
+  //  educationalStages = [
+  //   { name: '', value: 0, color: '#5f63f2' },
+  //   { name: '', value: 0, color: '#34a853' },
+  //   { name: '', value: 0, color: '#5ad97e' },
+  //   { name: '', value: 0, color: '#20e5c4' },
+  //   { name: '', value: 0, color: '#34a853' }
+  // ];
+  educationalStages: { name: string; value: number; color: string }[] = [];
+  getColor(index: number): string {
+    const colors = ['#5f63f2', '#17a2b8', '#dc3545', '#ffc107', '#28a745'];
+    return colors[index % colors.length];
+  }
+
 
   constructor(private apiService: ApiService){}
 
@@ -29,12 +43,26 @@ export class DashboardComponent implements OnInit{
   loadDashboardDate():void{
     this.apiService.getDashboardData().subscribe({
       next: (res: any) => {
-        this.dashboardData = res.dashboardResponse;
-        this.summaryCards[0].value = this.dashboardData.totalQuestions;
-        this.summaryCards[1].value = this.dashboardData.totalQuestionsAddedByYou;
-        this.summaryCards[2].value = this.dashboardData.lastFiveQuestions;
-      },
-      error: (error) => {
+          this.dashboardData = res.dashboardResponse;
+          this.summaryCards[0].value = this.dashboardData.totalQuestions;
+          this.summaryCards[1].value = this.dashboardData.totalQuestionsAddedByYou;
+          this.summaryCards[2].value = this.dashboardData.userBookmarked;
+
+          //this.subCategoryCountMap = res.dashboardResponse.countMap;
+
+          this.subCategoryCountMap = new Map(Object.entries(res.dashboardResponse.countMap));
+
+
+          this.educationalStages = Array.from(this.subCategoryCountMap.entries()).map(
+            ([key, value], index) => ({
+              name: key,
+              value: value,
+              color: this.getColor(index) // assign colors dynamically
+            })
+          );
+          console.log(this.educationalStages);
+        },
+        error: (error) => {
         
       },
     });
@@ -66,16 +94,10 @@ export class DashboardComponent implements OnInit{
     { title: 'Questions Added by You', value: 0, color: '#5f63f2', icon: '❓' },
     { title: 'Your Bookmarked', value: 0, color: '#34a853', icon: '⭐' },
     { title: 'New Messages', value: 0, color: '#fbbc04', icon: '💬' },
-    { title: 'Give Your Feedback', value: 0, color: '#cf7eb9', icon: '🗪' }
+    { title: 'New Feedback', value: 0, color: '#cf7eb9', icon: '🗪' }
   ];
 
-  educationalStages = [
-    { name: 'Java Theoritical', value: 90, color: '#5f63f2' },
-    { name: 'Java Programming', value: 145, color: '#34a853' },
-    { name: 'Springboot', value: 88, color: '#5ad97e' },
-    { name: 'Sql', value: 88, color: '#20e5c4' },
-    { name: 'Java Programming', value: 145, color: '#34a853' }
-  ];
+ 
 
  
 

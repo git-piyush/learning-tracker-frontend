@@ -11,6 +11,7 @@ interface Category {
   refCode: string;
   refCodeLongName: string;
   category: string;
+  subCategory:string;
   active: string;
   refCodeOrder?: number;
 }
@@ -47,7 +48,7 @@ export class CategoryListComponent implements OnInit {
   totalPages = 0;
   totalElements = 0;
   page = 0;
-  size = 5;
+  size = 10;
   sortBy = 'id';
   direction = 'asc';
 

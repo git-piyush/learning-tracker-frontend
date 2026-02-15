@@ -107,7 +107,6 @@ export class AddQuestionComponent implements OnInit {
       console.log(key, value);
     });
     if (this.imageFile) {
-      alert('imageFile');
       formData.append("imageFile", this.imageFile);
     }   
 
