@@ -22,7 +22,8 @@ export class AddQuestionComponent implements OnInit {
   ){}
 
   qId: string | null = null
-  category:string = ''
+  category:string = '';
+  subCategory:string='';
   type:string='';
   question:string='';
   bookmark:string='';
@@ -34,7 +35,8 @@ export class AddQuestionComponent implements OnInit {
   categories:any[] = []
   message:string = ''
   categoryList: String[] = [];
-  categoryMap: Map<string, string> = new Map<string, string>();
+  subCategoryList:string[] = [];
+
 
 
 
@@ -52,9 +54,10 @@ export class AddQuestionComponent implements OnInit {
 
   //GET ALL CATEGORIES
   loadDropDown():void{
-    this.categoryService.getCategoryByCategory('CAT_QUESTION').subscribe({
+    this.categoryService.getCategoryList().subscribe({
       next: (res)=>{
-        this.categoryMap = res.catMap;
+        this.categoryList = res.categoryList;
+        console.log(this.categoryList);
       },error:(err)=>console.error(err)
     });
   }
@@ -99,12 +102,14 @@ export class AddQuestionComponent implements OnInit {
     formData.append("level", this.level);
     formData.append("question", this.question);
     formData.append("answer", this.answer);
+    formData.append("subCategory", this.subCategory);
     formData.forEach((value, key) => {
       console.log(key, value);
     });
     if (this.imageFile) {
+      alert('imageFile');
       formData.append("imageFile", this.imageFile);
-    }
+    }   
 
     if (this.isEditing) {
       formData.append("qId", this.qId!);
@@ -132,6 +137,18 @@ export class AddQuestionComponent implements OnInit {
         }})
       }
    }
+
+  onChangeCategory(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const category1 = selectElement.value;
+    this.categoryService.getSubCategoryMap(category1).subscribe({
+      next: (res)=>{
+        this.subCategoryList = res.subCategoryList;
+        console.log(this.subCategoryList);
+      },error:(err)=>console.error(err)
+    });
+  }
+
   showMessage(message:string){
     this.message = message;
     setTimeout(() =>{

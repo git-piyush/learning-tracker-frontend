@@ -26,18 +26,25 @@ export class AddCategoryComponent implements OnInit {
       refCode: '',
       refCodeLongName: '',
       category: '',
-      active: ''
+      active: '',
+      subCategory:''
   };
   
   message:string | null = null;
   categoryList: String[] = [];
+  subCategoryList: String[] = [];
   isNewCat:boolean=false;
+  isNewSubCat:boolean=false;
 
   ngOnInit(): void {
     this.loadDropdown();
   }
 
-  addNewRefCodeInExistingCat(){
+  addSubCatInExistingCat():void{
+      this.isNewSubCat = !this.isNewSubCat;
+  }
+
+  addNewRefCodeInExistingCat():void{
     this.isNewCat = !this.isNewCat;
   }
 
@@ -51,19 +58,19 @@ export class AddCategoryComponent implements OnInit {
   }
 
   handleSubmit() { 
-
     if( 
       !this.formData.refCode || 
       !this.formData.refCodeLongName || 
       !this.formData.category || 
-      !this.formData.active 
+      !this.formData.active ||
+      !this.formData.subCategory
     ){
       this.showMessage("All fields are required");
       return;
     }
     this.categoryService.createCategory(this.formData).subscribe({
           next: (res:any) => {
-                alert('Category Updated Sucessfully!');
+                alert('Category Added Sucessfully!');
                 this.router.navigate(['/all-category']);
               },
               error: (err: any) => {
@@ -75,6 +82,17 @@ export class AddCategoryComponent implements OnInit {
             }
           });
       }
+    
+  onChangeCategory(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const category = selectElement.value;
+    this.categoryService.getSubCategoryMap(category).subscribe({
+      next: (res)=>{
+        this.subCategoryList = res.subCategoryList;
+        console.log(this.subCategoryList);
+      },error:(err)=>console.error(err)
+    });
+  }
 
 
   showMessage(message:string){

@@ -116,16 +116,14 @@
     }
      
     .nav-links a {
-    font-size: 0.9rem;
+      font-size: 0.9rem;
+      }
     }
-    }
-    
-    
     
     
     /* Adjust margin to match the fixed sidebar width */
     .main-content {
-    margin-left: 12%;
+    margin-left: 15%;
     /* Sidebar width when fixed */
     flex-grow: 1;
     padding: 20px;

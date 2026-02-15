@@ -7,6 +7,77 @@
       <h1>Add New Refcode in existing Category</h1>
     </div>
     <form (ngSubmit)="handleSubmit()">
+
+      <div *ngIf="isNewCat">
+        <div class="form-group">
+            <label for="">Category</label>
+            <input type="text" 
+            [(ngModel)]="formData.category"
+            name="category" 
+            class="form-control"/>
+        </div>
+      </div>
+      <div *ngIf="!isNewCat">
+          <div class="form-group">
+            <label for="">Select Category</label>
+            <select
+              name="category"
+              class="form-control"
+              (change)="onChangeCategory($event)"
+              [(ngModel)]="formData.category"
+              id="">
+              <option value="">Select a category</option>
+              <option *ngFor="let category of categoryList" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
+      </div>
+
+      <div *ngIf="isNewCat">
+        <div class="form-group">
+            <label for="">Sub Category</label>
+            <input type="text" 
+            [(ngModel)]="formData.subCategory"
+            name="subCategory" 
+            class="form-control"/>
+        </div>
+      </div>
+      <div *ngIf="!isNewCat">
+          <div class="form-group">
+  <label for="subCategory">Select Sub Category</label>
+  <div *ngIf="!isNewSubCat">
+          <div class="form-group1">
+              <select
+                id="subCategory"
+                name="subCategory"
+                class="form-control subcat-select"
+                [(ngModel)]="formData.subCategory">
+                <option value="">Select Sub product</option>
+                <option *ngFor="let subCategory of subCategoryList" [value]="subCategory">
+                  {{ subCategory }}
+                </option>
+              </select>
+              <button type="button" class="btnNew btn-primary" (click)="addSubCatInExistingCat()">
+                New
+              </button>
+            </div>
+  </div>
+  <div *ngIf="isNewSubCat">
+              <div class="form-group1">
+                  <input type="text" 
+                    [(ngModel)]="formData.subCategory" 
+                    name="subCategory" 
+                    class="form-control"/>
+                  <button type="button" class="btnNew btn-primary" (click)="addSubCatInExistingCat()">
+                    Existing
+                  </button>
+              </div>
+  </div>
+</div>
+
+      </div>
+
       <div class="form-group">
           <label for="">Reference Code</label>
           <input type="text" 
@@ -23,31 +94,7 @@
           name="refCodeLongName" 
           class="form-control"/>
       </div>
-      <div *ngIf="isNewCat">
-        <div class="form-group">
-            <label for="">Category</label>
-            <input type="text" 
-            [(ngModel)]="formData.category"
-            name="category" 
-            class="form-control"/>
-        </div>
-      </div>
-      <div *ngIf="!isNewCat">
-          <div class="form-group">
-            <label for="">Select Category</label>
-            <select
-              name="category"
-              class="form-control"
-              [(ngModel)]="formData.category"
-              id=""
-            >
-              <option value="">Select a product</option>
-              <option *ngFor="let category of categoryList" [value]="category">
-                {{ category }}
-              </option>
-            </select>
-          </div>
-      </div>
+
       <div class="form-group">
         <label for="">Active</label>
         <select
@@ -56,7 +103,7 @@
           [(ngModel)]="formData.active"
           id=""
         >
-          <option value="">Select a product</option>
+          <option value="">Active/Inactive</option>
           <option value="Yes">
             Yes
           </option>
@@ -73,7 +120,7 @@
             type="button" 
             class="btn btn-primary" 
             (click)="addNewRefCodeInExistingCat()">
-              Add New Category with new Refcode
+              Add New Category
           </button>
         </div>
         <div *ngIf="isNewCat">

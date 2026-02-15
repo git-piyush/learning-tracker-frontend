@@ -1,5 +1,5 @@
 .purchase-form-page {
-    max-width: 600px;
+    max-width: 700px;
     margin: 30px auto;
     padding: 20px;
     background-color: #f9f9f9;
@@ -18,27 +18,43 @@
     }
      
     .purchase-form-page .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #2F4F4F;
-    margin: 10px;
-    font-weight: 550;
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #2F4F4F;
+      margin: 10px;
+      font-weight: 550;
     }
+
+.form-group1 {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* spacing between dropdown and button */
+}
+
+
+.purchase-form-page .form-group label {
+  display: block;        /* keep label above */
+  margin-bottom: 5px;
+  font-weight: 550;
+  color: #2F4F4F;
+  white-space: nowrap;   /* prevent label wrapping */
+}
+
      
     .purchase-form-page .form-group input,
     .purchase-form-page .form-group select,
     .purchase-form-page .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
      
     .purchase-form-page .form-group textarea {
-    resize: vertical;
-    height: 100px;
+      resize: vertical;
+      height: 100px;
     }
 
     .button-group {
@@ -50,6 +66,11 @@
 
 .btn {
   min-width: 180px;        /* makes buttons consistent in width */
+  text-align: center;
+}
+
+.btnNew{
+  min-width: 50px;
   text-align: center;
 }
 

@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 export class CategoryService {
   authStatuschanged = new EventEmitter<void>();
   private static BASE_URL = 'http://localhost:5050/api';
-  private static ENCRYPTION_KEY = "phegon-dev-inventory";
 
 
   constructor(private http: HttpClient) {}
@@ -100,6 +99,12 @@ export class CategoryService {
 
   getCategoryList(): Observable<any> {
     return this.http.get(`${CategoryService.BASE_URL}/categories/category-list`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  getSubCategoryMap(cat: string): Observable<any> {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/getsubcategory-map/${cat}`, {
       headers: this.getHeader(),
     });
   }

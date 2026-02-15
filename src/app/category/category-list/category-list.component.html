@@ -30,6 +30,7 @@
     <tr>
       <th (click)="sort('id')">ID</th>
       <th (click)="sort('category')">Category</th>
+      <th>Sub Category</th>
       <th (click)="sort('refCode')">Ref Code</th>
       <th (click)="sort('refCodeLongName')">Ref Code Long Name</th>
       <th (click)="sort('active')">Active</th>
@@ -40,6 +41,7 @@
     <tr *ngFor="let cat of categories">
       <td>{{cat.id}}</td>
       <td>{{cat.category}}</td>
+      <td>{{cat.subCategory}}</td>
       <td>{{cat.refCode}}</td>
       <td>{{cat.refCodeLongName}}</td>
       <td>{{cat.active}}</td>

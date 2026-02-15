@@ -5,36 +5,82 @@
         <div class="form-row">
           <div class="form-group">
             <label for="">Category</label>
-            <select [(ngModel)]="category" name="category" id="" required>
+            <select [(ngModel)]="category" name="category" (change)="onChangeCategory($event)"
+            id="" required>
                 <option value="">Select a category</option>
-                <option *ngFor="let entry of categoryMap | keyvalue" [value]="entry.key">
-    {{ entry.value }}
-  </option>
-
+                <option *ngFor="let category of categoryList" [value]="category">
+                   {{ category }}
+                </option>
             </select>
-
           </div>
 
           <div class="form-group">
-            <label for="">Type</label>
-            <input type="text" [(ngModel)]="type" name="type" required>
+            <label for="">Sub Category</label>
+            <select [(ngModel)]="subCategory" name="subCategory" id="" required>
+                <option value="">Select a Sub Category</option>
+                <option *ngFor="let subCategory of subCategoryList" [value]="subCategory">
+                   {{ subCategory }}
+                </option>
+            </select>
           </div>
         </div>
 
 
         <div class="form-row">
-          <div class="form-group">
-            <label for="">Bookmark</label>
-            <input type="text" [(ngModel)]="bookmark" name="bookmark" required>
-          </div>
+            <div class="form-group">
+              <label for="">Bookmark⭐</label>
+                <select
+                  name="bookmark"
+                  class="form-control"
+                  [(ngModel)]="bookmark"
+                  id="">
+                  <option value="">Bookmark</option>
+                  <option value="Yes">
+                    Yes
+                  </option>
+                  <option value="No">
+                    No
+                  </option>
+                </select>
+            </div>
 
-          <div class="form-group">
-            <label for="">Level</label>
-            <input type="text" [(ngModel)]="level" name="level" required>
-          </div>
+            <div class="form-group">
+              <label for="">Type</label>
+                <select
+                  name="type"
+                  class="form-control"
+                  [(ngModel)]="type"
+                  id="">
+                  <option value="">Type</option>
+                  <option value="practical">
+                    Theoritical
+                  </option>
+                  <option value="practical">
+                    Hands On
+                  </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+              <label for="">Complex Level</label>
+                <select
+                  name="type"
+                  class="form-control"
+                  [(ngModel)]="level"
+                  id="">
+                  <option value="">Complex Level</option>
+                  <option value="beginner">
+                    Beginner Level
+                  </option>
+                  <option value="midium">
+                    Medium Level
+                  </option>
+                  <option value="experience">
+                    Experienced Level
+                  </option>
+                </select>
+            </div>
         </div>
-
-
         <div class="form-group">
             <label for="">Question</label>
             <input type="text" [(ngModel)]="question" name="question" required>

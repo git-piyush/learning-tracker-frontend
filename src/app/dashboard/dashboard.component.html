@@ -1,78 +1,101 @@
+<div class="layout">
+  <!-- Main Content -->
+  <div class="main">
 
-<div class="dashboard-container">
-    <h1>Transaction Dashboard</h1>
+    <!-- Header -->
+    <div class="header">
+      <h2>Learning Tracker Dashboard</h2>
+      <span>Under Development</span>
+    </div>
 
-      
-    <!-- Transaction Selection -->
-    <div style="margin-bottom: 50px; margin-top: 30px;">
-        <label>Select Month:</label>
-        <select [(ngModel)]="selectedMonth">
-          <option *ngFor="let month of months" [value]="month.value">{{ month.name }}</option>
-        </select>
-    
-        <label>Select Year:</label>
-        <select [(ngModel)]="selectedYear">
-          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-        </select>
-    
-        <button (click)="loadMonthlyData()">Show Monthly Data</button>
+    <!-- Summary Cards -->
+    <div class="summary">
+      <div class="card" *ngFor="let card of summaryCards">
+        <div class="icon" [style.background]="card.color">
+          {{card.icon}}
+        </div>
+        <div>
+          <h4>{{card.title}}</h4>
+          <h2>{{card.value}}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Section -->
+    <div class="middle">
+
+      <!-- Calendar -->
+      <div class="calendar">
+        <h3>Select month to check Monthly Report</h3>
+        <div class="months">
+          <span *ngFor="let month of months"
+                [class.active]="isActive(month)"
+                (click)="onMonthClick(month)">
+            {{ month }}
+          </span>
+        </div>
       </div>
 
-  
-    <!-- Transaction Type Count Bar Chart -->
-    <div style="margin-bottom: 30px;">
-      <h2>Transaction Counts by Type</h2>
-      <ngx-charts-bar-vertical
-        [view]="view"
-        [scheme]="'vivid'"
-        [results]="transactionTypeData"
-        [gradient]="false"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legend]="showLegend"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        xAxisLabel="Transaction Type"
-        yAxisLabel="Count"
-        [animations]="animations">
-      </ngx-charts-bar-vertical>
+
+      <!-- Educational Stage -->
+      <div class="education">
+        <h3>All Questions</h3>
+        <div *ngFor="let stage of educationalStages" class="stage">
+          <div class="dot" [style.background]="stage.color"></div>
+          <div>
+            <h4>{{stage.name}}</h4>
+            <span>{{stage.value}}</span>
+          </div>
+        </div>
+      </div>
+
     </div>
-  
-    <!-- Transaction Amount by Type Pie Chart -->
-    <div style="margin-bottom: 30px;">
-      <h2>Total Transaction Amount by Type</h2>
-      <ngx-charts-pie-chart
-        [view]="view"
-        [scheme]="'cool'"
-        [results]="transactionAmountData"
-        [legend]="showLegend"
-        [labels]="showLabels"
-        [doughnut]="false"
-        [animations]="animations">
-      </ngx-charts-pie-chart>
-    </div>
-  
 
+    <!-- Bottom Section -->
+    <div class="bottom">
 
-    <!-- Monthly Transaction Bar Chart -->
-    <h2 style="margin-bottom: 50px;">Monthly Transaction Chart</h2>
+<div class="events">
+  <h3>Add Your Activities & Events</h3>
 
-    <div *ngIf="monthlyTransactionData.length">
-      <ngx-charts-bar-vertical
-        [view]="view"
-        [scheme]="'flame'"
-        [results]="monthlyTransactionData"
-        [gradient]="false"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legend]="showLegend"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        xAxisLabel="Day of Month"
-        yAxisLabel="Total Price"
-        [animations]="animations">
-      </ngx-charts-bar-vertical>
+  <!-- Display mode -->
+  <ul *ngIf="!isEditing">
+    <li *ngFor="let event of events">
+      <input type="checkbox" [checked]="event.checked" disabled />
+      {{ event.name }}
+    </li>
+  </ul>
+
+  <!-- Edit mode -->
+  <div *ngIf="isEditing">
+    <div *ngFor="let event of events; let i = index" class="event-row">
+      <input type="checkbox" [(ngModel)]="event.checked" />
+      <input [(ngModel)]="event.name" placeholder="Edit event" />
+      <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
     </div>
   </div>
-  
-  
+
+  <div class="buttons">
+    <button (click)="addEvent()">Add</button>
+    <button (click)="toggleEdit()">
+      {{ isEditing ? 'Save' : 'Edit' }}
+    </button>
+  </div>
+</div>
+
+
+      <div class="ranking">
+        <div class="student-card"
+             *ngFor="let student of topStudents"
+             [style.background]="student.color">
+
+          <h3>{{student.name}}</h3>
+          <h1>{{student.percent}}</h1>
+          <span>{{student.rank}}</span>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

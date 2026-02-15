@@ -1,8 +1,8 @@
  
 .product-page {
-    padding: 20px;
+    padding: 10px;
     background-color: #f3f4f6;
-    }
+  }
      
     .product-header {
     display: flex;
@@ -38,13 +38,13 @@
     }
      
     .add-product-btn:hover {
-    background-color: #2F4F4F;
+     background-color: #2F4F4F;
     }
     .product-list {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     /* Display 7 items per row */
-    gap: 15px;
+    gap: 5px;
     /* Increased gap for better spacing between items */
     }
      
@@ -144,4 +144,6 @@
   align-items: center;
   gap: 1rem;                 /* control spacing between items */
 }
+
+
     

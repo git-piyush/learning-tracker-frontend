@@ -24,11 +24,15 @@ export class UpdateCategoryComponent implements OnInit{
       refCode: '',
       refCodeLongName: '',
       category: '',
-      active: ''
+      active: '',
+      subCategory:''
   };
   
   message:string | null = null;
   categoryList: String[] = [];
+  subCategoryList: String[] = [];
+
+
 
   ngOnInit(): void {
     this.categoryId = this.route.snapshot.paramMap.get('catId') || '';
@@ -46,25 +50,26 @@ export class UpdateCategoryComponent implements OnInit{
   }
 
   loadCategoryData(categoryId: string) {
-
         this.categoryService.getCategoryById(this.categoryId).subscribe({
           next: (res:any) => {
-                console.log(res.category);
                 this.formData = {
                   id: res.category.id,
                   refCode: res.category.refCode,
                   refCodeLongName: res.category.refCodeLongName,
                   category: res.category.category,
-                  active: res.category.active
+                  active: res.category.active,
+                  subCategory: res.category.subCategory
                 };
+                this.loadSubcategory(res.category.category, res.category.subCategory);
+                
               },
               error: (err: any) => {
               if(err.error.status==401){
                 alert('Need Access/Login!');
                 this.router.navigate(['/login']);
-              }
-              alert(err.error.message);
             }
+              alert(err.error.message);
+        }
     });
 
   }
@@ -74,12 +79,13 @@ export class UpdateCategoryComponent implements OnInit{
       !this.formData.refCode || 
       !this.formData.refCodeLongName || 
       !this.formData.category || 
-      !this.formData.active 
+      !this.formData.active ||
+      !this.formData.subCategory
     ){
       this.showMessage("All fields are required");
       return;
     }
-    console.log('pk'+this.formData);
+    console.log('Update: '+this.formData.subCategory);
     this.categoryService.updateCategory(this.formData).subscribe({
           next: (res:any) => {
                 alert('Category Updated Sucessfully!');
@@ -92,6 +98,25 @@ export class UpdateCategoryComponent implements OnInit{
               }
               alert(err.error.message);
             }
+    });
+  }
+
+  loadSubcategory(cat:string, subCategory:string):void{
+      this.categoryService.getSubCategoryMap(cat).subscribe({
+        next: (res)=>{
+          this.subCategoryList = res.subCategoryList;
+        },error:(err)=>console.error(err)
+      });
+      this.formData.subCategory = subCategory;
+  }
+
+ onChangeCategory(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const category = selectElement.value;
+    this.categoryService.getSubCategoryMap(category).subscribe({
+      next: (res)=>{
+        this.subCategoryList = res.subCategoryList;
+      },error:(err)=>console.error(err)
     });
   }
 

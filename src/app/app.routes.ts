@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import { GuardService } from './service/guard.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { TransactionComponent } from './transaction/transaction.component';
-import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 import { ProfileComponent } from './profile/profile.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { QuestionListComponent } from './question/question-list/question-list.component';
@@ -19,18 +17,15 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  { path: 'question-details/:qId', component: QuestionDetailsComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
-  { path: 'all-question', component: QuestionListComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
-  { path: 'add-question', component: AddQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
-  { path: 'update-question/:qId', component: UpdateQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
+  { path: 'question-details/:qId', component: QuestionDetailsComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'all-question', component: QuestionListComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'add-question', component: AddQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'update-question/:qId', component: UpdateQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
   
   { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
   { path: 'add-category', component: AddCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
   { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
-  { path: 'transaction', component: TransactionComponent, canActivate:[GuardService] },
-  { path: 'transaction/:transactionId', component: TransactionDetailsComponent, canActivate:[GuardService] },
-
 
   { path: 'profile', component: ProfileComponent, canActivate:[GuardService] },
   { path: 'dashboard', component: DashboardComponent, canActivate:[GuardService] },

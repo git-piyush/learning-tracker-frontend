@@ -1,25 +1,217 @@
- 
-.dashboard-container {
-    padding: 20px;
-    }
-     
-    .dashboard-container select {
-    padding: 8px;
-    font-size: 17px;
-    border: 1px solid #f0f0f0;
-    border-radius: 5px;
-    margin: 0px 10px;
-    }
-     
-    h1,
-    h2 {
-    text-align: center;
-    }
-     
-    ngx-charts-bar-vertical,
-    ngx-charts-pie-chart {
-    display: block;
-    margin: auto;
-    }
-     
-    
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+/* Summary Cards */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+}
+
+/* Middle */
+.middle {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.calendar,
+.events {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+.education {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+
+  max-height: 250px;      /* fixed height */
+  overflow-y: auto;       /* vertical scroll when overflowing */
+
+  display: grid;          /* grid layout */
+  grid-template-columns: 1fr 1fr; /* two equal columns */
+  gap: 12px;              /* spacing between items */
+}
+.stage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.months span {
+  padding: 8px;
+  background: #f1f3f6;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.months span.active {
+  background: #34a853;
+  color: white;
+}
+
+/* Education */
+.stage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* Bottom */
+.bottom {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+
+/* Ranking */
+.ranking {
+  display: flex;
+  gap: 15px;
+}
+
+.student-card {
+  flex: 1;
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.student-card h1 {
+  margin: 10px 0;
+}
+
+
+.event-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.event-row input[type="checkbox"] {
+  margin-right: 10px;
+  accent-color: green;   /* makes the checkbox green */
+}
+
+.event-row input[type="text"] {
+  flex: 1;
+  margin-right: 10px;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.remove-btn {
+  margin-left: auto;
+  padding: 4px 8px;
+  font-size: 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.buttons button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.buttons button:first-child {
+  background-color: #28a745; /* green for Add */
+  color: white;
+}
+
+.buttons button:last-child {
+  background-color: #007bff; /* blue for Edit/Save */
+  color: white;
+}

@@ -106,6 +106,7 @@ export class QuestionService {
 
 
   addQuestion(formData: any): Observable<any> {
+    alert('imageFile'+formData);
     return this.http.post(`${QuestionService.BASE_URL}/question/add-question`, formData, {
       headers: this.getHeader(),
     });

@@ -39,7 +39,8 @@ export class CategoryListComponent implements OnInit {
     category: '',
     refCode: '',
     refCodeLongName: '',
-    active: ''
+    active: '',
+    subCategory:''
   };
   categoryList: String[] = [];
   categories: Category[] = [];
@@ -62,7 +63,8 @@ export class CategoryListComponent implements OnInit {
       category: '',
       refCode: '',
       refCodeLongName: '',
-      active: ''
+      active: '',
+      subCategory:''
     };
     this.page = 0; // reset to first page
     this.loadCategories(); // reload full list
