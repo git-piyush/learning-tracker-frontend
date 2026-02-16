@@ -3,18 +3,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import CryptoJS from "crypto-js";
 import { environment } from '../environments/environment';
-
-
-
 @Injectable({
   providedIn: 'root',
 })
-
-
 export class ApiService {
-
-
-
   authStatuschanged = new EventEmitter<void>();
   private static BASE_URL = environment.apiUrl;
   constructor(private http: HttpClient) {}

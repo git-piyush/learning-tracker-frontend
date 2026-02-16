@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ApiService } from './service/api.service';
 
@@ -12,7 +12,8 @@ import { ApiService } from './service/api.service';
 })
 
 
-export class AppComponent {
+export class AppComponent implements OnInit{
+  userName:string | null = null;
   title = 'ims';
   constructor(
     private apiService: ApiService,
@@ -20,6 +21,9 @@ export class AppComponent {
     private cdr: ChangeDetectorRef
   ) {}
 
+ngOnInit(): void {
+  this.userName = localStorage.getItem("username");
+}
 
 isAuth():boolean{
   return this.apiService.isAuthenticated();

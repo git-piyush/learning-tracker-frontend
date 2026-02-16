@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
       if (response.status === 200) {
         this.apiService.encryptAndSaveToStorage('token', response.token);
         this.apiService.encryptAndSaveToStorage('role', response.role);
+        this.apiService.encryptAndSaveToStorage('username', response.userName);
         this.router.navigate(["/dashboard"]);
       }
     } catch (error:any) {

@@ -1,3 +1,24 @@
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="navbar-left">
+    <!-- Optional: App name or logo -->
+    <span class="navbar-title">TRACKER</span>
+  </div>
+  <div class="navbar-right">
+    <ng-container *ngIf="!isAuth()">
+      <a routerLink="/login" class="nav-btn">Login</a>
+      <a routerLink="/register" class="nav-btn">Register</a>
+    </ng-container>
+    <ng-container *ngIf="isAuth()">
+      <span class="username">{{ userName }}</span>
+      <button class="nav-btn" (click)="logOut()">Logout</button>
+    </ng-container>
+  </div>
+</div>
+
+
+
+
 <div class="dashboard-layout">
   <!-- SIDEBAR -->
   <div class="sidebar">
