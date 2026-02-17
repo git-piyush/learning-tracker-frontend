@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms'; // Forms module for two-way bindin
 })
 
 export class DashboardComponent implements OnInit{
-
+  userName:string | null = null;
   activeMonth: string = '';
   dashboardData:any='';
   subCategoryCountMap: Map<string, number> = new Map();
@@ -36,6 +36,7 @@ export class DashboardComponent implements OnInit{
   constructor(private apiService: ApiService){}
 
   ngOnInit(): void {
+    this.userName = localStorage.getItem("username");
     this.activeMonth = 'All';
     this.loadDashboardDate();
   }

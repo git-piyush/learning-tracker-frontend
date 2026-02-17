@@ -13,8 +13,42 @@
     </ng-container>
     <ng-container *ngIf="isAuth()">
       <span class="username">{{ userName }}</span>
+      <div class="emoji-square">
+        <span (click)="openFeedback()">🙂</span>
+        <span (click)="openFeedback()">😐</span>
+        <span (click)="openFeedback()">🙁</span>
+        <span (click)="openFeedback()">🤩</span>
+      </div>
       <button class="nav-btn" (click)="logOut()">Logout</button>
     </ng-container>
+  </div>
+</div>
+<!-- Feedback Modal -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>Give Your Feedback</h3>
+
+    <!-- Star Rating -->
+    <div class="stars">
+      <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
+        <span
+          class="star"
+          [class.filled]="(i + 1) <= rating"
+          [class.half]="(i + 0.5) === rating"
+          (click)="setRating(i + 1)">
+          ★
+        </span>
+      </ng-container>
+    </div>
+
+    <!-- Optional comment -->
+    <textarea [(ngModel)]="feedbackText" placeholder="Write your feedback..."></textarea>
+
+    <!-- Buttons -->
+    <div class="modal-actions">
+      <button (click)="submitFeedback()">Submit</button>
+      <button (click)="closeModal()">Close</button>
+    </div>
   </div>
 </div>
 

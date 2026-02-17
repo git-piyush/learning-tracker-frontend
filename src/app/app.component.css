@@ -180,4 +180,103 @@
   font-weight: 600;
   color: #17a2b8;
 }
+
+
+
+
+
+/* Emoji grid */
+.emoji-square {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 0px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Modal background */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Modal box */
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Stars */
+.stars {
+  display: flex;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.star {
+  color: #ccc;
+  position: relative;
+}
+
+/* Filled star */
+.star.filled {
+  color: #ffc107;
+}
+
+/* Half star using pseudo element */
+.star.half::before {
+  content: "★";
+  color: #ffc107;
+  position: absolute;
+  width: 50%;
+  overflow: hidden;
+}
+
+/* Textarea */
+textarea {
+  width: 100%;
+  height: 80px;
+  padding: 8px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+/* Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-actions button:first-child {
+  background-color: #4caf50;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-actions button:last-child {
+  background-color: #f44336;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+
     
