@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ApiService } from './service/api.service';
+import { LoaderComponent } from './loading-effect/loader/loader.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule,LoaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
