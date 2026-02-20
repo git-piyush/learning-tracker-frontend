@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';  // Module for charts
 import { ApiService } from '../service/api.service'; // Service to interact with API
 import { FormsModule } from '@angular/forms'; // Forms module for two-way binding
+import { DashboardService } from './service/dashboard.service';
+import { Router } from '@angular/router';
 
 // Define the component metadata
 @Component({
@@ -19,13 +21,6 @@ export class DashboardComponent implements OnInit{
   activeMonth: string = '';
   dashboardData:any='';
   subCategoryCountMap: Map<string, number> = new Map();
-  //  educationalStages = [
-  //   { name: '', value: 0, color: '#5f63f2' },
-  //   { name: '', value: 0, color: '#34a853' },
-  //   { name: '', value: 0, color: '#5ad97e' },
-  //   { name: '', value: 0, color: '#20e5c4' },
-  //   { name: '', value: 0, color: '#34a853' }
-  // ];
   educationalStages: { name: string; value: number; color: string }[] = [];
   getColor(index: number): string {
     const colors = ['#5f63f2', '#17a2b8', '#dc3545', '#ffc107', '#28a745'];
@@ -33,7 +28,7 @@ export class DashboardComponent implements OnInit{
   }
 
 
-  constructor(private apiService: ApiService){}
+  constructor(private dashboardService: DashboardService, private router: Router){}
 
   ngOnInit(): void {
     this.userName = localStorage.getItem("username");
@@ -42,18 +37,15 @@ export class DashboardComponent implements OnInit{
   }
 
   loadDashboardDate():void{
-    this.apiService.getDashboardData().subscribe({
+    this.dashboardService.getDashboardData().subscribe({
       next: (res: any) => {
           this.dashboardData = res.dashboardResponse;
           this.summaryCards[0].value = this.dashboardData.totalQuestions;
           this.summaryCards[1].value = this.dashboardData.totalQuestionsAddedByYou;
           this.summaryCards[2].value = this.dashboardData.userBookmarked;
-
+          this.summaryCards[4].value = this.dashboardData.unreadFeedBackCount;
           //this.subCategoryCountMap = res.dashboardResponse.countMap;
-
           this.subCategoryCountMap = new Map(Object.entries(res.dashboardResponse.countMap));
-
-
           this.educationalStages = Array.from(this.subCategoryCountMap.entries()).map(
             ([key, value], index) => ({
               name: key,
@@ -68,6 +60,14 @@ export class DashboardComponent implements OnInit{
       },
     });
   }
+
+  onCardClick(card: any) {
+    
+    if (card.title === 'New Feedback') {
+      alert(card.title);
+      this.router.navigate(['/feedback-list']);
+  }
+}
 
   onMonthClick(month: string): void {
     this.activeMonth = month;

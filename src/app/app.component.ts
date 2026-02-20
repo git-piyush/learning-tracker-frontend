@@ -19,9 +19,17 @@ export class AppComponent implements OnInit{
   showModal = false;
   rating = 0;        // can be 1, 1.5, 2, 2.5, etc.
   feedbackText = '';
-
   userName:string | null = null;
-  title = 'ims';
+  title = 'Tracker';
+  message:string | null = null;
+
+  
+  feedbackPayload: any = {
+      id:'',
+      rating:'',
+      message:''
+  };
+
   constructor(
     private apiService: ApiService,
     private router: Router,
@@ -67,7 +75,34 @@ ngOnInit(): void {
   }
 
   submitFeedback() {
-    console.log('Stars:', this.rating, 'Comment:', this.feedbackText);
+    this.feedbackPayload = {
+      rating: this.rating,
+      message: this.feedbackText
+    };
+
+    console.log('Stars:'+this.feedbackPayload.rating, 'Comment:'+this.feedbackPayload.message);
+
+      if( 
+        this.feedbackPayload.rating==0 || 
+        this.feedbackPayload.message==''
+      ){
+        alert("All fields are required");
+        return;
+      }
+
+      this.apiService.saveFeedback(this.feedbackPayload).subscribe({
+            next: (res:any) => {
+                  alert('Feedback Sumitted Sucessfully!');
+                },
+                error: (err: any) => {
+                if(err.error.status===401){
+                  alert('Need Access/Login!');
+                  this.router.navigate(['/login']);
+                }
+                alert(err.error.message);
+              }
+            });
+      
     // send this.rating and this.feedbackText to backend
     this.closeModal();
   }

@@ -10,7 +10,8 @@
 
     <!-- Summary Cards -->
     <div class="summary">
-      <div class="card" *ngFor="let card of summaryCards">
+      <div class="card" *ngFor="let card of summaryCards" (click)="onCardClick(card)"
+       style="cursor:pointer">
         <div class="icon" [style.background]="card.color">
           {{card.icon}}
         </div>

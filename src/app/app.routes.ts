@@ -11,6 +11,7 @@ import { CategoryListComponent } from './category/category-list/category-list.co
 import { AddCategoryComponent } from './category/add-category/add-category.component';
 import { UpdateCategoryComponent } from './category/update-category/update-category.component';
 import { QuestionDetailsComponent } from './question/question-details/question-details.component';
+import { FeedbackComponent } from './feedback/feedback/feedback.component';
 
 export const routes: Routes = [
 
@@ -26,6 +27,8 @@ export const routes: Routes = [
   { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
   { path: 'add-category', component: AddCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
   { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
+
+  { path: 'feedback-list', component: FeedbackComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
 
   { path: 'profile', component: ProfileComponent, canActivate:[GuardService] },
   { path: 'dashboard', component: DashboardComponent, canActivate:[GuardService] },

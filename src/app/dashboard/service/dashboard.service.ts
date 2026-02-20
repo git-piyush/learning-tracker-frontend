@@ -1,18 +1,23 @@
-import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import CryptoJS from "crypto-js";
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class ApiService {
+export class DashboardService {
+
   authStatuschanged = new EventEmitter<void>();
   private static BASE_URL = environment.apiUrl;
+  private static ENCRYPTION_KEY = "phegon-dev-inventory";
+
+
   constructor(private http: HttpClient) {}
 
     // Encrypt data and save to localStorage
     encryptAndSaveToStorage(key: string, value: string): void {
+      //const encryptedValue = CryptoJS.AES.encrypt(value, DashboardService.ENCRYPTION_KEY).toString();
       localStorage.setItem(key, value);
     }
   
@@ -21,6 +26,7 @@ export class ApiService {
       try {
         const encryptedValue = localStorage.getItem(key);
         if (!encryptedValue) return null;
+        //return CryptoJS.AES.decrypt(encryptedValue, DashboardService.ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
         return encryptedValue;
       } catch (error) {
         return null;
@@ -31,9 +37,7 @@ export class ApiService {
   private clearAuth() {
       localStorage.removeItem("token");
       localStorage.removeItem("role");
-      localStorage.removeItem("username");
   }
-
   private getHeader(): HttpHeaders {
     const token = this.getFromStorageAndDecrypt("token");
     return new HttpHeaders({
@@ -41,30 +45,16 @@ export class ApiService {
     });
   }
 
-
-
-
-
-
-
-  /***AUTH & USERS API METHODS */
-
-  registerUser(body: any): Observable<any> {
-    return this.http.post(`${ApiService.BASE_URL}/auth/register`, body);
-  }
-
   loginUser(body: any): Observable<any> {
-    return this.http.post(`${ApiService.BASE_URL}/auth/login`, body);
+    return this.http.post(`${DashboardService.BASE_URL}/auth/login`, body);
   }
 
   getLoggedInUserInfo(): Observable<any> {
-    return this.http.get(`${ApiService.BASE_URL}/users/current`, {
+    return this.http.get(`${DashboardService.BASE_URL}/users/current`, {
       headers: this.getHeader(),
     });
   }
 
-/**AUTHENTICATION CHECKER */
-    
   logout():void{
     this.clearAuth()
   }
@@ -79,9 +69,8 @@ export class ApiService {
     return role === "ADMIN";
   }
 
-  //
-  saveFeedback(formData: any): Observable<any> {
-    return this.http.post(`${ApiService.BASE_URL}/feedback/save`, formData, {
+  getDashboardData(): Observable<any> {
+    return this.http.get(`${DashboardService.BASE_URL}/dashboard/dashboard-data`, {
       headers: this.getHeader(),
     });
   }
