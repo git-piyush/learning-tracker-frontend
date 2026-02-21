@@ -1,6 +1,5 @@
 <div class="header">
-  <h2>Category List</h2>
-  <button class="add-btn" (click)="addCategory()">+ Add Category</button>
+  <h2>Feedback</h2>
 </div>
 
 <!-- Search Form -->
@@ -8,17 +7,25 @@
 <div class="search-form">
   
   <!-- Category Dropdown -->
-  <select [(ngModel)]="searchForm.category" name="category" style="width: 200px;">
-    <option value="">Select Category</option>
-    <option *ngFor="let cat of categoryList" [value]="cat">{{cat}}</option>
+  <select [(ngModel)]="searchForm.rating" name="rating" style="width: 200px;">
+    <option value="">Select Rating</option>
+    <option value="">All</option>
+    <option value="1">⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="5">⭐⭐⭐⭐⭐</option>
   </select>
-  <input type="text" placeholder="Ref Code" [(ngModel)]="searchForm.refCode" name="refCode">
-  <input type="text" placeholder="Ref Code Long Name" [(ngModel)]="searchForm.refCodeLongName" name="refCodeLongName">
-  <select [(ngModel)]="searchForm.active" name="active">
-    <option value="">Active?</option>
+  <select [(ngModel)]="searchForm.seen" name="seen">
+    <option value="">Seen</option>
+    <option value="">All</option>
     <option value="Y">Yes</option>
     <option value="N">No</option>
   </select>
+  <label>Start Day: <input type="date" id="startOfDay" [(ngModel)]="searchForm.startOfDay"  /></label>
+  
+  <label>End Day: <input type="date" id="endOfDay" [(ngModel)]="searchForm.endOfDay"  /></label>
+  
   <button class="search-btn" (click)="search()">Search</button>
   <button class="reset-btn" (click)="resetSearch()">Reset</button>
 </div>
@@ -29,26 +36,27 @@
   <thead>
     <tr>
       <th (click)="sort('id')">ID</th>
-      <th (click)="sort('category')">Category</th>
-      <th>Sub Category</th>
-      <th (click)="sort('refCode')">Ref Code</th>
-      <th (click)="sort('refCodeLongName')">Ref Code Long Name</th>
-      <th (click)="sort('active')">Active</th>
+      <th (click)="sort('rating')">Rating</th>
+      <th (click)="sort('createdBy')">Sumitted By</th>
+      <th (click)="sort('createdAt')">Submitted On</th>
+      <th>Message</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let cat of categories">
-      <td>{{cat.id}}</td>
-      <td>{{cat.category}}</td>
-      <td>{{cat.subCategory}}</td>
-      <td>{{cat.refCode}}</td>
-      <td>{{cat.refCodeLongName}}</td>
-      <td>{{cat.active}}</td>
+    <tr *ngFor="let feedback of feedbacks">
+      <td>{{feedback.id}}</td>
+      <td style="text-align: left;">
+        <ng-container *ngFor="let star of [].constructor(feedback.rating)">
+          ⭐
+        </ng-container>
+      </td>
+      <td>{{feedback.createdBy}}</td>
+      <td>{{ feedback.createdAt | date:'MMM d, y' }}</td>
+      <td>{{feedback.message}}</td>
       <td>
-        <button class="action-btn view" (click)="viewCategory(cat.id)">View</button>
-        <button class="action-btn edit" (click)="updateCategory(cat.id)">Edit</button>
-        <button class="action-btn delete" (click)="deleteCategory(cat.id)">Delete</button>
+        <button class="action-btn read" (click)="markAsRead(feedback.id)">Mark As Read</button>
+        <button class="action-btn delete" (click)="deleteFeedback(feedback.id)">Delete</button>
       </td>
     </tr>
   </tbody>

@@ -4,15 +4,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../category/service/category.service';
+import { FeedbackService } from '../service/feedback.service';
 
-interface Category {
+interface Feedback {
   id: number;
-  refCode: string;
-  refCodeLongName: string;
-  category: string;
-  subCategory:string;
-  active: string;
-  refCodeOrder?: number;
+  rating: number;
+  createdBy: string;
+  message: string;
+  createdAt:Date;
 }
 
 @Component({
@@ -25,14 +24,14 @@ interface Category {
 export class FeedbackComponent implements OnInit {
 
   searchForm = {
-    category: '',
-    refCode: '',
-    refCodeLongName: '',
-    active: '',
-    subCategory:''
+    rating: '',
+    read: '',
+    startOfDay: '',
+    endOfDay: '',
+    seen:''
   };
   categoryList: String[] = [];
-  categories: Category[] = [];
+  feedbacks: Feedback[] = [];
   totalPages = 0;
   totalElements = 0;
   page = 0;
@@ -40,39 +39,29 @@ export class FeedbackComponent implements OnInit {
   sortBy = 'id';
   direction = 'asc';
 
-  constructor(private http: HttpClient, private router: Router, private categoryService:CategoryService) {}
+  constructor(private http: HttpClient, private router: Router, private feedbackService:FeedbackService) {}
 
   ngOnInit(): void {
-    this.loadDropdown();
-    this.loadCategories();
+    this.loadFeedback();
   }
 
   resetSearch(): void {
     this.searchForm = {
-      category: '',
-      refCode: '',
-      refCodeLongName: '',
-      active: '',
-      subCategory:''
+      rating: '',
+      read: '',
+      startOfDay: '',
+      endOfDay: '',
+      seen:''
     };
     this.page = 0; // reset to first page
-    this.loadCategories(); // reload full list
+    this.loadFeedback(); // reload full list
 }
 
-
-  loadDropdown():void{
-    this.categoryService.getCategoryList().subscribe({
-      next: (res)=>{
-        this.categoryList = res.categoryList;
-        console.log(this.categoryList);
-      },error:(err)=>console.error(err)
-    });
-  }
-
-  loadCategories(): void {
-    this.categoryService.getAllCategory(this.page,this.size,this.direction,this.sortBy,this.searchForm).subscribe({
+  loadFeedback(): void {
+    console.log(this.searchForm);
+    this.feedbackService.getAllFeedback(this.page,this.size,this.direction,this.sortBy,this.searchForm).subscribe({
       next: (res) => {
-        this.categories = res.categories;
+        this.feedbacks = res.feedBackDetails;
         this.totalPages = res.totalPages;
         this.totalElements = res.totalElements;
       },
@@ -83,14 +72,14 @@ export class FeedbackComponent implements OnInit {
   changePage(newPage: number): void {
     if (newPage >= 0 && newPage < this.totalPages) {
       this.page = newPage;
-      this.loadCategories();
+      this.loadFeedback();
     }
   }
 
   changeSize(event: any): void {
     this.size = event.target.value;
     this.page = 0;
-    this.loadCategories();
+    this.loadFeedback();
   }
 
   sort(column: string): void {
@@ -100,29 +89,21 @@ export class FeedbackComponent implements OnInit {
       this.sortBy = column;
       this.direction = 'asc';
     }
-    this.loadCategories();
+    this.loadFeedback();
   }
 
-  addCategory(): void {
-    this.router.navigate(['/add-category']);
+  markAsRead(id: number):void{
+
   }
 
-  viewCategory(id: number): void {
-    this.router.navigate(['/view-category', id]);
-  }
-
-  updateCategory(id: number): void {
-    this.router.navigate(['/update-category', id]);
-  }
-
-  deleteCategory(id: number): void {
+  deleteFeedback(id: number): void {
       if (!confirm("Are you sure you want to delete this Reference Code?")) {
         return ;
       }
 
-      this.categoryService.deleteCategory(id).subscribe({
+      this.feedbackService.deleteFeedback(id).subscribe({
           next: (res:any) => {
-                alert('Category Deleted Sucessfully!');
+                alert('Feedback Deleted Sucessfully!');
                 window.location.reload();
               },
               error: (err: any) => {
@@ -137,8 +118,15 @@ export class FeedbackComponent implements OnInit {
 
   // Search method
   search(): void {
+    const start = new Date(this.searchForm.startOfDay);
+    const end = new Date(this.searchForm.endOfDay);
+    if (start >= end) {
+      alert("Start of Day must be before End of Day");
+      return;
+    }
+    console.log(this.searchForm);
     this.page = 0; // reset to first page
-    this.loadCategories(); // reload with filters applied
+    this.loadFeedback(); // reload with filters applied
   }
 
 
