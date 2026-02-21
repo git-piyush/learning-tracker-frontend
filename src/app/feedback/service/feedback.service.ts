@@ -84,6 +84,12 @@ export class FeedbackService {
     });
   }
 
+  markAsRead(id: number): Observable<any> {
+    return this.http.get(`${FeedbackService.BASE_URL}/feedback/mark-feedback/${id}`, {
+      headers: this.getHeader(),
+    });
+  }
+
 
   isAuthenticated():boolean{
     const token = this.getFromStorageAndDecrypt("token");

@@ -144,26 +144,6 @@
   gap: 20px;
 }
 
-
-/* Ranking */
-.ranking {
-  display: flex;
-  gap: 15px;
-}
-
-.student-card {
-  flex: 1;
-  color: white;
-  padding: 20px;
-  border-radius: 16px;
-  text-align: center;
-}
-
-.student-card h1 {
-  margin: 10px 0;
-}
-
-
 .event-row {
   display: flex;
   align-items: center;
@@ -217,4 +197,34 @@
 .buttons button:last-child {
   background-color: #007bff; /* blue for Edit/Save */
   color: white;
+}
+
+.events-scroll {
+  max-height: 100px;     /* adjust as needed */
+  overflow-y: auto;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 8px;
+  border: 1px solid #ddd; /* optional */
+  border-radius: 6px;     /* optional */
+}
+
+
+
+/* Ranking */
+.ranking {
+  display: flex;
+  gap: 15px;
+}
+
+.student-card {
+  flex: 1;
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.student-card h1 {
+  margin: 10px 0;
 }

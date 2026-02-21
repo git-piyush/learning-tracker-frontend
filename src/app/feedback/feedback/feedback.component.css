@@ -67,7 +67,12 @@ th:hover {
 
 
 .action-btn.read {
-  background: #3498db;
+  background: #3aabf6;
+  color: white;
+}
+
+.action-btn.un-read {
+  background: #00902e;
   color: white;
 }
 

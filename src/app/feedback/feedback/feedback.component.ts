@@ -12,6 +12,7 @@ interface Feedback {
   createdBy: string;
   message: string;
   createdAt:Date;
+  seen:string;
 }
 
 @Component({
@@ -93,7 +94,20 @@ export class FeedbackComponent implements OnInit {
   }
 
   markAsRead(id: number):void{
-
+   
+      this.feedbackService.markAsRead(id).subscribe({
+          next: (res:any) => {
+                alert(res.message);
+                window.location.reload();
+              },
+              error: (err: any) => {
+              if(err.error.status===401){
+                alert('Need Access/Login!');
+                this.router.navigate(['/login']);
+              }
+              alert(err.error.message);
+            }
+    });
   }
 
   deleteFeedback(id: number): void {

@@ -55,7 +55,22 @@
       <td>{{ feedback.createdAt | date:'MMM d, y' }}</td>
       <td>{{feedback.message}}</td>
       <td>
-        <button class="action-btn read" (click)="markAsRead(feedback.id)">Mark As Read</button>
+          <!-- Show Mark Read if seen = 'N' -->
+        <button 
+          *ngIf="feedback.seen === 'N'" 
+          class="action-btn read" 
+          (click)="markAsRead(feedback.id)">
+          Mark Read
+        </button>
+
+        <!-- Show Mark Un-Read if seen = 'Y' -->
+        <button 
+          *ngIf="feedback.seen === 'Y'" 
+          class="action-btn un-read" 
+          (click)="markAsRead(feedback.id)">
+          Mark Un-Read
+        </button>
+
         <button class="action-btn delete" (click)="deleteFeedback(feedback.id)">Delete</button>
       </td>
     </tr>

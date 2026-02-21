@@ -75,4 +75,10 @@ export class DashboardService {
     });
   }
 
+  createTodos(events: {id:string; task: string;completed:string; checked: boolean; }[]):Observable<any> {
+    return this.http.post(`${DashboardService.BASE_URL}/todo/todo-list`, events,{
+      headers: this.getHeader(),
+    });
+  }
+
 }

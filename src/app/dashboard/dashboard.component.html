@@ -54,45 +54,48 @@
 
     <!-- Bottom Section -->
     <div class="bottom">
+      <div>
+        <h3>Add Your Activities & Events</h3>
 
-<div class="events">
-  <h3>Add Your Activities & Events</h3>
+          <!-- Scrollable container -->
+        <div class="events-scroll">
+          <!-- Display mode -->
+          <ul *ngIf="!isEditing">
+            <li *ngFor="let event of events">
+              <input type="checkbox" [checked]="event.checked" disabled />
+              {{ event.task }}
+            </li>
+          </ul>
 
-  <!-- Display mode -->
-  <ul *ngIf="!isEditing">
-    <li *ngFor="let event of events">
-      <input type="checkbox" [checked]="event.checked" disabled />
-      {{ event.name }}
-    </li>
-  </ul>
+          <!-- Edit mode -->
+          <div *ngIf="isEditing">
+            <div *ngFor="let event of events; let i = index" class="event-row">
+              <input type="checkbox" [(ngModel)]="event.checked" />
+              <input type="text" [(ngModel)]="event.task" placeholder="Edit event" />
+              <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
+            </div>
+          </div>
 
-  <!-- Edit mode -->
-  <div *ngIf="isEditing">
-    <div *ngFor="let event of events; let i = index" class="event-row">
-      <input type="checkbox" [(ngModel)]="event.checked" />
-      <input [(ngModel)]="event.name" placeholder="Edit event" />
-      <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
-    </div>
-  </div>
+        </div>
 
-  <div class="buttons">
-    <button (click)="addEvent()">Add</button>
-    <button (click)="toggleEdit()">
-      {{ isEditing ? 'Save' : 'Edit' }}
-    </button>
-  </div>
-</div>
+        <div class="buttons">
+          <div *ngIf="isEditing">
+            <button class="add-btn" (click)="addEvent()">
+              Add
+            </button>
+          </div>
+          <button (click)="toggleEdit()">
+            {{ isEditing ? 'Save' : 'Edit' }}
+          </button>
+        </div>
+      </div>
 
 
       <div class="ranking">
-        <div class="student-card"
-             *ngFor="let student of topStudents"
-             [style.background]="student.color">
-
+        <div class="student-card" *ngFor="let student of topStudents" [style.background]="student.color">
           <h3>{{student.name}}</h3>
           <h1>{{student.percent}}</h1>
           <span>{{student.rank}}</span>
-
         </div>
       </div>
 

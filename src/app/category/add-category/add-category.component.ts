@@ -81,7 +81,7 @@ export class AddCategoryComponent implements OnInit {
               alert(err.error.message);
             }
           });
-      }
+  }
     
   onChangeCategory(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
