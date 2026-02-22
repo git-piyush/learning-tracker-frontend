@@ -55,17 +55,21 @@
         <div class="events-scroll">
           <!-- Display mode -->
           <ul *ngIf="!isEditing">
-            <li *ngFor="let event of events">
-              <input type="checkbox" [checked]="event.checked" disabled />
-              {{ event.task }}
-            </li>
+            <ul *ngFor="let entry of toDoMap | keyvalue  : dateDescOrder">
+              <label style="font-weight: 500; color: gray;">{{ entry.key | date:'MMM dd, yyyy' }}</label>
+              <li *ngFor="let todo of entry.value">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" [checked]="todo.completed === 'Y'" disabled />
+                {{ todo.task }}
+              </li>
+            </ul>
           </ul>
 
           <!-- Edit mode -->
           <div *ngIf="isEditing">
-            <div *ngFor="let event of events; let i = index" class="event-row">
-              <input type="checkbox" [(ngModel)]="event.checked" />
-              <input type="text" [(ngModel)]="event.task" placeholder="Edit event" />
+            <div *ngFor="let todo of todos; let i = index" class="event-row">
+              <input type="checkbox" [(ngModel)]="todo.checked" />
+              <input type="text" [(ngModel)]="todo.task" placeholder="Edit event" />
               <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
             </div>
           </div>

@@ -8,7 +8,7 @@ import { DashboardService } from './service/dashboard.service';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 
-interface Events1 {id:string;completed:string;task:string};
+interface Todo1 {id:string;completed:string;task:string};
 
 
 // Define the component metadata
@@ -51,10 +51,11 @@ export class DashboardComponent implements OnInit{
     { name: 'Adam Hisham', percent: '97.32%', rank: '3rd', color: '#fbbc04' }
   ];
 
-  events: {id:string; task: string;completed:string; checked: boolean }[] = [];
+  todos: {id:string; task: string;completed:string; checked: boolean }[] = [];
 
   
-  events1list: Events1[] = [];
+  todo1list: Todo1[] = [];
+  toDoMap!: { [date: string]: any[] };
 
 
 
@@ -92,13 +93,16 @@ export class DashboardComponent implements OnInit{
               color: this.getColor(index) // assign colors dynamically
             })
           );
-          this.events1list = res.dashboardResponse.toDoList;
-          this.events = this.events1list.map((item: Events1) => ({
+
+          this.todo1list = res.dashboardResponse.toDoList;
+          this.todos = this.todo1list.map((item: Todo1) => ({
             id:item.id,
             completed:item.completed,
             task: item.task,
             checked: item.completed === 'Y'
           }));
+
+          this.toDoMap = res.dashboardResponse.toDoMap;
           
           this.dailyQuestionCountMap = new Map(Object.entries(res.dashboardResponse.dailyQuestionCountMap));
           this.loadDailyChart(this.dailyQuestionCountMap);
@@ -109,6 +113,9 @@ export class DashboardComponent implements OnInit{
       },
     });
   }
+  dateDescOrder = (a: any, b: any): number => {
+    return new Date(b.key).getTime() - new Date(a.key).getTime();
+  };
 
   onCardClick(card: any) {
     if (card.title === 'New Feedback') {
@@ -133,12 +140,12 @@ export class DashboardComponent implements OnInit{
 
   toggleEdit() {
         if (this.isEditing) {
-          this.events = this.events.map(e => ({
+          this.todos = this.todos.map(e => ({
         ...e,
           completed: e.checked ? 'Y' : 'N'
          }));
-      console.log('Events saved:', this.events);
-      this.dashboardService.createTodos(this.events).subscribe({
+      console.log('Events saved:', this.todos);
+      this.dashboardService.createTodos(this.todos).subscribe({
           next: (res:any) => {
                 alert('Todos Added Sucessfully!');
               },
@@ -155,11 +162,11 @@ export class DashboardComponent implements OnInit{
   }
 
   addEvent() {
-    this.events.push({id:'', task: 'New Event',completed:'N', checked: false });
+    this.todos.push({id:'', task: 'New Event',completed:'N', checked: false });
   }
 
   removeEvent(index: number) {
-    this.events.splice(index, 1);
+    this.todos.splice(index, 1);
   }
 
  loadDailyChart(dailyQuestionCountMap: Map<string, number>) {

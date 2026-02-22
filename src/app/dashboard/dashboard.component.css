@@ -160,7 +160,7 @@ canvas {
 .event-row {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .event-row input[type="checkbox"] {
@@ -195,7 +195,7 @@ canvas {
 
 .buttons button {
   margin-left: 10px;
-  padding: 10px 20px;
+  padding: 5px 10px;
   font-size: 16px;
   border-radius: 6px;
   border: none;
