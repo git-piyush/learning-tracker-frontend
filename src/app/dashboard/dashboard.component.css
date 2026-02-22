@@ -72,12 +72,25 @@
 }
 
 
-.calendar,
+
 .events {
   background: white;
   padding: 20px;
   border-radius: 14px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+
+
+.calendar {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+canvas {
+  max-height: 320px;
 }
 
 .education {
@@ -86,7 +99,7 @@
   border-radius: 14px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 
-  max-height: 300px;      /* fixed height */
+  max-height: 400px;      /* fixed height */
   overflow-y: auto;       /* vertical scroll when overflowing */
 
   display: grid;          /* grid layout */

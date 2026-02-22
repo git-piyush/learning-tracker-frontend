@@ -27,14 +27,8 @@
 
       <!-- Calendar -->
       <div class="calendar">
-        <h3>Select month to check Monthly Report</h3>
-        <div class="months">
-          <span *ngFor="let month of months"
-                [class.active]="isActive(month)"
-                (click)="onMonthClick(month)">
-            {{ month }}
-          </span>
-        </div>
+        <h3>Daily Progress – Current Month</h3>
+        <canvas id="dailyChart"></canvas>
       </div>
 
 

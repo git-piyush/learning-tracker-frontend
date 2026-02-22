@@ -6,6 +6,7 @@ import { ApiService } from '../service/api.service'; // Service to interact with
 import { FormsModule } from '@angular/forms'; // Forms module for two-way binding
 import { DashboardService } from './service/dashboard.service';
 import { Router } from '@angular/router';
+import Chart from 'chart.js/auto';
 
 interface Events1 {id:string;completed:string;task:string};
 
@@ -25,6 +26,9 @@ export class DashboardComponent implements OnInit{
   dashboardData:any='';
   
   subCategoryCountMap: Map<string, number> = new Map();
+
+  dailyQuestionCountMap: Map<string, number> = new Map();
+
   educationalStages: { name: string; value: number; color: string }[] = [];
 
   summaryCards = [
@@ -65,6 +69,10 @@ export class DashboardComponent implements OnInit{
     this.userName = localStorage.getItem("username");
     this.activeMonth = 'All';
     this.loadDashboardDate();
+   // this.loadDailyChart();
+  }
+  ngAfterViewInit(): void {
+    
   }
 
   loadDashboardDate():void{
@@ -91,7 +99,10 @@ export class DashboardComponent implements OnInit{
             task: item.task,
             checked: item.completed === 'Y'
           }));
-          console.log(this.events);
+          
+          this.dailyQuestionCountMap = new Map(Object.entries(res.dashboardResponse.dailyQuestionCountMap));
+          this.loadDailyChart(this.dailyQuestionCountMap);
+
         },
         error: (error) => {
         
@@ -149,6 +160,48 @@ export class DashboardComponent implements OnInit{
 
   removeEvent(index: number) {
     this.events.splice(index, 1);
+  }
+
+ loadDailyChart(dailyQuestionCountMap: Map<string, number>) {
+    const today = new Date();
+    const currentDay = today.getDate(); // e.g. 15
+    const monthName = today.toLocaleString('default', { month: 'long' });
+
+    const labels = Array.from(dailyQuestionCountMap.keys());
+    const data = Array.from(dailyQuestionCountMap.values());
+
+    const colors = Array.from({ length: currentDay }, () =>
+      `hsl(${Math.floor(Math.random() * 360)}, 70%, 55%)`
+    );
+
+    new Chart('dailyChart', {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: `Questions Added in ${monthName}`,
+          data,
+          backgroundColor: colors,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
   }
 
 }
