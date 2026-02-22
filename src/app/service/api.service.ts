@@ -11,11 +11,16 @@ export class ApiService {
   private static BASE_URL = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
+      private url = `http://api.weatherapi.com/v1/current.json?key=d8bcb02f353742858d8110349262202&q=India&aqi=no`;
+
     // Encrypt data and save to localStorage
     encryptAndSaveToStorage(key: string, value: string): void {
       localStorage.setItem(key, value);
     }
   
+      getCurrentWeather(): Observable<any> {
+        return this.http.get(this.url);
+      }
     // Retreive from localStorage and Decrypt
     private getFromStorageAndDecrypt(key: string): any {
       try {

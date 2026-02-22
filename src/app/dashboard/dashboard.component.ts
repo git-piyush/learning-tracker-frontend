@@ -21,6 +21,15 @@ interface Todo1 {id:string;completed:string;task:string};
 })
 
 export class DashboardComponent implements OnInit{
+
+  private url = `http://api.weatherapi.com/v1/current.json?key=d8bcb02f353742858d8110349262202&q=India&aqi=no`;
+ // private url = `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=${this.apiKey}`;
+
+ temperature!: number;
+ city!: string;
+
+
+
   userName:string | null = null;
   activeMonth: string = '';
   dashboardData:any='';
@@ -30,6 +39,15 @@ export class DashboardComponent implements OnInit{
   dailyQuestionCountMap: Map<string, number> = new Map();
 
   educationalStages: { name: string; value: number; color: string }[] = [];
+
+  constructor(private dashboardService: DashboardService, private router: Router, private apiService:ApiService){}
+
+    ngOnInit(): void {
+    this.userName = localStorage.getItem("username");
+    this.activeMonth = 'All';
+    this.loadDashboardDate();
+    this.loadTemperature();
+  }
 
   summaryCards = [
     { title: 'Total Questions', value: 0, color: '#f28b82', icon: '❓' },
@@ -57,21 +75,24 @@ export class DashboardComponent implements OnInit{
   todo1list: Todo1[] = [];
   toDoMap!: { [date: string]: any[] };
 
-
+  loadTemperature() {
+    this.apiService.getCurrentWeather().subscribe(data => {
+      this.temperature = data.current.temp_c;
+      this.city = data.location.name;
+      console.log(data);
+    });
+    this.temperature=20.0;
+    this.city="Bengaluru";
+  }
 
   getColor(index: number): string {
     const colors = ['#5f63f2', '#17a2b8', '#dc3545', '#ffc107', '#28a745'];
     return colors[index % colors.length];
   }
 
-  constructor(private dashboardService: DashboardService, private router: Router){}
+ 
 
-  ngOnInit(): void {
-    this.userName = localStorage.getItem("username");
-    this.activeMonth = 'All';
-    this.loadDashboardDate();
-   // this.loadDailyChart();
-  }
+
   ngAfterViewInit(): void {
     
   }
