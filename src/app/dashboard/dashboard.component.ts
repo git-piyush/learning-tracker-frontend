@@ -10,6 +10,18 @@ import Chart from 'chart.js/auto';
 
 interface Todo1 {id:string;completed:string;task:string};
 
+interface WeatherCard {
+  city: string;
+  currentTemp: number;
+  zone: string;
+  weatherType: string;
+  hTemp: number;
+  lTemp: number;
+  humidity: number;
+  lastUpdated: string;
+}
+
+
 
 // Define the component metadata
 @Component({
@@ -22,8 +34,16 @@ interface Todo1 {id:string;completed:string;task:string};
 
 export class DashboardComponent implements OnInit{
 
-  private url = `http://api.weatherapi.com/v1/current.json?key=d8bcb02f353742858d8110349262202&q=India&aqi=no`;
- // private url = `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=${this.apiKey}`;
+  weatherCard: WeatherCard = {
+      city: '',
+      currentTemp: 0,
+      zone: '',
+      weatherType: '',
+      hTemp: 0,
+      lTemp: 0,
+      humidity: 0,
+      lastUpdated: ''
+    };
 
  temperature!: number;
  city!: string;
@@ -43,10 +63,11 @@ export class DashboardComponent implements OnInit{
   constructor(private dashboardService: DashboardService, private router: Router, private apiService:ApiService){}
 
     ngOnInit(): void {
-    this.userName = localStorage.getItem("username");
-    this.activeMonth = 'All';
-    this.loadDashboardDate();
-    this.loadTemperature();
+      this.userName = localStorage.getItem("username");
+      this.activeMonth = 'All';
+      this.loadDashboardDate();
+      //this.getLocation();
+      this.loadTemperature();
   }
 
   summaryCards = [
@@ -64,8 +85,8 @@ export class DashboardComponent implements OnInit{
   ];
 
   topStudents = [
-    { name: 'Rovan Hossam', percent: '99.88%', rank: '1st', color: '#34a853' },
-    { name: 'Rony Beyablo', percent: '98.17%', rank: '2nd', color: '#5f63f2' },
+
+    { name: 'Rony Beyablo', percent: '98.17%', rank: '2nd', color: '#34a853' },
     { name: 'Adam Hisham', percent: '97.32%', rank: '3rd', color: '#fbbc04' }
   ];
 
@@ -74,30 +95,48 @@ export class DashboardComponent implements OnInit{
   
   todo1list: Todo1[] = [];
   toDoMap!: { [date: string]: any[] };
-
+  selectedCity:string = '';
   loadTemperature() {
-    this.apiService.getCurrentWeather().subscribe(data => {
-      this.temperature = data.current.temp_c;
-      this.city = data.location.name;
-      console.log(data);
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      this.apiService.getCity(lat, lng).subscribe(res => {
+        this.selectedCity = res.city;
+        this.apiService.getCurrentWeather(this.selectedCity)
+          .subscribe(weather => {
+              const location = weather.location;
+              const current = weather.current;
+
+              console.log('Location:', location);
+              console.log('Current:', current);
+              const lastUpdated = weather.current.last_updated;
+              const timeOnly = lastUpdated.split(' ')[1];
+              this.weatherCard = {
+                    city: weather.location.name+','+weather.location.region,
+                    currentTemp: weather.current.temp_c,
+                    zone: weather.location.tz_id,
+                    weatherType: weather.current.condition.text, // usually inside current.condition
+                    hTemp: weather.current.temp_c,   // or use max temp if API provides
+                    lTemp: weather.current.temp_c, // or use min temp if API provides
+                    humidity: weather.current.humidity,
+                    lastUpdated: timeOnly
+                  };
+          });
+      });
     });
-    this.temperature=20.0;
-    this.city="Bengaluru";
   }
+}
 
   getColor(index: number): string {
     const colors = ['#5f63f2', '#17a2b8', '#dc3545', '#ffc107', '#28a745'];
     return colors[index % colors.length];
   }
 
- 
-
 
   ngAfterViewInit(): void {
     
-  }
-
-  loadDashboardDate():void{
+  }  loadDashboardDate():void{
     this.dashboardService.getDashboardData().subscribe({
       next: (res: any) => {
           this.dashboardData = res.dashboardResponse;

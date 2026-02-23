@@ -88,17 +88,32 @@
         </div>
       </div>
 
-      <div class="ranking" >
-      <h3>{{temperature}}</h3>
+      
+      <div class="ranking">
+        <div class="weather-card">
+          <div class="top-row">
+            <span class="city">{{weatherCard.city}}</span>
+            <span class="icon">☀️</span>
+          </div>
+
+          <div class="temperature">{{weatherCard.currentTemp}}<span class="deg">°C</span>
+          </div>
+          <div class="condition">{{weatherCard.zone}}</div>
+          <div class="condition">{{weatherCard.weatherType}}</div>
+
+          <div class="bottom-row">
+            <span>Updated At: {{weatherCard.lastUpdated}}</span>
+            <span>💧 {{weatherCard.humidity}}%</span>
+          </div>
       </div>
 
-      <!-- <div class="ranking">
+      
         <div class="student-card" *ngFor="let student of topStudents" [style.background]="student.color">
           <h3>{{student.name}}</h3>
           <h1>{{student.percent}}</h1>
           <span>{{student.rank}}</span>
         </div>
-      </div> -->
+      </div>
 
     </div>
 
