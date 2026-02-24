@@ -162,6 +162,7 @@ export class DashboardComponent implements OnInit{
                     humidity: weather.current.humidity,
                     lastUpdated: timeOnly
                   };
+                  console.log('weatherCard: '+this.weatherCard);
           });
       });
     });

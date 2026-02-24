@@ -21,12 +21,15 @@ export class ApiService {
     }
 
     getCurrentWeather(cityName:string): Observable<any>  {
+      console.log('cityName: '+cityName);
        return this.http.get(`${this.apiEndPoint}?key=${this.apiEndPointKey}&q=${cityName}`);
     }
 
     private cityUrl = "https://api-bdc.io/data/reverse-geocode-client?";
 
     getCity(lat:number, lon:number): Observable<any>{
+      console.log('lat: '+lat);
+      console.log('lon: '+lon);
       return this.http.get(`${this.cityUrl}?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
     }
 
