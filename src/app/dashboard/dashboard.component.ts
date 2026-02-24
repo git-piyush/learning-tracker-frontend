@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit{
 
       this.loadCricketData();
 
-      this.startAutoSlide();
+     // this.startAutoSlide();
   }
 
   startAutoSlide(): void {
@@ -201,6 +201,10 @@ export class DashboardComponent implements OnInit{
                   team2Img: m.t2img
                 }));
                 console.log(this.nextFiveMatches);
+                if (this.nextFiveMatches.length > 0) {
+                  this.currentIndex = 0;
+                  this.startAutoSlide();
+                }
           });
 
         this.apiService.increaseKeyHits()
