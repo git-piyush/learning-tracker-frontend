@@ -153,7 +153,7 @@ canvas {
 /* Bottom */
 .bottom {
   display: grid;
-  grid-template-columns: 45% 1fr;
+  grid-template-columns: 50% 1fr;
   gap: 10px;
 }
 
@@ -230,20 +230,6 @@ canvas {
   gap: 15px;
 }
 
-.student-card {
-  flex: 1;
-  color: white;
-  padding: 20px;
-  border-radius: 16px;
-  text-align: center;
-}
-
-.student-card h1 {
-  margin: 10px 0;
-}
-
-
-
 .weather-card {
   width: 5cm;
   height: 6cm;
@@ -305,5 +291,101 @@ canvas {
   justify-content: space-between;
   font-size: 12px;
   opacity: 0.95;
+}
+
+
+.live-score-card {
+  width: 5cm;
+  height: 6cm;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  border-radius: 12px;
+  padding: 5px;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  /* gap: 12px; */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* .next-five-match-card {
+  width: 5cm;
+  height: 6cm;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  border-radius: 12px;
+  padding: 5px;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+   gap: 12px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+} */
+
+.next-five-match-card {
+  width: 5cm;
+  height: 6cm;
+  background: linear-gradient(135deg, #4facfe, #ddcf91);
+  border-radius: 12px;
+  padding: 5px;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+   gap: 12px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.slide {
+  text-align: center;
+}
+
+.teams {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.datetime {
+  margin-top: 8px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.type {
+  margin: 10px 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.subscribe-btn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #0099cc;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.subscribe-btn:hover {
+  background: #e6f7ff;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}
+
+.dots span {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+.dots span.active {
+  background: #fff;
 }
 

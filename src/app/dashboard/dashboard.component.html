@@ -50,7 +50,6 @@
     <div class="bottom">
       <div>
         <h3>Add Your Activities & Events</h3>
-
           <!-- Scrollable container -->
         <div class="events-scroll">
           <!-- Display mode -->
@@ -107,13 +106,41 @@
           </div>
       </div>
 
-      
-        <div class="student-card" *ngFor="let student of topStudents" [style.background]="student.color">
-          <h3>{{student.name}}</h3>
-          <h1>{{student.percent}}</h1>
-          <span>{{student.rank}}</span>
-        </div>
+      <div class="live-score-card">
+          live-score-card
       </div>
+      <div class="next-five-match-card" *ngIf="nextFiveMatches.length">
+
+        <div class="slide">
+          <div class="teams">
+            {{ nextFiveMatches[currentIndex].teams }}
+          </div>
+
+          <div class="datetime">
+            {{ nextFiveMatches[currentIndex].date }} •
+            {{ nextFiveMatches[currentIndex].time }}
+          </div>
+
+          <div class="type">
+            {{ nextFiveMatches[currentIndex].matchType }}
+          </div>
+
+          <button
+            class="subscribe-btn"
+            (click)="saveSubscription(nextFiveMatches[currentIndex])"> Subscribe
+          </button>
+        </div>
+
+  <!-- dots indicator -->
+        <div class="dots">
+          <span
+            *ngFor="let m of nextFiveMatches; let i = index"
+            [class.active]="i === currentIndex">
+          </span>
+        </div>
+
+</div>
+    </div>
 
     </div>
 

@@ -21,6 +21,25 @@ interface WeatherCard {
   lastUpdated: string;
 }
 
+interface MatchCard {
+  id: string;
+  teams: string;
+  date: string;
+  time: string;
+  matchType: string;
+  status: string;
+  team1Img?: string;
+  team2Img?: string;
+}
+
+interface MatchSlide {
+  id: string;
+  teams: string;
+  date: string;
+  time: string;
+  matchType: string;
+}
+
 
 
 // Define the component metadata
@@ -33,6 +52,11 @@ interface WeatherCard {
 })
 
 export class DashboardComponent implements OnInit{
+
+    
+  nextFiveMatches: MatchCard[] = [];
+  currentIndex = 0;
+  slideInterval: any;
 
   weatherCard: WeatherCard = {
       city: '',
@@ -68,6 +92,22 @@ export class DashboardComponent implements OnInit{
       this.loadDashboardDate();
       //this.getLocation();
       this.loadTemperature();
+
+      this.loadCricketData();
+
+      this.startAutoSlide();
+  }
+
+  startAutoSlide(): void {
+    this.slideInterval = setInterval(() => {
+      this.currentIndex =
+        (this.currentIndex + 1) % this.nextFiveMatches.length;
+    }, 4000); // ⏱ 4 seconds
+  }
+
+  saveSubscription(match: MatchSlide): void {
+    console.log('Subscribed Match:', match);
+    // 👉 call API here
   }
 
   summaryCards = [
@@ -127,6 +167,46 @@ export class DashboardComponent implements OnInit{
     });
   }
 }
+  loadCricketData(){
+    this.apiService.getcricketData()
+          .subscribe(res => {
+              console.log(res.data);
+              const now = new Date();
+
+              this.nextFiveMatches = res.data
+
+                // future + today matches
+                .filter((m: any) => new Date(m.dateTimeGMT) >= now)
+
+                // sort by time
+                .sort(
+                  (a: any, b: any) =>
+                    new Date(a.dateTimeGMT).getTime() -
+                    new Date(b.dateTimeGMT).getTime()
+                )
+
+                // take only next 5
+                .slice(0, 5)
+
+                // map to clean object
+                .map((m: any): MatchCard => ({
+                  id: m.id,
+                  teams: `${m.t1} vs ${m.t2}`,
+                  date: this.getDate(m.dateTimeGMT),
+                  time: this.getTime(m.dateTimeGMT),
+                  matchType: m.matchType.toUpperCase(),
+                  status: m.ms,
+                  team1Img: m.t1img,
+                  team2Img: m.t2img
+                }));
+                console.log(this.nextFiveMatches);
+          });
+
+        this.apiService.increaseKeyHits()
+          .subscribe(res => {
+              console.log('Key hit got incremented.');
+      });
+  }
 
   getColor(index: number): string {
     const colors = ['#5f63f2', '#17a2b8', '#dc3545', '#ffc107', '#28a745'];
@@ -197,6 +277,13 @@ export class DashboardComponent implements OnInit{
 
   selected: boolean[] = [];
   isEditing = false;
+  reloadDashboard(): void {
+    const currentUrl = this.router.url;
+
+    this.router.navigateByUrl('/dashboard', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
 
   toggleEdit() {
         if (this.isEditing) {
@@ -207,7 +294,8 @@ export class DashboardComponent implements OnInit{
       console.log('Events saved:', this.todos);
       this.dashboardService.createTodos(this.todos).subscribe({
           next: (res:any) => {
-                alert('Todos Added Sucessfully!');
+               // alert('Todos Added Sucessfully!');
+                this.reloadDashboard();
               },
               error: (err: any) => {
               if(err.error.status===401){
@@ -268,6 +356,22 @@ export class DashboardComponent implements OnInit{
           }
         }
       }
+    });
+  }
+
+  getDate(dateTime: string): string {
+    const d = new Date(dateTime);
+    return d.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: 'short'
+    });
+  }
+
+  getTime(dateTime: string): string {
+    const d = new Date(dateTime);
+    return d.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit'
     });
   }
 

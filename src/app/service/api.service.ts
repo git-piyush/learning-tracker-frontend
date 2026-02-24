@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
   providedIn: 'root',
 })
 export class ApiService {
+  
   authStatuschanged = new EventEmitter<void>();
   private static BASE_URL = environment.apiUrl;
   constructor(private http: HttpClient) {}
@@ -24,17 +25,23 @@ export class ApiService {
     }
 
     private cityUrl = "https://api-bdc.io/data/reverse-geocode-client?";
-    // `reverse?format=json&lat=${lat}&lon=${lng}`;
-    //https://api-bdc.io/data/reverse-geocode-client?latitude=12.9786&longitude=77.364&localityLanguage=en
-
-    private googleApiKey = "AIzaSyD9kH2_e_gSe777LquNhnDvr2t_3l9m2vU";
 
     getCity(lat:number, lon:number): Observable<any>{
       return this.http.get(`${this.cityUrl}?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
     }
 
+    private key = localStorage.getItem('ckey');
+    private cricketData = "https://api.cricapi.com/v1/cricScore?apikey="+this.key;
+    
+    getcricketData(): Observable<any>{
+      return this.http.get(this.cricketData);
+    }
 
-
+    increaseKeyHits():Observable<any> {
+      return this.http.get(`${ApiService.BASE_URL}/key/increase-hits/`+localStorage.getItem('ckey'), {
+        headers: this.getHeader(),
+      });
+    }
 
 
     // Retreive from localStorage and Decrypt
@@ -53,6 +60,7 @@ export class ApiService {
       localStorage.removeItem("token");
       localStorage.removeItem("role");
       localStorage.removeItem("username");
+      localStorage.removeItem("ckey");
   }
 
   private getHeader(): HttpHeaders {

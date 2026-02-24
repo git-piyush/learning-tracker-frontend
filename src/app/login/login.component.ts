@@ -40,9 +40,11 @@ export class LoginComponent implements OnInit {
         this.apiService.loginUser(this.formData)
       );
       if (response.status === 200) {
+        alert('hi');
         this.apiService.encryptAndSaveToStorage('token', response.token);
         this.apiService.encryptAndSaveToStorage('role', response.role);
         this.apiService.encryptAndSaveToStorage('username', response.userName);
+        this.apiService.encryptAndSaveToStorage('ckey', response.ckey);
         this.router.navigate(["/dashboard"]);
       }
     } catch (error:any) {
