@@ -112,7 +112,11 @@ export class QuestionService {
     });
   }
 
-
+  deleteQuestionById(id: string): Observable<any> {
+    return this.http.delete(`${QuestionService.BASE_URL}/question/delete/${id}`, {
+      headers: this.getHeader(),
+    });
+  }
 
 
 
@@ -146,11 +150,7 @@ export class QuestionService {
     );
   }
 
-  deleteSupplier(id: string): Observable<any> {
-    return this.http.delete(`${QuestionService.BASE_URL}/suppliers/delete/${id}`, {
-      headers: this.getHeader(),
-    });
-  }
+
 
 
 
@@ -162,19 +162,14 @@ export class QuestionService {
 
 
   updateProduct(formData: any): Observable<any> {
-    return this.http.put(`${QuestionService.BASE_URL}/products/update`, formData, {
+    console.log('formData:'+formData);
+    return this.http.put(`${QuestionService.BASE_URL}/question/update-question`, formData, {
       headers: this.getHeader(),
     });
   }
 
   getAllProducts(): Observable<any> {
     return this.http.get(`${QuestionService.BASE_URL}/question/getall-question`, {
-      headers: this.getHeader(),
-    });
-  }
-
-  getProductById(id: string): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/products/${id}`, {
       headers: this.getHeader(),
     });
   }

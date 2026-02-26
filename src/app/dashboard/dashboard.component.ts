@@ -218,10 +218,7 @@ export class DashboardComponent implements OnInit{
     return colors[index % colors.length];
   }
 
-
-  ngAfterViewInit(): void {
-    
-  }  loadDashboardDate():void{
+  loadDashboardDate():void{
     this.dashboardService.getDashboardData().subscribe({
       next: (res: any) => {
           this.dashboardData = res.dashboardResponse;
@@ -285,7 +282,7 @@ export class DashboardComponent implements OnInit{
   reloadDashboard(): void {
     const currentUrl = this.router.url;
 
-    this.router.navigateByUrl('/dashboard', { skipLocationChange: true }).then(() => {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate([currentUrl]);
     });
   }

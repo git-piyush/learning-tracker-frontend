@@ -1,7 +1,7 @@
 /* Page Background */
 .page-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #93a2e6, #764ba2);
+  background: linear-gradient(135deg, #4facfe, #ddcf91);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,6 +13,7 @@
 .question-card {
   background: #ffffff;
   width: 1000px;
+  
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
@@ -60,6 +61,7 @@
 .answer-section {
   background: linear-gradient(120deg, #65c8f6, #95e9f2);
   padding: 20px;
+  height: 200px;
   border-radius: 10px;
   color: #333;
   margin-bottom: 20px;

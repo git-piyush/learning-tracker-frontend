@@ -31,9 +31,8 @@ export class AddQuestionComponent implements OnInit {
   answer:string='';
   imageUrl:string='';
   imageFile:File | null = null;
-  isEditing:boolean = false
-  categories:any[] = []
-  message:string = ''
+  categories:any[] = [];
+  message:string = '';
   categoryList: String[] = [];
   subCategoryList:string[] = [];
 
@@ -44,11 +43,6 @@ export class AddQuestionComponent implements OnInit {
   ngOnInit(): void {
     this.loadDropDown();
     this.qId = this.route.snapshot.paramMap.get('productId');
-    
-    if (this.qId) {
-      this.isEditing = true;
-      this.fetchProductById(this.qId)
-    }
   }
 
 
@@ -66,7 +60,7 @@ export class AddQuestionComponent implements OnInit {
   //GET CATEGORY BY ID
 
   fetchProductById(productId: string):void{
-    this.questionService.getProductById(productId).subscribe({
+    this.questionService.getQuestionById(productId).subscribe({
       next:(res:any) =>{
         if (res.status === 200) {
           const product = res.product;
@@ -109,21 +103,8 @@ export class AddQuestionComponent implements OnInit {
     if (this.imageFile) {
       formData.append("imageFile", this.imageFile);
     }   
-
-    if (this.isEditing) {
-      formData.append("qId", this.qId!);
-      this.questionService.updateProduct(formData).subscribe({
-        next:(res:any) =>{
-          if (res.status === 200) {
-            this.showMessage("product updated successfully")
-            this.router.navigate(['/product'])
-          }
-        },
-        error:(error) =>{
-          this.showMessage(error?.error?.message || error?.message || "Unable to update a product" + error)
-        }})
-    }else{
-      this.questionService.addQuestion(formData).subscribe({
+    
+    this.questionService.addQuestion(formData).subscribe({
         next:(res:any) =>{
 
           if (res.status === 200) {
@@ -134,7 +115,6 @@ export class AddQuestionComponent implements OnInit {
         error:(error) =>{
           this.showMessage(error?.error?.message || error?.message || "Unable to save a Question" + error)
         }})
-      }
    }
 
   onChangeCategory(event: Event): void {

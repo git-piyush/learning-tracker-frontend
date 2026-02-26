@@ -46,29 +46,29 @@ export class QuestionDetailsComponent implements OnInit{
         return 'data:image/jpeg;base64,' + base64String;
       }
 
-  prevQuestion(id:string) {
-    alert(id);
-  }
+    prevQuestion(id:string) {
+      alert(id);
+    }
 
-  nextQuestion(id:string) {
-    alert(id);
-  }
+    nextQuestion(id:string) {
+      alert(id);
+    }
 
-  goBack() {
-    // logic to navigate back
-  }
+    goBack() {
+      // logic to navigate back
+    }
 
-  changePage(newPage: number): void {
-    
-  }
+    changePage(newPage: number): void {
+      
+    }
 
-  changeSize(event: any): void {
-    
-  }
+    changeSize(event: any): void {
+      
+    }
 
-  sort(column: string): void {
-    
-    //this.loadCategories();
-  }
+    sort(column: string): void {
+      
+      //this.loadCategories();
+    }
 }
 

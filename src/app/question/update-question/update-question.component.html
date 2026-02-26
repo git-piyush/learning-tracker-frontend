@@ -1,1 +1,106 @@
-<p>update-question works!</p>
+<div class="product-form-page">
+    <p *ngIf="message" class="message">{{message}}</p>
+    <h1>Edit Question</h1>
+    <form (submit)="handleSubmit($event)">
+     
+        <div class="form-row">
+          <div class="form-group">
+            <label for="">Category</label>
+            <select [(ngModel)]="category" name="category" (change)="onChangeCategory($event)"
+            id="" required>
+                <option value="">Select a category</option>
+                <option *ngFor="let category of categoryList" [value]="category">
+                   {{ category }}
+                </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="">Sub Category</label>
+            <select [(ngModel)]="subCategory" name="subCategory" id="" [ngModelOptions]="{ standalone: true }" required>
+                <option value="">Select a Sub Category</option>
+                <option *ngFor="let subCategory of subCategoryList" [value]="subCategory">
+                   {{ subCategory }}
+                </option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group">
+              <label for="">Bookmark⭐</label>
+                <select
+                  name="bookmark"
+                  class="form-control"
+                  [(ngModel)]="bookmark"
+                  id="">
+                  <option value="" disabled>Bookmark</option>
+                  <option value="Yes">
+                    Yes
+                  </option>
+                  <option value="No">
+                    No
+                  </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+              <label for="">Type</label>
+                <select
+                  name="type"
+                  class="form-control"
+                  [(ngModel)]="type"
+                  id="" [ngModelOptions]="{ standalone: true }">
+                  <option value="" disabled>Type</option>
+                  <option value="theory">
+                    Theoritical
+                  </option>
+                  <option value="practical">
+                    Hands On
+                  </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+              <label for="">Complex Level</label>
+                <select
+                  name="type"
+                  class="form-control"
+                  [(ngModel)]="level"
+                  id="">
+                  <option value="" disabled>Complex Level</option>
+                  <option value="beginner">
+                    Beginner Level
+                  </option>
+                  <option value="medium">
+                    Medium Level
+                  </option>
+                  <option value="experience">
+                    Experienced Level
+                  </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="">Question</label>
+            <input type="text" [(ngModel)]="question" name="question" required>
+        </div>
+
+        <div class="form-group">
+            <label for="">Answer</label>
+            <textarea [(ngModel)]="answer" name="answer" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="">Reference Image</label>
+            <input type="file" (change)="handleImageChange($event)">
+            <div *ngIf="imageUrl">
+                <img [src]="imageUrl" alt="preview" class="image-preview">
+            </div>
+        </div>
+
+        <button type="submit">Edit Question</button>
+    </form>
+
+</div>

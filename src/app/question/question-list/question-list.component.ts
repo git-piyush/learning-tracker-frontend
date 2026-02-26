@@ -49,39 +49,37 @@ export class QuestionListComponent  implements OnInit {
     });
   }
 
-  //DELETE A PRODUCT
-  handleProductDelete(productId: string): void {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      this.questionService.deleteProduct(productId).subscribe({
-        next: (res: any) => {
-          if (res.status === 200) {
-            this.showMessage('Product deleted successfully');
-            this.fetchProducts(); //reload the products
-          }
-        },
-        error: (error) => {
-          this.showMessage(
-            error?.error?.message ||
-              error?.message ||
-              'Unable to Delete product' + error
-          );
-        },
-      });
-    }
-  }
-
   //NAVIGATE TO ADD PRODUCT PAGE
   navigateToAddQuestionPage(): void {
     this.router.navigate(['/add-question']);
   }
 
   //NAVIGATE TO EDIT PRODUCT PAGE
-  navigateToEditProductPage(productId: string): void {
-    this.router.navigate([`/edit-product/${productId}`]);
+  navigateToEditProductPage(id: string): void {
+    this.router.navigate([`/update-question/${id}`]);
   }
 
   navigateToViewQuestionDetails(id: string):void{
       this.router.navigate([`/question-details/${id}`]);
+  }
+
+  deleteQuestion(id:string):void{
+    if(!confirm("Are you sure you want to delete this Question?")){
+      return;
+    }
+    this.questionService.deleteQuestionById(id).subscribe({
+      next: (res:any)=>{
+        alert(res.message);
+        const currentUrl = this.router.url;
+
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate([currentUrl]);
+        });
+
+      },error:(err)=>{
+        alert(err.error.message);
+      }
+    })
   }
 
     changePage(newPage: number): void {

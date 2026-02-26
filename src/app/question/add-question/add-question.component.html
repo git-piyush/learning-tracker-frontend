@@ -1,6 +1,6 @@
 <div class="product-form-page">
     <p *ngIf="message" class="message">{{message}}</p>
-    <h1>{{isEditing? 'Edit Question' : 'Add Question'}}</h1>
+    <h1>Add Question</h1>
     <form (submit)="handleSubmit($event)">
         <div class="form-row">
           <div class="form-group">
@@ -34,7 +34,7 @@
                   class="form-control"
                   [(ngModel)]="bookmark"
                   id="">
-                  <option value="">Bookmark</option>
+                  <option value="" disabled selected>Bookmark</option>
                   <option value="Yes">
                     Yes
                   </option>
@@ -51,7 +51,7 @@
                   class="form-control"
                   [(ngModel)]="type"
                   id="">
-                  <option value="">Type</option>
+                  <option value="" disabled selected>Type</option>
                   <option value="practical">
                     Theoritical
                   </option>
@@ -68,7 +68,7 @@
                   class="form-control"
                   [(ngModel)]="level"
                   id="">
-                  <option value="">Complex Level</option>
+                  <option value="" disabled selected>Complex Level</option>
                   <option value="beginner">
                     Beginner Level
                   </option>
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        <button type="submit">{{isEditing? 'Edit Product' : 'Add Product'}}</button>
+        <button type="submit">Add Product</button>
     </form>
 
 </div>

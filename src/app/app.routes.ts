@@ -21,7 +21,7 @@ export const routes: Routes = [
   { path: 'question-details/:qId', component: QuestionDetailsComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
   { path: 'all-question', component: QuestionListComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
   { path: 'add-question', component: AddQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-  { path: 'update-question/:qId', component: UpdateQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'update-question/:id', component: UpdateQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
   
   { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
