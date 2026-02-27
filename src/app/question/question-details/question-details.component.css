@@ -59,13 +59,34 @@
 
 /* Answer Section */
 .answer-section {
-  background: linear-gradient(120deg, #65c8f6, #95e9f2);
+  background: linear-gradient(120deg, #abe4ff, #ffe7fb);
   padding: 20px;
-  height: 200px;
+  min-height: 300px;      /* 👈 visible height */
+  max-height: 500px;      /* 👈 limit growth */
+  overflow-y: auto;       /* 👈 scroll if text is long */
   border-radius: 10px;
-  color: #333;
   margin-bottom: 20px;
+  font-size: 25px;      /* 👈 increase font size */
 }
+
+.answer-text {
+  font-size: 18px;
+  line-height: 1.6;
+  font-family: monospace;
+}
+
+/* styles for DB-stored HTML */
+.answer-text strong {
+  font-weight: 700;
+}
+
+.answer-text .red-text {
+  color: rgb(255, 0, 0);
+  font-weight: 700;
+}
+
+
+
 
 .answer-section h2 {
   margin-top: 0;
