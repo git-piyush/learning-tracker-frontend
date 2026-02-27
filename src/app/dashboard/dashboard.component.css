@@ -9,6 +9,7 @@
   display: flex;
   min-height: 100vh;
   background: #f5f6fa;
+  overflow: auto;      /* ✅ KEY LINE */
 }
 
 
@@ -231,17 +232,15 @@ canvas {
 }
 
 .weather-card {
-  width: 5cm;
-  height: 6cm;
+    width: clamp(230px, 18vw, 80px);
+  min-height: clamp(230px, 10vh, 260px);
   background: linear-gradient(135deg, #4facfe, #00f2fe);
   border-radius: 12px;
-  padding: 5px;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  /* gap: 12px; */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;       /* prevents collapsing */
+  max-width: 90%;
 }
 
 
@@ -295,17 +294,15 @@ canvas {
 
 
 .live-score-card {
-  width: 5cm;
-  height: 6cm;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  width: clamp(230px, 18vw, 80px);
+  min-height: clamp(230px, 10vh, 260px);
+  background: linear-gradient(135deg, hsl(163, 99%, 65%), #ffb892);
   border-radius: 12px;
-  padding: 5px;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  /* gap: 12px; */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;       /* prevents collapsing */
+  max-width: 90%;
 }
 
 /* .next-five-match-card {
@@ -323,17 +320,15 @@ canvas {
 } */
 
 .next-five-match-card {
-  width: 5cm;
-  height: 6cm;
+      width: clamp(230px, 18vw, 80px);
+  min-height: clamp(230px, 10vh, 260px);
   background: linear-gradient(135deg, #4facfe, #ddcf91);
   border-radius: 12px;
-  padding: 5px;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-   gap: 12px; 
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;       /* prevents collapsing */
+  max-width: 90%;
 }
 
 .slide {
@@ -347,8 +342,9 @@ canvas {
 
 .datetime {
   margin-top: 8px;
-  font-size: 14px;
-  opacity: 0.9;
+  font-size: 20px;
+  opacity: 2.0;
+  font-weight: bold;
 }
 
 .type {
@@ -358,7 +354,7 @@ canvas {
 }
 
 .subscribe-btn {
-  margin-top: 12px;
+  margin-top: 25px;
   padding: 8px 14px;
   border: none;
   border-radius: 20px;
@@ -373,9 +369,11 @@ canvas {
 }
 
 .dots {
+  margin-top: 25px;
   display: flex;
-  justify-content: center;
-  gap: 2px;
+  justify-content: center;   /* horizontal center */
+  align-items: flex-end;     /* vertical bottom */
+  gap: 8px;
 }
 
 .dots span {

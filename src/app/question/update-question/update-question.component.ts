@@ -5,11 +5,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../category/service/category.service';
 import { QuestionService } from '../service/question.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NotificationService } from '../../shared/notificationService';
 
 @Component({
   selector: 'app-update-question',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,MatSnackBarModule],
   templateUrl: './update-question.component.html',
   styleUrl: './update-question.component.css'
 })
@@ -18,7 +20,8 @@ export class UpdateQuestionComponent  implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private categoryService: CategoryService,
-    private questionService: QuestionService
+    private questionService: QuestionService,
+    private notify: NotificationService
   ){}
 
   qId: string='';
@@ -57,7 +60,6 @@ export class UpdateQuestionComponent  implements OnInit {
   fetchProductById(productId: string):void{
     this.questionService.getQuestionById(productId).subscribe({
       next:(res:any) =>{
-        console.log(res);
         this.loadSubcategory(res.question.category);
         if (res.status === 200) {
           
@@ -77,12 +79,10 @@ export class UpdateQuestionComponent  implements OnInit {
           this.imageUrl = `data:image/png;base64,${q.image}`;
         }
           
-        }else{
-          this.showMessage(res.message);
         }
       },
       error:(error) =>{
-        this.showMessage(error?.error?.message || error?.message || "Unable to get all categories" + error)
+        alert(error?.error?.message || error?.message || "Unable to get all categories" + error)
       }})
   }
 
@@ -127,12 +127,12 @@ export class UpdateQuestionComponent  implements OnInit {
     this.questionService.updateProduct(formData).subscribe({
         next:(res:any) =>{
           if (res.status === 200) {
-            this.showMessage("Question Updated successfully.")
+            this.notify.success("Question Updated successfully.");
             this.router.navigate(['/all-question'])
           }
         },
         error:(error) =>{
-          this.showMessage(error?.error?.message || error?.message || "Unable to update" + error)
+          this.notify.error(error?.error?.message || error?.message || "Unable to update" + error);
         }})
    }
 
@@ -156,12 +156,5 @@ export class UpdateQuestionComponent  implements OnInit {
         console.log(this.subCategoryList);
       },error:(err)=>console.error(err)
     });
-  }
-
-  showMessage(message:string){
-    this.message = message;
-    setTimeout(() =>{
-      this.message = ''
-    }, 4000)
   }
 }

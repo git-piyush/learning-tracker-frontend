@@ -2,16 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuestionService } from '../service/question.service';
 import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-question-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [MatSnackBarModule,CommonModule],
   templateUrl: './question-list.component.html',
   styleUrl: './question-list.component.css'
 })
 export class QuestionListComponent  implements OnInit {
-  constructor(private questionService: QuestionService, private router: Router) {}
+  constructor(private questionService: QuestionService, private router: Router,  private snackBar: MatSnackBar) {}
   products: any[] = [];
   message: string = '';
 
@@ -69,7 +70,7 @@ export class QuestionListComponent  implements OnInit {
     }
     this.questionService.deleteQuestionById(id).subscribe({
       next: (res:any)=>{
-        alert(res.message);
+        this.showMessage(res.message);
         const currentUrl = this.router.url;
 
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
@@ -77,7 +78,7 @@ export class QuestionListComponent  implements OnInit {
         });
 
       },error:(err)=>{
-        alert(err.error.message);
+        this.showMessage(err.error.message);
       }
     })
   }

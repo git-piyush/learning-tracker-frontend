@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../category/service/category.service';
 import { QuestionService } from '../service/question.service';
+import { NotificationService } from '../../shared/notificationService';
 
 @Component({
   selector: 'app-add-question',
@@ -18,7 +19,8 @@ export class AddQuestionComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private categoryService: CategoryService,
-    private questionService: QuestionService
+    private questionService: QuestionService,
+    private notify: NotificationService
   ){}
 
   qId: string | null = null
@@ -51,7 +53,6 @@ export class AddQuestionComponent implements OnInit {
     this.categoryService.getCategoryList().subscribe({
       next: (res)=>{
         this.categoryList = res.categoryList;
-        console.log(this.categoryList);
       },error:(err)=>console.error(err)
     });
   }
@@ -67,11 +68,11 @@ export class AddQuestionComponent implements OnInit {
           this.category = product.category;
           this.imageUrl = product.imageUrl;
         }else{
-          this.showMessage(res.message);
+          this.notify.error(res.message);
         }
       },
       error:(error) =>{
-        this.showMessage(error?.error?.message || error?.message || "Unable to get all categories" + error)
+        this.notify.error(error?.error?.message || error?.message || "Unable to get all categories" + error);
       }})
   }
 
@@ -108,12 +109,12 @@ export class AddQuestionComponent implements OnInit {
         next:(res:any) =>{
 
           if (res.status === 200) {
-            this.showMessage("Question Saved successfully.")
+            this.notify.success("Question Saved successfully.");
             this.router.navigate(['/all-question'])
           }
         },
         error:(error) =>{
-          this.showMessage(error?.error?.message || error?.message || "Unable to save a Question" + error)
+          this.notify.success(error?.error?.message || error?.message || "Unable to save a Question" + error);
         }})
    }
 
@@ -124,14 +125,7 @@ export class AddQuestionComponent implements OnInit {
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
         console.log(this.subCategoryList);
-      },error:(err)=>console.error(err)
+      },error:(err)=>this.notify.success(err.error.message)
     });
-  }
-
-  showMessage(message:string){
-    this.message = message;
-    setTimeout(() =>{
-      this.message = ''
-    }, 4000)
   }
 }

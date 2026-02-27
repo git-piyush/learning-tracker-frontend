@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CategoryService } from '../service/category.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BaseComponent } from '../../baseComponent';
 
 
 interface Category {
@@ -34,7 +35,7 @@ interface ApiResponse {
   templateUrl: './category-list.component.html',
   styleUrl: './category-list.component.css'
 })
-export class CategoryListComponent implements OnInit {
+export class CategoryListComponent extends BaseComponent implements OnInit {
 
   searchForm = {
     category: '',
@@ -52,7 +53,9 @@ export class CategoryListComponent implements OnInit {
   sortBy = 'id';
   direction = 'asc';
 
-  constructor(private http: HttpClient, private router: Router, private categoryService:CategoryService) {}
+  constructor(injector:Injector, private categoryService:CategoryService){
+    super(injector);
+  }
 
   ngOnInit(): void {
     this.loadDropdown();

@@ -30,3 +30,37 @@ button:hover {
     text-align: center;
     margin-bottom: 30px;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+.snackbar-success {
+  background-color: #28a745 !important;
+  color: #fff !important;
+}
+
+.snackbar-error {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+}
+
+.snackbar-info {
+  background-color: #17a2b8 !important;
+  color: #fff !important;
+}
+
+.snackbar-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+
+.center-offset-snackbar.mat-snack-bar-container {
+  position: fixed !important;
+  top: 100% !important;              /* 👈 move down (50% → 60%) */
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+

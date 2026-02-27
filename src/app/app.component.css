@@ -123,8 +123,9 @@
     
     /* Adjust margin to match the fixed sidebar width */
    .main-content {
+    background: linear-gradient(135deg, #cbe5fd, #a7aafe);
   margin-left: 15%; /* sidebar width */
-  padding: 80px 20px 20px; /* extra top padding for navbar */
+  padding: 70px 15px 20px; /* extra top padding for navbar */
   transition: margin-left 0.3s ease;
 }
 
@@ -274,6 +275,10 @@ textarea {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.main-content-background1{
+
 }
 
 

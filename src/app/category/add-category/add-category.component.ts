@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CategoryService } from '../service/category.service';
+import { BaseComponent } from '../../baseComponent';
 
 @Component({
   selector: 'app-add-category',
@@ -14,13 +15,14 @@ import { CategoryService } from '../service/category.service';
   templateUrl: './add-category.component.html',
   styleUrl: './add-category.component.css'
 })
-export class AddCategoryComponent implements OnInit {
+export class AddCategoryComponent extends BaseComponent implements OnInit{
 
   constructor(
-    private categoryService: CategoryService,
-    private route: ActivatedRoute,
-    private router: Router,private fb: FormBuilder, private http: HttpClient
-  ){}
+    injector: Injector,
+    private categoryService: CategoryService
+  ) {
+    super(injector); // ✅ NOW VALID
+  }
 
   formData: any = {
       refCode: '',

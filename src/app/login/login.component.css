@@ -10,10 +10,11 @@
      
     /* LOGIN AND REGISTER STYLING */
     .auth-container {
+        background: linear-gradient(135deg, #9cc0e0, #9baacf);
     width: 500px;
     margin: 8rem auto;
     padding: 20px;
-    border: 1px solid #eee;
+    border: 1px solid #000000;
     border-radius: 5px;
     font-size: 20px;
     }
