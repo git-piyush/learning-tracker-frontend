@@ -89,18 +89,18 @@
 
         <div class="form-group">
             <label for="">Answer</label>
-            <textarea [(ngModel)]="answer" name="answer" required></textarea>
+            <textarea [(ngModel)]="answer" name="answer" required style="height: 200px;"></textarea>
         </div>
 
         <div class="form-group">
             <label for="">Reference Image</label>
             <input type="file" (change)="handleImageChange($event)">
             <div *ngIf="imageUrl">
-                <img [src]="imageUrl" alt="preview" class="image-preview">
+                <img [src]="imageUrl" alt="preview" class="image-preview" style="height: 500px;">
             </div>
         </div>
 
-        <button type="submit">Edit Question</button>
+        <button type="submit">Save Question</button>
     </form>
 
 </div>

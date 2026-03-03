@@ -106,12 +106,49 @@
           </div>
       </div>
 
-      <div class="live-score-card">
-          live-score-card
-      </div>
+      <!--Liva score card-->
+<div class="live-score-card" *ngIf="subscribedMatches.length > 0">
+
+  <div class="slide">
+    <div class="teams">
+      {{ subscribedMatches[currentIndex1].teams }}
+    </div>
+
+    <div class="datetime">
+      {{ subscribedMatches[currentIndex1].date }} At
+  {{ subscribedMatches[currentIndex1].time }} GMT
+
+    </div>
+
+    <div class="type">
+      {{ subscribedMatches[currentIndex1].matchType }}
+    </div>
+
+    <div class="type">
+      {{ subscribedMatches[currentIndex1].series }}
+    </div>
+
+    <button class="subscribe-btn"
+      (click)="unsubscribeSubscription(subscribedMatches[currentIndex1])">
+      Un-Subscribe
+    </button>
+  </div>
+
+  <div class="dots">
+    <span
+      *ngFor="let m of subscribedMatches; let i = index"
+      [class.active]="i === currentIndex1">
+    </span>
+  </div>
+
+</div>
+
+
+      <!-- next five matches -->
       <div class="next-five-match-card" *ngIf="nextFiveMatches.length">
 
-        <div class="slide">
+        <div class="slide" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
+          Next five match
           <div class="teams">
             {{ nextFiveMatches[currentIndex].teams }}
           </div>
@@ -125,22 +162,26 @@
             {{ nextFiveMatches[currentIndex].matchType }}
           </div>
 
+          <div class="type">
+            {{ nextFiveMatches[currentIndex].series }}
+          </div>
+
           <button
             class="subscribe-btn"
             (click)="saveSubscription(nextFiveMatches[currentIndex])"> Subscribe
           </button>
         </div>
 
-  <!-- dots indicator -->
+        <!-- dots indicator -->
         <div class="dots">
           <span
             *ngFor="let m of nextFiveMatches; let i = index"
             [class.active]="i === currentIndex">
           </span>
         </div>
+      </div>
 
-</div>
-    </div>
+  </div>
 
     </div>
 

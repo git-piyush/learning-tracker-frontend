@@ -1,12 +1,14 @@
 // Import necessary Angular modules and services
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';  // Module for charts
 import { ApiService } from '../service/api.service'; // Service to interact with API
 import { FormsModule } from '@angular/forms'; // Forms module for two-way binding
 import { DashboardService } from './service/dashboard.service';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
+import { NotificationService } from '../shared/notificationService';
+import { Subscription, timer } from 'rxjs';
 
 interface Todo1 {id:string;completed:string;task:string};
 
@@ -21,26 +23,25 @@ interface WeatherCard {
   lastUpdated: string;
 }
 
-interface MatchCard {
-  id: string;
-  teams: string;
-  date: string;
-  time: string;
-  matchType: string;
-  status: string;
-  team1Img?: string;
-  team2Img?: string;
+interface Match{
+    id:string;
+    dateTimeGMT:string;
+    matchType:string;
+    status:string;
+    ms:string;
+    t1:string;
+    t2:string;
+    t1s:string;
+    t2s:string;
+    t1img:string;
+    t2img:string;
+    series:string;
+    date: string;
+    time: string;
+    strdate: string;
+    strtime: string;
+    teams: string;
 }
-
-interface MatchSlide {
-  id: string;
-  teams: string;
-  date: string;
-  time: string;
-  matchType: string;
-}
-
-
 
 // Define the component metadata
 @Component({
@@ -51,12 +52,15 @@ interface MatchSlide {
   styleUrl: './dashboard.component.css', // CSS styles for the component
 })
 
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit, OnDestroy {
 
-    
-  nextFiveMatches: MatchCard[] = [];
+  subscribedMatches: Match[] = [];
+
+  nextFiveMatches: Match[] = [];
   currentIndex = 0;
+  currentIndex1 = 0;
   slideInterval: any;
+  slideInterval1: any;
 
   weatherCard: WeatherCard = {
       city: '',
@@ -84,7 +88,12 @@ export class DashboardComponent implements OnInit{
 
   educationalStages: { name: string; value: number; color: string }[] = [];
 
-  constructor(private dashboardService: DashboardService, private router: Router, private apiService:ApiService){}
+  constructor(private dashboardService: DashboardService, 
+    private router: Router, 
+    private apiService:ApiService, private notify: NotificationService){}
+
+    tenMinSub!: Subscription;
+    isTenMinEnabled = true;
 
     ngOnInit(): void {
       this.userName = localStorage.getItem("username");
@@ -95,19 +104,90 @@ export class DashboardComponent implements OnInit{
 
       this.loadCricketData();
 
-     // this.startAutoSlide();
+      this.loadSubscribedMatches();
+
+     // this.startTenMinTask();
   }
 
-  startAutoSlide(): void {
-    this.slideInterval = setInterval(() => {
-      this.currentIndex =
-        (this.currentIndex + 1) % this.nextFiveMatches.length;
+      startTenMinTask(): void {
+        console.log('inside startTenMinTask');
+        if (this.tenMinSub) {
+          return; // already running
+        }
+
+        this.tenMinSub = timer(0, 10 * 60 * 1000).subscribe(() => {
+          if (this.isTenMinEnabled) {
+            this.executeEveryTenMinutes();
+          }
+        });
+      }
+
+      stopTenMinTask(): void {
+        this.tenMinSub?.unsubscribe();
+        this.tenMinSub = undefined as any;
+      }
+
+      executeEveryTenMinutes(): void {
+        console.log('Executed every 10 minutes', new Date());
+        // 🔥 Call API / refresh live data
+      }
+
+      ngOnDestroy(): void {
+        this.stopTenMinTask();
+      }
+
+    startAutoSlide(): void {
+      this.slideInterval = setInterval(() => {
+        this.currentIndex =
+          (this.currentIndex + 1) % this.nextFiveMatches.length;
+      }, 4000); // ⏱ 4 seconds
+    }
+
+  startAutoSlide1(): void {
+    this.slideInterval1 = setInterval(() => {
+      this.currentIndex1 =
+        (this.currentIndex1 + 1) % this.subscribedMatches.length;
     }, 4000); // ⏱ 4 seconds
   }
 
-  saveSubscription(match: MatchSlide): void {
+  pauseAutoSlide(): void {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+      this.slideInterval = null;
+    }
+  }
+
+  resumeAutoSlide(): void {
+    if (!this.slideInterval) {
+      this.startAutoSlide();
+    }
+  }
+
+  saveSubscription(match: Match): void {
     console.log('Subscribed Match:', match);
-    // 👉 call API here
+      this.dashboardService.saveSubscription(match).subscribe({
+        next: res => {
+          this.notify.info(res.message);
+        },
+        error: err => {
+          this.notify.error(err.error.message);
+        }
+      });
+      this.reloadDashboard();
+  }
+
+  
+  unsubscribeSubscription(match: Match): void {
+    console.log('Subscribed Match:', match);
+      this.dashboardService.unsubscribeSubscription(match).subscribe({
+        next: res => {
+          this.notify.info(res.message);
+        },
+        error: err => {
+          this.notify.error(err.error.message);
+        }
+      });
+      this.reloadDashboard();
   }
 
   summaryCards = [
@@ -168,49 +248,38 @@ export class DashboardComponent implements OnInit{
     });
   }
 }
-  loadCricketData(){
-    this.apiService.getcricketData()
-          .subscribe(res => {
-              console.log(res.data);
-              const now = new Date();
 
-              this.nextFiveMatches = res.data
+loadCricketData() {
+  this.dashboardService.getNextFiveMatches().subscribe({
+    next: (res: any) => {
 
-                // future + today matches
-                .filter((m: any) => new Date(m.dateTimeGMT) >= now)
+      this.nextFiveMatches = res.matches;
+      if (this.nextFiveMatches.length > 0) {
+        this.currentIndex = 0;
+        this.startAutoSlide();
+      }
+    },
+    error: err => {
+      console.error('API error:', err);
+      this.nextFiveMatches = [];
+    }
+  });
+}
 
-                // sort by time
-                .sort(
-                  (a: any, b: any) =>
-                    new Date(a.dateTimeGMT).getTime() -
-                    new Date(b.dateTimeGMT).getTime()
-                )
 
-                // take only next 5
-                .slice(0, 5)
-
-                // map to clean object
-                .map((m: any): MatchCard => ({
-                  id: m.id,
-                  teams: `${m.t1} vs ${m.t2}`,
-                  date: this.getDate(m.dateTimeGMT),
-                  time: this.getTime(m.dateTimeGMT),
-                  matchType: m.matchType.toUpperCase(),
-                  status: m.ms,
-                  team1Img: m.t1img,
-                  team2Img: m.t2img
-                }));
-                console.log(this.nextFiveMatches);
-                if (this.nextFiveMatches.length > 0) {
-                  this.currentIndex = 0;
-                  this.startAutoSlide();
+loadSubscribedMatches(){
+  this.dashboardService.getSubscribedMatch().subscribe(res => {
+              console.log(res.matches);
+              console.log('subscribedMatches1: <=============>'+res.matches.length);
+              console.log('subscribedMatches2:', JSON.stringify(res.matches, null, 2));
+              this.subscribedMatches = res.matches;
+                console.log('subscribedMatches3: <=============>'+this.subscribedMatches.length);
+                console.log('subscribedMatches4:', JSON.stringify(this.subscribedMatches, null, 2));
+                if (this.subscribedMatches.length > 0) {
+                  this.currentIndex1 = 0;
+                  this.startAutoSlide1();
                 }
           });
-
-        this.apiService.increaseKeyHits()
-          .subscribe(res => {
-              console.log('Key hit got incremented.');
-      });
   }
 
   getColor(index: number): string {
@@ -264,18 +333,6 @@ export class DashboardComponent implements OnInit{
         this.router.navigate(['/feedback-list']);
     }
   }
-
-  onMonthClick(month: string): void {
-    this.activeMonth = month;
-  }
-
-  isActive(month: string): boolean {
-    return this.activeMonth === month;
-  }
-
-
-
-
 
   selected: boolean[] = [];
   isEditing = false;

@@ -5,9 +5,23 @@ import { finalize } from 'rxjs';
 
 export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
   const loader = inject(loaderService);
-  loader.show();
+  const skipForHeader = req.headers.has('X-Skip-Loader');
 
-  return next(req).pipe(
-    finalize(() => loader.hide())
+  const skipUrls = ['/cricScore'];
+
+  const skipForUrls = skipUrls.some(url => req.url.includes(url));
+
+
+  if(!(skipForHeader || skipForUrls)){
+    loader.show();
+  }
+
+
+    return next(req).pipe(
+    finalize(() => {
+      if (!(skipForHeader || skipForUrls)) {
+        loader.hide();
+      }
+    })
   );
 };

@@ -295,15 +295,17 @@ canvas {
 
 .live-score-card {
   width: clamp(230px, 18vw, 80px);
-  min-height: clamp(230px, 10vh, 260px);
+  height: clamp(280px, 10vh, 260px);   /* fixed height */
   background: linear-gradient(135deg, hsl(163, 99%, 65%), #ffb892);
   border-radius: 12px;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;       /* prevents collapsing */
+  flex-shrink: 0;
   max-width: 90%;
+  overflow: hidden;   /* prevents content from stretching card */
 }
+
 
 /* .next-five-match-card {
   width: 5cm;
@@ -354,10 +356,8 @@ canvas {
 }
 
 .subscribe-btn {
-  margin-top: 25px;
-  padding: 8px 14px;
   border: none;
-  border-radius: 20px;
+  border-radius: 0px;
   background: #ffffff;
   color: #0099cc;
   font-weight: 600;
@@ -369,7 +369,7 @@ canvas {
 }
 
 .dots {
-  margin-top: 25px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;   /* horizontal center */
   align-items: flex-end;     /* vertical bottom */

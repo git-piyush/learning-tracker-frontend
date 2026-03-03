@@ -33,40 +33,11 @@ export class DashboardService {
       }
     }
 
-    
-  private clearAuth() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-  }
   private getHeader(): HttpHeaders {
     const token = this.getFromStorageAndDecrypt("token");
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-  }
-
-  loginUser(body: any): Observable<any> {
-    return this.http.post(`${DashboardService.BASE_URL}/auth/login`, body);
-  }
-
-  getLoggedInUserInfo(): Observable<any> {
-    return this.http.get(`${DashboardService.BASE_URL}/users/current`, {
-      headers: this.getHeader(),
-    });
-  }
-
-  logout():void{
-    this.clearAuth()
-  }
-
-  isAuthenticated():boolean{
-    const token = this.getFromStorageAndDecrypt("token");
-    return !!token;
-  }
-
-  isAdmin():boolean {
-    const role = this.getFromStorageAndDecrypt("role");
-    return role === "ADMIN";
   }
 
   getDashboardData(): Observable<any> {
@@ -77,6 +48,39 @@ export class DashboardService {
 
   createTodos(events: {id:string; task: string;completed:string; checked: boolean; }[]):Observable<any> {
     return this.http.post(`${DashboardService.BASE_URL}/todo/todo-list`, events,{
+      headers: this.getHeader(),
+    });
+  }
+
+  getNextFiveMatches(): Observable<any> {
+    return this.http.get(`${DashboardService.BASE_URL}/match/next-five-match`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  increaseKeyHits():Observable<any>{
+    const key = localStorage.getItem('ckey');
+    return this.http.get(`${DashboardService.BASE_URL}/key/increasehits/`+key, {
+      headers: this.getHeader(),
+    });
+  }
+
+  saveSubscription(match: any): Observable<any> {
+    return this.http.post(`${DashboardService.BASE_URL}/match/save-subscribedmatch`, match,{
+      headers: this.getHeader(),
+    });
+  }
+
+  
+  unsubscribeSubscription(match: any): Observable<any> {
+  return this.http.delete(`${DashboardService.BASE_URL}/delete-match`, {
+    headers: this.getHeader(),
+    body: match
+  });
+}
+
+  getSubscribedMatch(): Observable<any> {
+    return this.http.get(`${DashboardService.BASE_URL}/match/subscribed-match`,{
       headers: this.getHeader(),
     });
   }

@@ -46,6 +46,10 @@ export class QuestionDetailsComponent implements OnInit{
         return 'data:image/jpeg;base64,' + base64String;
       }
 
+    editQuestion(id:string):void{
+      this.router.navigate([`/update-question/${id}`]);
+    }
+
     prevQuestion(id:string) {
       alert(id);
     }

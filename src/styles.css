@@ -66,7 +66,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .red-text {
   color: red;
   text-decoration: underline;
-  font-weight: 700;
+  font-weight: 500;
+  font-style: italic;
 }
 
 
