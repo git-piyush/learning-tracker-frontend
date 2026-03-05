@@ -107,55 +107,94 @@
       </div>
 
       <!--Liva score card-->
-<div class="live-score-card" *ngIf="subscribedMatches.length > 0">
+      <div class="live-score-card" *ngIf="!livescore && subscribedMatches.length == 0">
+        No Subscription
+      </div>
 
-  <div class="slide">
-    <div class="teams">
-      {{ subscribedMatches[currentIndex1].teams }}
-    </div>
 
-    <div class="datetime">
-      {{ subscribedMatches[currentIndex1].date }} At
-  {{ subscribedMatches[currentIndex1].time }} GMT
+      <div class="live-score-card" *ngIf="!livescore && subscribedMatches.length > 0">
+        
+        <div class="slide">
+          Subscribed Matches
+          <div class="teams">
+            {{ subscribedMatches[currentIndex1].teams }}
+          </div>
 
-    </div>
+          <div class="datetime">
+            {{ subscribedMatches[currentIndex1].date }} At
+        {{ subscribedMatches[currentIndex1].time }} GMT
 
-    <div class="type">
-      {{ subscribedMatches[currentIndex1].matchType }}
-    </div>
+          </div>
 
-    <div class="type">
-      {{ subscribedMatches[currentIndex1].series }}
-    </div>
+          <div class="type">
+            {{ subscribedMatches[currentIndex1].matchType }}
+          </div>
 
-    <button class="subscribe-btn"
-      (click)="unsubscribeSubscription(subscribedMatches[currentIndex1])">
-      Un-Subscribe
-    </button>
-  </div>
+          <div class="type">
+            {{ subscribedMatches[currentIndex1].series }}
+          </div>
 
-  <div class="dots">
-    <span
-      *ngFor="let m of subscribedMatches; let i = index"
-      [class.active]="i === currentIndex1">
-    </span>
-  </div>
+          <button class="subscribe-btn"
+            (click)="unsubscribeSubscription(subscribedMatches[currentIndex1])">
+            Un-Subscribe
+          </button>
+        </div>
 
-</div>
+        <div class="dots">
+          <span
+            *ngFor="let m of subscribedMatches; let i = index"
+            [class.active]="i === currentIndex1">
+          </span>
+        </div>
+      </div>
+
+      <div class="live-score-card" *ngIf="livescore && liveScoreCards.length > 0">
+
+        <div class="slide">
+          <div class="teams">
+            {{ subscribedMatches[currentIndex1].teams }}
+          </div>
+
+          <div class="datetime">
+            {{ subscribedMatches[currentIndex1].date }} At
+        {{ subscribedMatches[currentIndex1].time }} GMT
+
+          </div>
+
+          <div class="type">
+            {{ subscribedMatches[currentIndex1].matchType }}
+          </div>
+
+          <div class="type">
+            {{ subscribedMatches[currentIndex1].series }}
+          </div>
+
+          <button class="subscribe-btn"
+            (click)="unsubscribeSubscription(subscribedMatches[currentIndex1])">
+            Un-Subscribe
+          </button>
+        </div>
+
+        <div class="dots">
+          <span
+            *ngFor="let m of subscribedMatches; let i = index"
+            [class.active]="i === currentIndex1">
+          </span>
+        </div>
+      </div>
 
 
       <!-- next five matches -->
       <div class="next-five-match-card" *ngIf="nextFiveMatches.length">
-
-        <div class="slide" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
+        <div class="card-content">
+                 <div class="slide" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
           Next five match
           <div class="teams">
-            {{ nextFiveMatches[currentIndex].teams }}
+            {{ nextFiveMatches[currentIndex].t1 }} Vs {{ nextFiveMatches[currentIndex].t2 }}
           </div>
-
           <div class="datetime">
-            {{ nextFiveMatches[currentIndex].date }} •
-            {{ nextFiveMatches[currentIndex].time }}
+            {{ nextFiveMatches[currentIndex].dateTimeGMT | date:'MMM d, y' }} •
+            {{ nextFiveMatches[currentIndex].dateTimeGMT | date:'hh:mm a' }}
           </div>
 
           <div class="type">
@@ -179,6 +218,9 @@
             [class.active]="i === currentIndex">
           </span>
         </div>
+        </div>
+
+ 
       </div>
 
   </div>

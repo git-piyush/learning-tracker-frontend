@@ -41,6 +41,28 @@ interface Match{
     strdate: string;
     strtime: string;
     teams: string;
+    flgMatchStarted: string;
+    flgMatchEnded: string;
+}
+
+interface LiveScore{
+    matchid:string;
+
+    t1:string;
+
+    t1s:string;
+
+    t1o:string;
+
+    t1w:string;
+
+    t2:string;
+
+    t2s:string;
+
+    t2o:string;
+
+    t2w:string;
 }
 
 // Define the component metadata
@@ -55,6 +77,7 @@ interface Match{
 export class DashboardComponent implements OnInit, OnDestroy {
 
   subscribedMatches: Match[] = [];
+  liveScoreCards: LiveScore[] = [];
 
   nextFiveMatches: Match[] = [];
   currentIndex = 0;
@@ -75,6 +98,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
  temperature!: number;
  city!: string;
+ livescore:boolean=false;
 
 
 
@@ -97,9 +121,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
       this.userName = localStorage.getItem("username");
-      this.activeMonth = 'All';
       this.loadDashboardDate();
-      //this.getLocation();
       this.loadTemperature();
 
       this.loadCricketData();
@@ -140,15 +162,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.slideInterval = setInterval(() => {
         this.currentIndex =
           (this.currentIndex + 1) % this.nextFiveMatches.length;
-      }, 4000); // ⏱ 4 seconds
+      }, 3000); // ⏱ 3 seconds
     }
 
-  startAutoSlide1(): void {
-    this.slideInterval1 = setInterval(() => {
-      this.currentIndex1 =
-        (this.currentIndex1 + 1) % this.subscribedMatches.length;
-    }, 4000); // ⏱ 4 seconds
-  }
+    startAutoSlide1(): void {
+      this.slideInterval1 = setInterval(() => {
+        this.currentIndex1 =
+          (this.currentIndex1 + 1) % this.subscribedMatches.length;
+      }, 3000); // ⏱ 3 seconds
+    }
 
   pauseAutoSlide(): void {
     if (this.slideInterval) {
@@ -173,7 +195,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.notify.error(err.error.message);
         }
       });
-      this.reloadDashboard();
+      setTimeout(() => this.reloadDashboard(), 3000);
   }
 
   
@@ -187,7 +209,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.notify.error(err.error.message);
         }
       });
-      this.reloadDashboard();
+      setTimeout(() => this.reloadDashboard(), 3000);
   }
 
   summaryCards = [
@@ -269,15 +291,21 @@ loadCricketData() {
 
 loadSubscribedMatches(){
   this.dashboardService.getSubscribedMatch().subscribe(res => {
-              console.log(res.matches);
-              console.log('subscribedMatches1: <=============>'+res.matches.length);
-              console.log('subscribedMatches2:', JSON.stringify(res.matches, null, 2));
+              console.log(JSON.stringify(res, null, 2));
+
+              //console.log('subscribedMatches2:', JSON.stringify(res.matches, null, 2));
               this.subscribedMatches = res.matches;
-                console.log('subscribedMatches3: <=============>'+this.subscribedMatches.length);
-                console.log('subscribedMatches4:', JSON.stringify(this.subscribedMatches, null, 2));
-                if (this.subscribedMatches.length > 0) {
-                  this.currentIndex1 = 0;
-                  this.startAutoSlide1();
+             // console.log('subscribedMatches4:', JSON.stringify(this.subscribedMatches, null, 2));
+                
+              this.liveScoreCards = res.liveScoreDetails;
+                if(this.liveScoreCards.length>0){
+                  this.livescore = true;
+                }else{
+                  if (this.subscribedMatches.length > 0) {
+                    this.livescore = false;
+                    this.currentIndex1 = 0;
+                    this.startAutoSlide1();
+                  }
                 }
           });
   }
@@ -338,10 +366,8 @@ loadSubscribedMatches(){
   isEditing = false;
   reloadDashboard(): void {
     const currentUrl = this.router.url;
+    window.location.reload();
 
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([currentUrl]);
-    });
   }
 
   toggleEdit() {
