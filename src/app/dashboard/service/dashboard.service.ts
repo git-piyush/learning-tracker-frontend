@@ -54,7 +54,7 @@ export class DashboardService {
 
   getNextFiveMatches(): Observable<any> {
     return this.http.get(`${DashboardService.BASE_URL}/match/next-five-match`, {
-      headers: this.getHeader(),
+      headers: this.getHeader().set('X-Skip-Loader', 'true')
     });
   }
 
@@ -81,7 +81,7 @@ export class DashboardService {
 
   getSubscribedMatch(): Observable<any> {
     return this.http.get(`${DashboardService.BASE_URL}/match/subscribed-match`,{
-      headers: this.getHeader(),
+      headers: this.getHeader().set('X-Skip-Loader', 'true')
     });
   }
 

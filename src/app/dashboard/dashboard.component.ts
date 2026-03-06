@@ -26,6 +26,7 @@ interface WeatherCard {
 interface Match{
     id:string;
     dateTimeGMT:string;
+    dateTimeIST:string;
     matchType:string;
     status:string;
     ms:string;
@@ -46,6 +47,9 @@ interface Match{
 }
 
 interface LiveScore{
+    status:string;
+    name:string;
+
     matchid:string;
 
     t1:string;
@@ -80,6 +84,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   liveScoreCards: LiveScore[] = [];
 
   nextFiveMatches: Match[] = [];
+
+  slides: any[] = [];
+  currentIndex2 = 0;
+  slideInterval2: any;
+
   currentIndex = 0;
   currentIndex1 = 0;
   slideInterval: any;
@@ -128,7 +137,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       this.loadSubscribedMatches();
 
-     // this.startTenMinTask();
+      this.startTenMinTask();
   }
 
       startTenMinTask(): void {
@@ -151,66 +160,85 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       executeEveryTenMinutes(): void {
         console.log('Executed every 10 minutes', new Date());
-        // 🔥 Call API / refresh live data
+        this.loadSubscribedMatches();
       }
 
       ngOnDestroy(): void {
         this.stopTenMinTask();
       }
 
-    startAutoSlide(): void {
-      this.slideInterval = setInterval(() => {
-        this.currentIndex =
-          (this.currentIndex + 1) % this.nextFiveMatches.length;
-      }, 3000); // ⏱ 3 seconds
-    }
+      startAutoSlide(): void {
+        this.slideInterval = setInterval(() => {
+          this.currentIndex =
+            (this.currentIndex + 1) % this.nextFiveMatches.length;
+        }, 3000); // ⏱ 3 seconds
+      }
 
-    startAutoSlide1(): void {
-      this.slideInterval1 = setInterval(() => {
-        this.currentIndex1 =
-          (this.currentIndex1 + 1) % this.subscribedMatches.length;
-      }, 3000); // ⏱ 3 seconds
-    }
-
-  pauseAutoSlide(): void {
-    if (this.slideInterval) {
-      clearInterval(this.slideInterval);
-      this.slideInterval = null;
-    }
-  }
-
-  resumeAutoSlide(): void {
-    if (!this.slideInterval) {
-      this.startAutoSlide();
-    }
-  }
-
-  saveSubscription(match: Match): void {
-    console.log('Subscribed Match:', match);
-      this.dashboardService.saveSubscription(match).subscribe({
-        next: res => {
-          this.notify.info(res.message);
-        },
-        error: err => {
-          this.notify.error(err.error.message);
+      pauseAutoSlide(): void {
+        if (this.slideInterval) {
+          clearInterval(this.slideInterval);
+          this.slideInterval = null;
         }
-      });
-      setTimeout(() => this.reloadDashboard(), 3000);
-  }
+      }
+
+      resumeAutoSlide(): void {
+        if (!this.slideInterval) {
+          this.startAutoSlide();
+        }
+      }
+
+      startAutoSlide2(): void {
+        if (this.slideInterval2) {
+          clearInterval(this.slideInterval2); // stop previous timer
+        }
+
+        this.slideInterval2 = setInterval(() => {
+          this.currentIndex2 =
+            (this.currentIndex2 + 1) % this.slides.length;
+        }, 3000);
+      }
+
+      pauseAutoSlide2(): void {
+        if (this.slideInterval2) {
+          clearInterval(this.slideInterval2);
+          this.slideInterval2 = null;
+        }
+      }
+
+      resumeAutoSlide2(): void {
+        if (!this.slideInterval2) {
+          this.startAutoSlide2();
+        }
+      }
+
+
+
+      saveSubscription(match: Match): void {
+        console.log('Subscribed Match:', match);
+          this.dashboardService.saveSubscription(match).subscribe({
+            next: res => {
+              this.notify.info(res.message);
+            },
+            error: err => {
+              this.notify.error(err.error.message);
+            }
+          });
+          setTimeout(() => this.reloadDashboard(), 3000);
+      }
 
   
-  unsubscribeSubscription(match: Match): void {
-    console.log('Subscribed Match:', match);
-      this.dashboardService.unsubscribeSubscription(match).subscribe({
-        next: res => {
-          this.notify.info(res.message);
-        },
-        error: err => {
-          this.notify.error(err.error.message);
-        }
-      });
-      setTimeout(() => this.reloadDashboard(), 3000);
-  }
+      unsubscribeSubscription(match: Match): void {
+        console.log('Subscribed Match:', match);
+          this.dashboardService.unsubscribeSubscription(match).subscribe({
+            next: res => {
+              this.notify.info(res.message);
+            },
+            error: err => {
+              this.notify.error(err.error.message);
+            }
+          });
+          setTimeout(() => this.reloadDashboard(), 3000);
+      }
 
   summaryCards = [
     { title: 'Total Questions', value: 0, color: '#f28b82', icon: '❓' },
@@ -290,23 +318,33 @@ loadCricketData() {
 
 
 loadSubscribedMatches(){
+  
   this.dashboardService.getSubscribedMatch().subscribe(res => {
+    this.slides = [];
               console.log(JSON.stringify(res, null, 2));
 
               //console.log('subscribedMatches2:', JSON.stringify(res.matches, null, 2));
               this.subscribedMatches = res.matches;
-             // console.log('subscribedMatches4:', JSON.stringify(this.subscribedMatches, null, 2));
+             console.log('subscribedMatches length: '+this.subscribedMatches.length);
+                this.subscribedMatches.forEach(m => {
+                  this.slides.push({
+                    type: 'subscribed',
+                    data: m
+                  });
+                });
+
+                this.liveScoreCards = res.liveScoreDetails;
+
+                console.log('liveScoreCards length: '+this.liveScoreCards.length);
+                this.liveScoreCards.forEach(m => {
+                  this.slides.push({
+                    type: 'live',
+                    data: m
+                  });
+                });
+                console.log('Slides length:', this.slides.length);
+                this.startAutoSlide2();
                 
-              this.liveScoreCards = res.liveScoreDetails;
-                if(this.liveScoreCards.length>0){
-                  this.livescore = true;
-                }else{
-                  if (this.subscribedMatches.length > 0) {
-                    this.livescore = false;
-                    this.currentIndex1 = 0;
-                    this.startAutoSlide1();
-                  }
-                }
           });
   }
 

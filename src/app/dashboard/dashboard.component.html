@@ -112,117 +112,114 @@
       </div>
 
 
-      <div class="live-score-card" *ngIf="!livescore && subscribedMatches.length > 0">
-        
-        <div class="slide">
-          Subscribed Matches
-          <div class="teams">
-            {{ subscribedMatches[currentIndex1].teams }}
+      <div class="live-score-card" *ngIf="slides.length > 0">
+          <div class="card-content">
+            <div class="slide" (mouseenter)="pauseAutoSlide2()" (mouseleave)="resumeAutoSlide2()">
+
+              <!-- Subscribed Match -->
+              <ng-container *ngIf="slides[currentIndex2].type === 'subscribed'">
+                Subscribed Matches
+
+                <div class="teams">
+                  {{ slides[currentIndex2].data.teams }}
+                </div>
+
+                <div class="datetime">
+                  {{ slides[currentIndex2].data.dateTimeIST | date:'MMM d, y' }} •
+                  {{ slides[currentIndex2].data.dateTimeIST | date:'hh:mm a' }}
+                </div>
+
+                <div class="type">
+                  {{ slides[currentIndex2].data.matchType }}
+                </div>
+
+                <div class="type">
+                  {{ slides[currentIndex2].data.series }}
+                </div>
+
+                <button class="subscribe-btn"
+                  (click)="unsubscribeSubscription(slides[currentIndex2].data)">
+                  Un-Subscribe
+                </button>
+              </ng-container>
+
+
+              <!-- Live Score -->
+              <ng-container *ngIf="slides[currentIndex2].type === 'live'">
+                Live Score
+
+                <div class="teams">
+                  {{ slides[currentIndex2].data.name }}
+                </div>
+
+                <div>T1: {{ slides[currentIndex2].data.t1 }}</div>
+                <div>T1s: {{ slides[currentIndex2].data.t1s }}</div>
+                <div>T1o: {{ slides[currentIndex2].data.t1o }}</div>
+                <div>T1w: {{ slides[currentIndex2].data.t1w }}</div>
+
+                <div>T2: {{ slides[currentIndex2].data.t2 }}</div>
+                <div>T2s: {{ slides[currentIndex2].data.t2s }}</div>
+                <div>T2o: {{ slides[currentIndex2].data.t2o }}</div>
+                <div>T2w: {{ slides[currentIndex2].data.t2w }}</div>
+
+                <div class="datetime">
+                  Result: {{ slides[currentIndex2].data.status }}
+                </div>
+                <button class="subscribe-btn"
+                  (click)="unsubscribeSubscription(slides[currentIndex2].data)">
+                  Un-Subscribe
+                </button>
+              </ng-container>
+
+            </div>
+
+            <div class="dots">
+              <span
+                *ngFor="let s of slides; let i = index"
+                [class.active]="i === currentIndex2">
+              </span>
+            </div>
           </div>
-
-          <div class="datetime">
-            {{ subscribedMatches[currentIndex1].date }} At
-        {{ subscribedMatches[currentIndex1].time }} GMT
-
-          </div>
-
-          <div class="type">
-            {{ subscribedMatches[currentIndex1].matchType }}
-          </div>
-
-          <div class="type">
-            {{ subscribedMatches[currentIndex1].series }}
-          </div>
-
-          <button class="subscribe-btn"
-            (click)="unsubscribeSubscription(subscribedMatches[currentIndex1])">
-            Un-Subscribe
-          </button>
-        </div>
-
-        <div class="dots">
-          <span
-            *ngFor="let m of subscribedMatches; let i = index"
-            [class.active]="i === currentIndex1">
-          </span>
-        </div>
       </div>
 
-      <div class="live-score-card" *ngIf="livescore && liveScoreCards.length > 0">
-
-        <div class="slide">
-          <div class="teams">
-            {{ subscribedMatches[currentIndex1].teams }}
-          </div>
-
-          <div class="datetime">
-            {{ subscribedMatches[currentIndex1].date }} At
-        {{ subscribedMatches[currentIndex1].time }} GMT
-
-          </div>
-
-          <div class="type">
-            {{ subscribedMatches[currentIndex1].matchType }}
-          </div>
-
-          <div class="type">
-            {{ subscribedMatches[currentIndex1].series }}
-          </div>
-
-          <button class="subscribe-btn"
-            (click)="unsubscribeSubscription(subscribedMatches[currentIndex1])">
-            Un-Subscribe
-          </button>
-        </div>
-
-        <div class="dots">
-          <span
-            *ngFor="let m of subscribedMatches; let i = index"
-            [class.active]="i === currentIndex1">
-          </span>
-        </div>
-      </div>
 
 
       <!-- next five matches -->
       <div class="next-five-match-card" *ngIf="nextFiveMatches.length">
         <div class="card-content">
-                 <div class="slide" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
-          Next five match
-          <div class="teams">
-            {{ nextFiveMatches[currentIndex].t1 }} Vs {{ nextFiveMatches[currentIndex].t2 }}
-          </div>
-          <div class="datetime">
-            {{ nextFiveMatches[currentIndex].dateTimeGMT | date:'MMM d, y' }} •
-            {{ nextFiveMatches[currentIndex].dateTimeGMT | date:'hh:mm a' }}
+          <div class="slide" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
+            Next five match
+            <div class="teams">
+              {{ nextFiveMatches[currentIndex].t1 }} Vs {{ nextFiveMatches[currentIndex].t2 }}
+            </div>
+            <div class="datetime">
+              {{ nextFiveMatches[currentIndex].dateTimeIST | date:'MMM d, y' }} •
+              {{ nextFiveMatches[currentIndex].dateTimeIST | date:'hh:mm a' }}
+            </div>
+
+            <div class="type">
+              {{ nextFiveMatches[currentIndex].matchType }}
+            </div>
+
+            <div class="type">
+              {{ nextFiveMatches[currentIndex].series }}
+            </div>
+
+            <button
+              class="subscribe-btn"
+              (click)="saveSubscription(nextFiveMatches[currentIndex])"> Subscribe
+            </button>
           </div>
 
-          <div class="type">
-            {{ nextFiveMatches[currentIndex].matchType }}
+          <!-- dots indicator -->
+          <div class="dots">
+            <span
+              *ngFor="let m of nextFiveMatches; let i = index"
+              [class.active]="i === currentIndex">
+            </span>
           </div>
-
-          <div class="type">
-            {{ nextFiveMatches[currentIndex].series }}
-          </div>
-
-          <button
-            class="subscribe-btn"
-            (click)="saveSubscription(nextFiveMatches[currentIndex])"> Subscribe
-          </button>
         </div>
-
-        <!-- dots indicator -->
-        <div class="dots">
-          <span
-            *ngFor="let m of nextFiveMatches; let i = index"
-            [class.active]="i === currentIndex">
-          </span>
-        </div>
-        </div>
-
- 
       </div>
-
   </div>
 
     </div>
