@@ -80,7 +80,61 @@
           {{ isEditing ? '💾 Save' : '✏️ Edit' }}
         </button>
       </div>
+
+        <!-- User Table -->
+       <div class="panel user-table-panel">
+          <h3 class="panel-title">👥 Registered Users</h3>
+          <div class="table-scroll">
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Provider</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of registeredUsers">
+                  <td>{{ user.id }}</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="avatar" [style.background]="getAvatarColor(user.name)">
+                        {{ getInitial(user.name) }}
+                      </div>
+                      {{ user.name }}
+                    </div>
+                  </td>
+                  <td>{{ user.email }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'admin' : 'manager'">
+                      {{ user.role }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="user.provider === 'GOOGLE' ? 'google' : 'local'">
+                      {{ user.provider }}
+                    </span>
+                  </td>
+                  <td>{{ user.joined | date:'MMM d, yyyy' }}</td>
+                  <td>
+                    <span class="status" [ngClass]="user.online ? 'active' : 'inactive'">
+                      ● {{ user.online ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- User Table Ends here -->
+
+
     </div>
+    
 
     <!-- Right Column: Weather + Cricket -->
     <div class="right-column">

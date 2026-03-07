@@ -467,6 +467,108 @@
   background: #6366f1;
 }
 
+/* User Table */
+.user-table-panel {
+  margin-top: 16px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.table-scroll::-webkit-scrollbar { height: 4px; }
+.table-scroll::-webkit-scrollbar-track { background: #1a1a1a; }
+.table-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.user-table thead tr {
+  border-bottom: 1px solid #222;
+}
+
+.user-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.user-table td {
+  padding: 12px 14px;
+  color: #ccc;
+  border-bottom: 1px solid #1a1a1a;
+  white-space: nowrap;
+}
+
+.user-table tbody tr:last-child td { border-bottom: none; }
+.user-table tbody tr { transition: background 0.15s; }
+.user-table tbody tr:hover { background: #161616; }
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.badge {
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.badge.admin   { background: rgba(99,102,241,0.15);  color: #818cf8; }
+.badge.manager { background: rgba(16,185,129,0.15);  color: #34d399; }
+.badge.google  { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+.badge.local   { background: rgba(156,163,175,0.1);  color: #9ca3af; }
+
+.status { font-size: 12px; font-weight: 500; }
+.status.active   { color: #34d399; }
+.status.inactive { color: #ef4444; }
+
+
+.table-scroll {
+  overflow-x: auto;
+  max-height: 280px;      /* ✅ shows ~5 rows then scrolls */
+  overflow-y: auto;
+}
+
+.user-table thead tr th {
+  position: sticky;    /* ✅ header stays fixed while body scrolls */
+  top: 0;
+  background: #111;    /* ✅ matches panel background so it doesn't look transparent */
+  z-index: 1;
+}
+
+
+
+
+
+
+
+
 /* ── Responsive ── */
 @media (max-width: 1200px) {
   .summary-grid {
@@ -484,3 +586,5 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+

@@ -48,7 +48,7 @@ export class DashboardService {
 
   createTodos(events: {id:string; task: string;completed:string; checked: boolean; }[]):Observable<any> {
     return this.http.post(`${DashboardService.BASE_URL}/todo/todo-list`, events,{
-      headers: this.getHeader(),
+      headers: this.getHeader().set('X-Skip-Loader', 'true'),
     });
   }
 
@@ -58,23 +58,16 @@ export class DashboardService {
     });
   }
 
-  increaseKeyHits():Observable<any>{
-    const key = localStorage.getItem('ckey');
-    return this.http.get(`${DashboardService.BASE_URL}/key/increasehits/`+key, {
-      headers: this.getHeader(),
-    });
-  }
-
   saveSubscription(match: any): Observable<any> {
     return this.http.post(`${DashboardService.BASE_URL}/match/save-subscribedmatch`, match,{
-      headers: this.getHeader(),
+      headers: this.getHeader().set('X-Skip-Loader', 'true'),
     });
   }
 
   
   unsubscribeSubscription(match: any): Observable<any> {
   return this.http.delete(`${DashboardService.BASE_URL}/delete-match`, {
-    headers: this.getHeader(),
+    headers: this.getHeader().set('X-Skip-Loader', 'true'),
     body: match
   });
 }

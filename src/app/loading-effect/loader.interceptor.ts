@@ -7,7 +7,7 @@ export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
   const loader = inject(loaderService);
   const skipForHeader = req.headers.has('X-Skip-Loader');
 
-  const skipUrls = ['/cricScore'];
+  const skipUrls = ['/cricScore','/v1/current.json'];
 
   const skipForUrls = skipUrls.some(url => req.url.includes(url));
 

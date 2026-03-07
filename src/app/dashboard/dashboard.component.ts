@@ -49,24 +49,25 @@ interface Match{
 interface LiveScore{
     status:string;
     name:string;
-
     matchid:string;
-
     t1:string;
-
     t1s:string;
-
     t1o:string;
-
     t1w:string;
-
     t2:string;
-
     t2s:string;
-
     t2o:string;
-
     t2w:string;
+}
+
+interface RegisteredUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  provider: string;
+  joined: string;
+  online: string;
 }
 
 // Define the component metadata
@@ -84,6 +85,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   liveScoreCards: LiveScore[] = [];
 
   nextFiveMatches: Match[] = [];
+
+  registeredUsers: RegisteredUser[]=[];
 
   slides: any[] = [];
   currentIndex2 = 0;
@@ -104,6 +107,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       humidity: 0,
       lastUpdated: ''
     };
+
+// Helper to get first letter for avatar
+getInitial(name: string): string {
+  return name ? name.charAt(0).toUpperCase() : '?';
+}
+
+// Helper to get avatar color based on name
+getAvatarColor(name: string): string {
+  const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316','#068d25','#f86300'];
+  const index = name.charCodeAt(0) % colors.length;
+  return colors[index];
+}
 
  temperature!: number;
  city!: string;
@@ -138,7 +153,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.loadSubscribedMatches();
 
       this.startTenMinTask();
+
+      this.loadOnlineUsers();
   }
+
+    loadOnlineUsers(): void {
+       this.apiService.loadOnlineUsers().subscribe(response => {
+         this.registeredUsers = response.users;  // ✅ replace dummy data with real data
+         console.log(this.registeredUsers);
+       });
+    }
 
       startTenMinTask(): void {
         console.log('inside startTenMinTask');

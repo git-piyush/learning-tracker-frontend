@@ -46,6 +46,12 @@ export class ApiService {
       });
     }
 
+    loadOnlineUsers():Observable<any> {
+      return this.http.get(`${ApiService.BASE_URL}/users/online`, {
+        headers: this.getHeader(),
+      });
+    }
+
 
     // Retreive from localStorage and Decrypt
     private getFromStorageAndDecrypt(key: string): any {
