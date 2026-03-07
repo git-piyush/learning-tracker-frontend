@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../service/api.service';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+  private static OAUTH_URL = environment.oauthUrl;
   constructor(private apiService:ApiService, private router:Router){}
 
   formData: any = {
@@ -51,6 +53,10 @@ export class LoginComponent implements OnInit {
       
     }
   }
+
+  loginWithGoogle() {
+  window.location.href = `${LoginComponent.OAUTH_URL}/oauth2/authorize/google`;
+}
 
   showMessage(message:string){
     this.message = message;

@@ -1,38 +1,68 @@
-<div class="auth-container">
-  <h2>Register</h2>
-  <p *ngIf="message" class="message">{{ message }}</p>
+<!-- register.component.html -->
+<div class="auth-wrapper">
+  <div class="auth-card">
 
-  <form (ngSubmit)="handleSubmit()">
-    <input
-      type="text"
-      placeholder="Name ..."
-      [(ngModel)]="formData.name"
-      name="name"
-      required
-    />
-    <input
-      type="email"
-      placeholder="Email ..."
-      [(ngModel)]="formData.email"
-      name="email"
-      required
-    />
-    <input
-      type="password"
-      placeholder="Psssword ..."
-      [(ngModel)]="formData.password"
-      name="password"
-      required
-    />
-    <input
-      type="number"
-      placeholder="Phone Number ..."
-      [(ngModel)]="formData.phoneNumber"
-      name="phoneNumber"
-      required
-    />
+    <div class="brand">
+      <div class="brand-icon">📦</div>
+      <h1>Inventory<span>MS</span></h1>
+      <p class="subtitle">Create your account</p>
+    </div>
 
-    <button type="submit">Register</button>
-  </form>
-  <p>Already have an account?<a routerLink="/login" routerLinkActive="router-link-active" >Login</a></p>
+    <p *ngIf="message" class="message">{{ message }}</p>
+
+    <form (ngSubmit)="handleSubmit()" class="register-form">
+
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input
+          type="text"
+          placeholder="Full name"
+          [(ngModel)]="formData.name"
+          name="name"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">✉️</span>
+        <input
+          type="email"
+          placeholder="Email address"
+          [(ngModel)]="formData.email"
+          name="email"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input
+          type="password"
+          placeholder="Password"
+          [(ngModel)]="formData.password"
+          name="password"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">📱</span>
+        <input
+          type="number"
+          placeholder="Phone number"
+          [(ngModel)]="formData.phoneNumber"
+          name="phoneNumber"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary">Create Account</button>
+    </form>
+
+    <p class="login-link">
+      Already have an account?
+      <a routerLink="/login" routerLinkActive="router-link-active">Login</a>
+    </p>
+
+  </div>
 </div>

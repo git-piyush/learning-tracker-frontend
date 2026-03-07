@@ -12,6 +12,7 @@ import { AddCategoryComponent } from './category/add-category/add-category.compo
 import { UpdateCategoryComponent } from './category/update-category/update-category.component';
 import { QuestionDetailsComponent } from './question/question-details/question-details.component';
 import { FeedbackComponent } from './feedback/feedback/feedback.component';
+import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 
 export const routes: Routes = [
 
@@ -32,6 +33,7 @@ export const routes: Routes = [
 
   { path: 'profile', component: ProfileComponent, canActivate:[GuardService] },
   { path: 'dashboard', component: DashboardComponent, canActivate:[GuardService] },
+  { path: 'auth/social-callback', component: Oauth2LoginComponent },
 
 //   WIDE CARD
     {path: "", redirectTo: "/login", pathMatch: 'full'},

@@ -1,228 +1,169 @@
-<div class="layout">
-  <!-- Main Content -->
-  <div class="main">
+<div class="dashboard-wrapper">
 
-    <!-- Header -->
-    <div class="header">
-      <h2>Learning Tracker Dashboard</h2>
-      <span>Under Development</span>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="summary">
-      <div class="card" *ngFor="let card of summaryCards" (click)="onCardClick(card)"
-       style="cursor:pointer">
-        <div class="icon" [style.background]="card.color">
-          {{card.icon}}
-        </div>
-        <div>
-          <h4>{{card.title}}</h4>
-          <h2>{{card.value}}</h2>
-        </div>
-      </div>
-    </div>
-
-    <!-- Middle Section -->
-    <div class="middle">
-
-      <!-- Calendar -->
-      <div class="calendar">
-        <h3>Daily Progress – Current Month</h3>
-        <canvas id="dailyChart"></canvas>
-      </div>
-
-
-      <!-- Educational Stage -->
-      <div class="education">
-        <h3>All Questions</h3>
-        <div *ngFor="let stage of educationalStages" class="stage">
-          <div class="dot" [style.background]="stage.color"></div>
-          <div>
-            <h4>{{stage.name}}</h4>
-            <span>{{stage.value}}</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Bottom Section -->
-    <div class="bottom">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="brand-icon">📦</div>
       <div>
-        <h3>Add Your Activities & Events</h3>
-          <!-- Scrollable container -->
-        <div class="events-scroll">
-          <!-- Display mode -->
-          <ul *ngIf="!isEditing">
-            <ul *ngFor="let entry of toDoMap | keyvalue  : dateDescOrder">
-              <label style="font-weight: 500; color: gray;">{{ entry.key | date:'MMM dd, yyyy' }}</label>
-              <li *ngFor="let todo of entry.value">
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="checkbox" [checked]="todo.completed === 'Y'" disabled />
-                {{ todo.task }}
-              </li>
-            </ul>
+        <h1>Learning Tracker <span>Dashboard</span></h1>
+        <p class="under-dev">🚧 Under Development</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+    <div class="summary-card" *ngFor="let card of summaryCards" (click)="onCardClick(card)" style="cursor:pointer">
+      <div class="card-icon" [style.background]="card.color">{{ card.icon }}</div>
+      <div class="card-info">
+        <p class="card-title">{{ card.title }}</p>
+        <h2 class="card-value">{{ card.value }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle Section -->
+  <div class="middle-grid">
+
+    <!-- Chart -->
+    <div class="panel chart-panel">
+      <h3 class="panel-title">📈 Daily Progress – Current Month</h3>
+      <canvas id="dailyChart"></canvas>
+    </div>
+
+    <!-- All Questions -->
+    <div class="panel questions-panel">
+      <h3 class="panel-title">🗂 All Questions</h3>
+      <div *ngFor="let stage of educationalStages" class="stage-row">
+        <div class="stage-dot" [style.background]="stage.color"></div>
+        <div class="stage-info">
+          <span class="stage-name">{{ stage.name }}</span>
+          <span class="stage-value">{{ stage.value }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Section -->
+  <div class="bottom-grid">
+
+    <!-- Activities & Events -->
+    <div class="panel events-panel">
+      <h3 class="panel-title">📋 Add Your Activities & Events</h3>
+
+      <div class="events-scroll">
+        <!-- Display mode -->
+        <ul class="events-list" *ngIf="!isEditing">
+          <ul *ngFor="let entry of toDoMap | keyvalue : dateDescOrder">
+            <label class="date-label">{{ entry.key | date:'MMM dd, yyyy' }}</label>
+            <li *ngFor="let todo of entry.value" class="todo-item">
+              <input type="checkbox" [checked]="todo.completed === 'Y'" disabled />
+              <span>{{ todo.task }}</span>
+            </li>
           </ul>
+        </ul>
 
-          <!-- Edit mode -->
-          <div *ngIf="isEditing">
-            <div *ngFor="let todo of todos; let i = index" class="event-row">
-              <input type="checkbox" [(ngModel)]="todo.checked" />
-              <input type="text" [(ngModel)]="todo.task" placeholder="Edit event" />
-              <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
-            </div>
+        <!-- Edit mode -->
+        <div *ngIf="isEditing">
+          <div *ngFor="let todo of todos; let i = index" class="event-row">
+            <input type="checkbox" [(ngModel)]="todo.checked" />
+            <input type="text" [(ngModel)]="todo.task" placeholder="Edit event" class="edit-input" />
+            <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
           </div>
-
-        </div>
-
-        <div class="buttons">
-          <div *ngIf="isEditing">
-            <button class="add-btn" (click)="addEvent()">
-              Add
-            </button>
-          </div>
-          <button (click)="toggleEdit()">
-            {{ isEditing ? 'Save' : 'Edit' }}
-          </button>
         </div>
       </div>
 
-      
-      <div class="ranking">
-        <div class="weather-card">
-          <div class="top-row">
-            <span class="city">{{weatherCard.city}}</span>
-            <span class="icon">☀️</span>
-          </div>
+      <div class="buttons">
+        <button class="add-btn" *ngIf="isEditing" (click)="addEvent()">+ Add</button>
+        <button class="edit-btn" (click)="toggleEdit()">
+          {{ isEditing ? '💾 Save' : '✏️ Edit' }}
+        </button>
+      </div>
+    </div>
 
-          <div class="temperature">{{weatherCard.currentTemp}}<span class="deg">°C</span>
-          </div>
-          <div class="condition">{{weatherCard.zone}}</div>
-          <div class="condition">{{weatherCard.weatherType}}</div>
+    <!-- Right Column: Weather + Cricket -->
+    <div class="right-column">
 
-          <div class="bottom-row">
-            <span>Updated At: {{weatherCard.lastUpdated}}</span>
-            <span>💧 {{weatherCard.humidity}}%</span>
-          </div>
+      <!-- Weather Card -->
+      <div class="panel weather-card">
+        <div class="weather-top">
+          <span class="city">{{ weatherCard.city }}</span>
+          <span class="weather-icon">☀️</span>
+        </div>
+        <div class="temperature">{{ weatherCard.currentTemp }}<span class="deg">°C</span></div>
+        <div class="condition">{{ weatherCard.zone }}</div>
+        <div class="condition">{{ weatherCard.weatherType }}</div>
+        <div class="weather-bottom">
+          <span>Updated: {{ weatherCard.lastUpdated }}</span>
+          <span>💧 {{ weatherCard.humidity }}%</span>
+        </div>
       </div>
 
-      <!--Liva score card-->
-      <div class="live-score-card" *ngIf="!livescore && subscribedMatches.length == 0">
-        No Subscription
+      <!-- No Subscription -->
+      <div class="panel no-sub-card" *ngIf="!livescore && subscribedMatches.length == 0">
+        <span>📭 No Subscription</span>
       </div>
 
+      <!-- Live Score / Subscribed Matches Slider -->
+      <div class="panel cricket-card" *ngIf="slides.length > 0">
+        <div class="card-content">
+          <div class="slide" (mouseenter)="pauseAutoSlide2()" (mouseleave)="resumeAutoSlide2()">
 
-      <div class="live-score-card" *ngIf="slides.length > 0">
-          <div class="card-content">
-            <div class="slide" (mouseenter)="pauseAutoSlide2()" (mouseleave)="resumeAutoSlide2()">
+            <ng-container *ngIf="slides[currentIndex2].type === 'subscribed'">
+              <p class="cricket-label">📌 Subscribed Match</p>
+              <div class="teams">{{ slides[currentIndex2].data.teams }}</div>
+              <div class="datetime">
+                {{ slides[currentIndex2].data.dateTimeIST | date:'MMM d, y' }} •
+                {{ slides[currentIndex2].data.dateTimeIST | date:'hh:mm a' }}
+              </div>
+              <div class="match-type">{{ slides[currentIndex2].data.matchType }}</div>
+              <div class="match-type">{{ slides[currentIndex2].data.series }}</div>
+              <button class="subscribe-btn unsub" (click)="unsubscribeSubscription(slides[currentIndex2].data)">
+                Unsubscribe
+              </button>
+            </ng-container>
 
-              <!-- Subscribed Match -->
-              <ng-container *ngIf="slides[currentIndex2].type === 'subscribed'">
-                Subscribed Matches
+            <ng-container *ngIf="slides[currentIndex2].type === 'live'">
+              <p class="cricket-label live-badge">🔴 Live Score</p>
+              <div class="teams">{{ slides[currentIndex2].data.name }}</div>
+              <div class="score-row"><span>{{ slides[currentIndex2].data.t1 }}</span><span>{{ slides[currentIndex2].data.t1s }}</span></div>
+              <div class="score-row"><span>{{ slides[currentIndex2].data.t2 }}</span><span>{{ slides[currentIndex2].data.t2s }}</span></div>
+              <div class="datetime">Result: {{ slides[currentIndex2].data.status }}</div>
+              <button class="subscribe-btn unsub" (click)="unsubscribeSubscription(slides[currentIndex2].data)">
+                Unsubscribe
+              </button>
+            </ng-container>
 
-                <div class="teams">
-                  {{ slides[currentIndex2].data.teams }}
-                </div>
-
-                <div class="datetime">
-                  {{ slides[currentIndex2].data.dateTimeIST | date:'MMM d, y' }} •
-                  {{ slides[currentIndex2].data.dateTimeIST | date:'hh:mm a' }}
-                </div>
-
-                <div class="type">
-                  {{ slides[currentIndex2].data.matchType }}
-                </div>
-
-                <div class="type">
-                  {{ slides[currentIndex2].data.series }}
-                </div>
-
-                <button class="subscribe-btn"
-                  (click)="unsubscribeSubscription(slides[currentIndex2].data)">
-                  Un-Subscribe
-                </button>
-              </ng-container>
-
-
-              <!-- Live Score -->
-              <ng-container *ngIf="slides[currentIndex2].type === 'live'">
-                Live Score
-
-                <div class="teams">
-                  {{ slides[currentIndex2].data.name }}
-                </div>
-
-                <div>T1: {{ slides[currentIndex2].data.t1 }}</div>
-                <div>T1s: {{ slides[currentIndex2].data.t1s }}</div>
-                <div>T1o: {{ slides[currentIndex2].data.t1o }}</div>
-                <div>T1w: {{ slides[currentIndex2].data.t1w }}</div>
-
-                <div>T2: {{ slides[currentIndex2].data.t2 }}</div>
-                <div>T2s: {{ slides[currentIndex2].data.t2s }}</div>
-                <div>T2o: {{ slides[currentIndex2].data.t2o }}</div>
-                <div>T2w: {{ slides[currentIndex2].data.t2w }}</div>
-
-                <div class="datetime">
-                  Result: {{ slides[currentIndex2].data.status }}
-                </div>
-                <button class="subscribe-btn"
-                  (click)="unsubscribeSubscription(slides[currentIndex2].data)">
-                  Un-Subscribe
-                </button>
-              </ng-container>
-
-            </div>
-
-            <div class="dots">
-              <span
-                *ngFor="let s of slides; let i = index"
-                [class.active]="i === currentIndex2">
-              </span>
-            </div>
           </div>
+          <div class="dots">
+            <span *ngFor="let s of slides; let i = index" [class.active]="i === currentIndex2"></span>
+          </div>
+        </div>
       </div>
 
-
-
-      <!-- next five matches -->
-      <div class="next-five-match-card" *ngIf="nextFiveMatches.length">
+      <!-- Next Five Matches -->
+      <div class="panel cricket-card" *ngIf="nextFiveMatches.length">
         <div class="card-content">
           <div class="slide" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
-            Next five match
-            <div class="teams">
-              {{ nextFiveMatches[currentIndex].t1 }} Vs {{ nextFiveMatches[currentIndex].t2 }}
-            </div>
+            <p class="cricket-label">🏏 Next Match</p>
+            <div class="teams">{{ nextFiveMatches[currentIndex].t1 }} vs {{ nextFiveMatches[currentIndex].t2 }}</div>
             <div class="datetime">
               {{ nextFiveMatches[currentIndex].dateTimeIST | date:'MMM d, y' }} •
               {{ nextFiveMatches[currentIndex].dateTimeIST | date:'hh:mm a' }}
             </div>
-
-            <div class="type">
-              {{ nextFiveMatches[currentIndex].matchType }}
-            </div>
-
-            <div class="type">
-              {{ nextFiveMatches[currentIndex].series }}
-            </div>
-
-            <button
-              class="subscribe-btn"
-              (click)="saveSubscription(nextFiveMatches[currentIndex])"> Subscribe
+            <div class="match-type">{{ nextFiveMatches[currentIndex].matchType }}</div>
+            <div class="match-type">{{ nextFiveMatches[currentIndex].series }}</div>
+            <button class="subscribe-btn" (click)="saveSubscription(nextFiveMatches[currentIndex])">
+              + Subscribe
             </button>
           </div>
-
-          <!-- dots indicator -->
           <div class="dots">
-            <span
-              *ngFor="let m of nextFiveMatches; let i = index"
-              [class.active]="i === currentIndex">
-            </span>
+            <span *ngFor="let m of nextFiveMatches; let i = index" [class.active]="i === currentIndex"></span>
           </div>
         </div>
       </div>
-  </div>
 
     </div>
-
   </div>
 </div>
