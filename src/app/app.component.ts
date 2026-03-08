@@ -41,6 +41,7 @@ ngOnInit(): void {
 }
 
   isAuth():boolean{
+    this.userName = localStorage.getItem("username");
     return this.apiService.isAuthenticated();
   }
 
