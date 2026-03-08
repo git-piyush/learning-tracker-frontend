@@ -1,7 +1,12 @@
 <!-- Enhanced Navbar + Sidebar + Feedback Modal -->
 <!-- All Angular bindings preserved exactly as original -->
+      <div class="dashboard-container">
+  <app-loader></app-loader>   <!-- ← moved here, out of app shell -->
 
-<app-loader></app-loader>
+  <!-- rest of dashboard content -->
+  <div class="stats-cards"> ... </div>
+</div>
+
 
 <!-- ── NAVBAR ── -->
 <div class="navbar">
@@ -126,7 +131,10 @@
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
-    <router-outlet></router-outlet>
+
+
+
+      <router-outlet></router-outlet>
   </div>
 
 </div>
