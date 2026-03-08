@@ -63,7 +63,7 @@
 /* ── Form Card ── */
 .question-form {
   width: 100%;
-  max-width: 860px;
+  max-width: 1100px;
   background: rgba(18, 20, 30, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 20px;
