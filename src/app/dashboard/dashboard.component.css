@@ -210,6 +210,16 @@
   list-style: none;
 }
 
+input[type="checkbox"] {
+  accent-color: rgb(0, 100, 0);
+}
+
+.readonly-check {
+  accent-color: green;
+  pointer-events: none;
+  cursor: default;
+}
+
 .date-label {
   display: block;
   font-size: 11px;
@@ -231,7 +241,7 @@
 }
 
 .todo-item input[type="checkbox"] {
-  accent-color: #6366f1;
+  accent-color: #00380e;
 }
 
 .event-row {

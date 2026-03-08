@@ -58,7 +58,7 @@
           <ul *ngFor="let entry of toDoMap | keyvalue : dateDescOrder">
             <label class="date-label">{{ entry.key | date:'MMM dd, yyyy' }}</label>
             <li *ngFor="let todo of entry.value" class="todo-item">
-              <input type="checkbox" [checked]="todo.completed === 'Y'" disabled />
+              <input type="checkbox" [checked]="todo.completed === 'Y'" class="readonly-check"/>
               <span>{{ todo.task }}</span>
             </li>
           </ul>
