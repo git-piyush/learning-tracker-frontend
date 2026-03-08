@@ -12,7 +12,7 @@ export class ApiService {
   private static BASE_URL = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-    private apiEndPoint = "https://api.weatherapi.com/v1/current.json";
+    private apiEndPoint = "/weather-api/v1/current.json";
     private apiEndPointKey = "d8bcb02f353742858d8110349262202";
 
     // Encrypt data and save to localStorage

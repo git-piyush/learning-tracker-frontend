@@ -1,138 +1,88 @@
+<!-- Enhanced Add Category Page -->
+<!-- All Angular bindings preserved exactly as original -->
+
 <div class="purchase-form-page">
-    <p *ngIf="message" class="message">{{ message }}</p>
-    <div *ngIf="isNewCat">
-      <h1>Add New Category</h1>
-    </div>
-    <div *ngIf="!isNewCat">
-      <h1>Add New Refcode in existing Category</h1>
-    </div>
-    <form (ngSubmit)="handleSubmit()">
+  <p *ngIf="message" class="message">{{ message }}</p>
 
-      <div *ngIf="isNewCat">
-        <div class="form-group">
-            <label for="">Category</label>
-            <input type="text" 
-            [(ngModel)]="formData.category"
-            name="category" 
-            class="form-control"/>
-        </div>
-      </div>
-      <div *ngIf="!isNewCat">
-          <div class="form-group">
-            <label for="">Select Category</label>
-            <select
-              name="category"
-              class="form-control"
-              (change)="onChangeCategory($event)"
-              [(ngModel)]="formData.category"
-              id="">
-              <option value="">Select a category</option>
-              <option *ngFor="let category of categoryList" [value]="category">
-                {{ category }}
-              </option>
-            </select>
-          </div>
-      </div>
-
-      <div *ngIf="isNewCat">
-        <div class="form-group">
-            <label for="">Sub Category</label>
-            <input type="text" 
-            [(ngModel)]="formData.subCategory"
-            name="subCategory" 
-            class="form-control"/>
-        </div>
-      </div>
-      <div *ngIf="!isNewCat">
-          <div class="form-group">
-  <label for="subCategory">Select Sub Category</label>
-  <div *ngIf="!isNewSubCat">
-          <div class="form-group1">
-              <select
-                id="subCategory"
-                name="subCategory"
-                class="form-control subcat-select"
-                [(ngModel)]="formData.subCategory">
-                <option value="">Select Sub product</option>
-                <option *ngFor="let subCategory of subCategoryList" [value]="subCategory">
-                  {{ subCategory }}
-                </option>
-              </select>
-              <button type="button" class="btnNew btn-primary" (click)="addSubCatInExistingCat()">
-                New
-              </button>
-            </div>
+  <div class="form-header">
+    <span class="form-eyebrow">Category Management</span>
+    <h1 *ngIf="isNewCat">Add New Category</h1>
+    <h1 *ngIf="!isNewCat">Add New Refcode in existing Category</h1>
   </div>
-  <div *ngIf="isNewSubCat">
-              <div class="form-group1">
-                  <input type="text" 
-                    [(ngModel)]="formData.subCategory" 
-                    name="subCategory" 
-                    class="form-control"/>
-                  <button type="button" class="btnNew btn-primary" (click)="addSubCatInExistingCat()">
-                    Existing
-                  </button>
-              </div>
-  </div>
-</div>
 
-      </div>
+  <form (ngSubmit)="handleSubmit()" class="category-form">
 
-      <div class="form-group">
-          <label for="">Reference Code</label>
-          <input type="text" 
-          [(ngModel)]="formData.refCode" 
-          name="refCode" 
-          class="form-control"/>
-        </div>
-  
-  
-      <div class="form-group">
-          <label for="">Ref Code Long Name</label>
-          <input type="text" 
-          [(ngModel)]="formData.refCodeLongName"
-          name="refCodeLongName" 
-          class="form-control"/>
-      </div>
+    <!-- Category Field -->
+    <div class="form-group" *ngIf="isNewCat">
+      <label>Category</label>
+      <input type="text" [(ngModel)]="formData.category" name="category" placeholder="Enter category name" />
+    </div>
 
-      <div class="form-group">
-        <label for="">Active</label>
-        <select
-          name="active"
-          class="form-control"
-          [(ngModel)]="formData.active"
-          id=""
-        >
-          <option value="">Active/Inactive</option>
-          <option value="Yes">
-            Yes
-          </option>
-          <option value="No">
-            No
-          </option>
+    <div class="form-group" *ngIf="!isNewCat">
+      <label>Select Category</label>
+      <select name="category" (change)="onChangeCategory($event)" [(ngModel)]="formData.category">
+        <option value="">Select a category</option>
+        <option *ngFor="let category of categoryList" [value]="category">{{ category }}</option>
+      </select>
+    </div>
+
+    <!-- Sub Category Field -->
+    <div class="form-group" *ngIf="isNewCat">
+      <label>Sub Category</label>
+      <input type="text" [(ngModel)]="formData.subCategory" name="subCategory" placeholder="Enter sub category name" />
+    </div>
+
+    <div class="form-group" *ngIf="!isNewCat">
+      <label>Select Sub Category</label>
+
+      <div *ngIf="!isNewSubCat" class="input-with-action">
+        <select id="subCategory" name="subCategory" [(ngModel)]="formData.subCategory">
+          <option value="">Select Sub Category</option>
+          <option *ngFor="let subCategory of subCategoryList" [value]="subCategory">{{ subCategory }}</option>
         </select>
-      </div>
-   
-      <div class="button-group">
-        <button type="submit" class="btn btn-primary">Add</button>
-        <div *ngIf="!isNewCat">
-          <button 
-            type="button" 
-            class="btn btn-primary" 
-            (click)="addNewRefCodeInExistingCat()">
-              Add New Category
-          </button>
-        </div>
-        <div *ngIf="isNewCat">
-          <button 
-            type="button" 
-            class="btn btn-primary" 
-            (click)="addNewRefCodeInExistingCat()">
-              Add Refcode in existing Category
-          </button>
-        </div>
+        <button type="button" class="inline-btn" (click)="addSubCatInExistingCat()">New</button>
       </div>
 
-    </form>
-  </div>
-  
+      <div *ngIf="isNewSubCat" class="input-with-action">
+        <input type="text" [(ngModel)]="formData.subCategory" name="subCategory" placeholder="Enter new sub category" />
+        <button type="button" class="inline-btn secondary" (click)="addSubCatInExistingCat()">Existing</button>
+      </div>
+    </div>
+
+    <!-- Ref Code + Ref Code Long Name -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Reference Code</label>
+        <input type="text" [(ngModel)]="formData.refCode" name="refCode" placeholder="e.g. JBACS" />
+      </div>
+
+      <div class="form-group">
+        <label>Ref Code Long Name</label>
+        <input type="text" [(ngModel)]="formData.refCodeLongName" name="refCodeLongName" placeholder="e.g. Java Basics" />
+      </div>
+    </div>
+
+    <!-- Active -->
+    <div class="form-group half">
+      <label>Active</label>
+      <select name="active" [(ngModel)]="formData.active">
+        <option value="">Active / Inactive</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-group">
+      <button type="submit" class="btn btn-primary">Add</button>
+
+      <button *ngIf="!isNewCat" type="button" class="btn btn-secondary" (click)="addNewRefCodeInExistingCat()">
+        + Add New Category
+      </button>
+      <button *ngIf="isNewCat" type="button" class="btn btn-secondary" (click)="addNewRefCodeInExistingCat()">
+        Add Refcode in Existing Category
+      </button>
+    </div>
+
+  </form>
+</div>

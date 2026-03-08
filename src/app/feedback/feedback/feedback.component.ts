@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../category/service/category.service';
 import { FeedbackService } from '../service/feedback.service';
+import { NotificationService } from '../../shared/notificationService';
 
 interface Feedback {
   id: number;
@@ -40,7 +41,7 @@ export class FeedbackComponent implements OnInit {
   sortBy = 'id';
   direction = 'asc';
 
-  constructor(private http: HttpClient, private router: Router, private feedbackService:FeedbackService) {}
+  constructor(private http: HttpClient, private router: Router, private feedbackService:FeedbackService, private notify:NotificationService) {}
 
   ngOnInit(): void {
     this.loadFeedback();
@@ -97,7 +98,7 @@ export class FeedbackComponent implements OnInit {
    
       this.feedbackService.markAsRead(id).subscribe({
           next: (res:any) => {
-                alert(res.message);
+                this.notify.info(res.message);
                 window.location.reload();
               },
               error: (err: any) => {
@@ -105,7 +106,7 @@ export class FeedbackComponent implements OnInit {
                 alert('Need Access/Login!');
                 this.router.navigate(['/login']);
               }
-              alert(err.error.message);
+              this.notify.error(err.error.message);
             }
     });
   }
@@ -117,7 +118,7 @@ export class FeedbackComponent implements OnInit {
 
       this.feedbackService.deleteFeedback(id).subscribe({
           next: (res:any) => {
-                alert('Feedback Deleted Sucessfully!');
+                this.notify.info(res.message);
                 window.location.reload();
               },
               error: (err: any) => {
@@ -125,7 +126,7 @@ export class FeedbackComponent implements OnInit {
                 alert('Need Access/Login!');
                 this.router.navigate(['/login']);
               }
-              alert(err.error.message);
+              this.notify.info(err.error.message);
             }
     });
   }

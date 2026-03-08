@@ -1,10 +1,17 @@
+<!-- Enhanced Question List Page -->
+<!-- All Angular bindings preserved exactly as original -->
+
 <div class="product-page">
   <p class="message" *ngIf="message">{{ message }}</p>
 
   <!-- PRODUCT HEADER -->
   <div class="product-header">
-    <h1>Question List</h1>
+    <div class="header-left">
+      <span class="header-eyebrow">Repository</span>
+      <h1>Question List</h1>
+    </div>
     <button class="add-product-btn" (click)="navigateToAddQuestionPage()">
+      <span class="btn-icon">+</span>
       Add New Question
     </button>
   </div>
@@ -12,45 +19,48 @@
   <!-- PRODUCT LIST -->
   <div class="product-list" *ngIf="products.length > 0">
     <div class="product-item" *ngFor="let product of products">
-      <img [src]="getImageSrc(product.image)" 
-      [alt]="product.category" 
-      class="product-image"/>
-      <div class="product-info">
-        <h3 class="name">{{ product.question }}</h3>
-        <p class="sku">Type: {{ product.type }}</p>
-        <p class="sku">Level: {{ product.level }}</p>
-        <p class="sku">Modified Date: {{ product.modifiedDate | date:'dd MMM, yyyy' }}</p>
+
+      <div class="product-image-wrap">
+        <img [src]="getImageSrc(product.image)"
+             [alt]="product.category"
+             class="product-image"/>
+        <div class="image-overlay"></div>
       </div>
 
-      <!-- PRODUCT ACTIONS -->
-      <div class="product-actions">
-        <button (click)="navigateToViewQuestionDetails(product.id)" class="view-btn">
-          View
-        </button>
-        <button (click)="navigateToEditProductPage(product.id)" class="edt-btn">
-          Edit
-        </button>
-        <button (click)="deleteQuestion(product.id)" class="delete-btn">
-          Delete
-        </button>
+      <div class="product-body">
+        <div class="product-info">
+          <h3 class="name">{{ product.question }}</h3>
+          <div class="meta-row">
+            <span class="meta-badge">{{ product.type }}</span>
+            <span class="meta-badge level">{{ product.level }}</span>
+          </div>
+          <p class="modified">{{ product.modifiedDate | date:'dd MMM, yyyy' }}</p>
+        </div>
+
+        <!-- PRODUCT ACTIONS -->
+        <div class="product-actions">
+          <button (click)="navigateToViewQuestionDetails(product.id)" class="view-btn">View</button>
+          <button (click)="navigateToEditProductPage(product.id)" class="edt-btn">Edit</button>
+          <button (click)="deleteQuestion(product.id)" class="delete-btn">Delete</button>
+        </div>
       </div>
+
     </div>
+  </div>
+
+  <div class="empty-state" *ngIf="products.length === 0">
+    <p>No questions found.</p>
   </div>
 </div>
 
-
 <div class="pagination">
-  <button (click)="changePage(page-1)" [disabled]="page===0">Prev</button>
+  <button (click)="changePage(page-1)" [disabled]="page===0">← Prev</button>
   <span>Page {{page+1}} of {{totalPages}}</span>
-  <button (click)="changePage(page+1)" [disabled]="page+1>=totalPages">Next</button>
-
-  <label>
+  <button (click)="changePage(page+1)" [disabled]="page+1>=totalPages">Next →</button>
+  <label class="page-size-label">
     Page Size:
     <select (change)="changeSize($event)" [value]="size">
       <option *ngFor="let s of [5,10,20]" [value]="s">{{s}}</option>
     </select>
   </label>
 </div>
-
-
-
