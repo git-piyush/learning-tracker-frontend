@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ApiService } from './service/api.service';
 import { LoaderComponent } from './loading-effect/loader/loader.component';
 import { FormsModule } from '@angular/forms';
+import { NotificationService } from './shared/notificationService';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit{
 
   constructor(
     private apiService: ApiService,
+    private notify: NotificationService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -106,5 +108,21 @@ ngOnInit(): void {
       
     // send this.rating and this.feedbackText to backend
     this.closeModal();
+  }
+
+  resetCricketKeys():void{
+    this.apiService.resetCricketKeys().subscribe({
+            next: (res:any) => {
+                  this.notify.info(res.message);
+                },
+                error: (err: any) => {
+                if(err.error.status===401){
+                  alert('Need Access/Login!');
+                  //this.router.navigate(['/login']);
+                }
+                this.notify.info(err.error.message);
+          }
+      });
+    
   }
 }

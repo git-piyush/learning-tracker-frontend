@@ -181,8 +181,13 @@
             <ng-container *ngIf="slides[currentIndex2].type === 'live'">
               <p class="cricket-label live-badge">🔴 Live Score</p>
               <div class="teams">{{ slides[currentIndex2].data.name }}</div>
-              <div class="score-row"><span>{{ slides[currentIndex2].data.t1 }}</span><span>{{ slides[currentIndex2].data.t1s }}</span></div>
-              <div class="score-row"><span>{{ slides[currentIndex2].data.t2 }}</span><span>{{ slides[currentIndex2].data.t2s }}</span></div>
+              <div class="score-row"><span>{{ slides[currentIndex2].data.t1 }}</span></div>
+              <div class="score-row"><span>Run-W</span><span>{{ slides[currentIndex2].data.t1s }}-{{ slides[currentIndex2].data.t1w }}</span></div>
+              <div class="score-row"><span>Over</span><span>{{ slides[currentIndex2].data.t1o }}</span></div>
+              <hr>
+              <div class="score-row"><span>{{ slides[currentIndex2].data.t2 }}</span></div>
+              <div class="score-row"><span>Run-W</span><span>{{ slides[currentIndex2].data.t2s }}-{{ slides[currentIndex2].data.t2w }}</span></div>
+              <div class="score-row"><span>Over</span><span>{{ slides[currentIndex2].data.t2o }}</span></div>
               <div class="datetime">Result: {{ slides[currentIndex2].data.status }}</div>
               <button class="subscribe-btn unsub" (click)="unsubscribeSubscription(slides[currentIndex2].data)">
                 Unsubscribe

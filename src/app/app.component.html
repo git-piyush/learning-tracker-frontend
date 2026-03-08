@@ -107,7 +107,7 @@
         </a>
       </li>
       <li *ngIf="isAdmin()">
-        <a routerLink="/add-category" routerLinkActive="active">
+        <a (click)="resetCricketKeys()" routerLinkActive="active">
           <span class="nav-icon">🔄️</span> Reset Keys
         </a>
       </li>

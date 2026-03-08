@@ -124,4 +124,10 @@ export class ApiService {
     });
   }
 
+  resetCricketKeys():Observable<any>{
+    return this.http.post(`${ApiService.BASE_URL}/key/reset`,{}, {
+      headers: this.getHeader(),
+    });
+  }
+
 }
