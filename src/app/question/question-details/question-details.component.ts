@@ -2,18 +2,35 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from '../../category/service/category.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { QuestionService } from '../service/question.service';
+
+export interface InterviewQuestion {
+  id: string;
+  question: string;
+  answer: string;
+  addedBy: string;
+  createdDate: Date;
+  modifiedDate:Date;
+  expanded?: boolean;
+  parentQuestionId: string;
+}
 
 @Component({
   selector: 'app-question-details',
   standalone: true,
-  imports: [CommonModule, ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './question-details.component.html',
   styleUrl: './question-details.component.css'
 })
 export class QuestionDetailsComponent implements OnInit{
+
+    interviewQuestions: InterviewQuestion[] = [];
+
+  isModalOpen = false;
+  isEditMode = false;
+  modalForm: Partial<InterviewQuestion> = {};
 
   constructor(private route: ActivatedRoute, private categoryService: CategoryService,
     private router: Router,private fb: FormBuilder, private http: HttpClient,
@@ -28,6 +45,7 @@ export class QuestionDetailsComponent implements OnInit{
   ngOnInit(): void {
     this.questionId = this.route.snapshot.paramMap.get('qId') || '';
     this.loadQuestionDetaisl(this.questionId);
+    this.loadInterviewQuestions(this.questionId);
   }
 
     loadQuestionDetaisl(qId: string): void {
@@ -74,5 +92,98 @@ export class QuestionDetailsComponent implements OnInit{
       
       //this.loadCategories();
     }
+
+
+
+     // ─── Interview Questions ──────────────────────────────────
+
+  loadInterviewQuestions(parentId: string): void {
+    this.questionService.getInterviewQuestions(parentId).subscribe({
+      next: (res) => {
+        this.interviewQuestions = res.interviewQuestionDTOList;
+      }
+    });
+  }
+
+  toggleAnswer(iq: InterviewQuestion): void {
+    iq.expanded = !iq.expanded;
+  }
+
+  // ─── Add ─────────────────────────────────────────────────
+
+  openAddModal(): void {
+    this.isEditMode = false;
+    this.modalForm = {
+      question: '',
+      answer: '',
+      expanded: false,
+      parentQuestionId: this.question.id
+    };
+    this.isModalOpen = true;
+  }
+
+  // ─── Edit ────────────────────────────────────────────────
+
+  editInterviewQuestion(iq: InterviewQuestion): void {
+    this.isEditMode = true;
+    this.modalForm = { ...iq };
+    this.isModalOpen = true;
+  }
+
+  // ─── Save (Add or Update) ─────────────────────────────────
+
+  saveInterviewQuestion(): void {
+    if (!this.modalForm.question?.trim() || !this.modalForm.answer?.trim()) {
+      alert('Question and Answer are required.');
+      return;
+    }
+    if (this.isEditMode && this.modalForm.id) {
+      this.questionService.updateInterviewQuestion(this.modalForm as InterviewQuestion).subscribe({
+        next: (updated) => {
+          const index = this.interviewQuestions.findIndex(q => q.id === updated.interviewQuestionDTO.id);
+          if (index > -1) {
+            this.interviewQuestions[index] = { ...updated.interviewQuestionDTO, expanded: false?false:true };
+          }
+          this.closeModal();
+        },
+        error: (err) => console.error('Failed to update', err)
+      });
+    } else {
+      const newIQ: Partial<InterviewQuestion> = {
+        ...this.modalForm,
+        parentQuestionId: this.question.id,
+        createdDate: new Date()
+      };
+      this.questionService.addInterviewQuestion(newIQ).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.interviewQuestions.push({ ...res.interviewQuestionDTO, expanded: false?false:true });
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Failed to add', err.error.message);
+        }
+      });
+    }
+  }
+
+  // ─── Delete ───────────────────────────────────────────────
+
+  deleteInterviewQuestion(id: string): void {
+    if (!confirm('Delete this interview question?')) return;
+    this.questionService.deleteInterviewQuestion(id).subscribe({
+      next: () => {
+        this.interviewQuestions = this.interviewQuestions.filter(q => q.id !== id);
+      },
+      error: (err) => console.error('Failed to delete', err)
+    });
+  }
+
+  // ─── Close Modal ──────────────────────────────────────────
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.modalForm = {};
+  }
 }
 

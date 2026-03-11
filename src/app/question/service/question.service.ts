@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { InterviewQuestion } from '../question-details/question-details.component';
 
 @Injectable({
   providedIn: 'root'
@@ -233,6 +234,30 @@ export class QuestionService {
         month: month,
         year: year,
       },
+    });
+  }
+
+  getInterviewQuestions(parentQuestionId: string): Observable<any> {
+    return this.http.get(`${QuestionService.BASE_URL}/interviewquestion/`+parentQuestionId, {
+        headers: this.getHeader(),
+    });
+  }
+
+  addInterviewQuestion(iq: Partial<InterviewQuestion>): Observable<any> {
+     return this.http.post(`${QuestionService.BASE_URL}/interviewquestion`, iq, {
+        headers: this.getHeader(),
+    });
+  }
+
+  updateInterviewQuestion(iq: InterviewQuestion): Observable<any> {
+   return this.http.put(`${QuestionService.BASE_URL}/update-interviewquestion`, iq, {
+        headers: this.getHeader(),
+    });
+  }
+
+  deleteInterviewQuestion(id: string): Observable<void> {
+    return this.http.delete<void>(`${QuestionService.BASE_URL}/delete-interviewquestion/${id}`, {
+        headers: this.getHeader(),
     });
   }
 

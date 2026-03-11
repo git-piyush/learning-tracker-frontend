@@ -1,23 +1,19 @@
-<!-- Enhanced Question Detail Page -->
-<!-- All Angular bindings preserved exactly as original -->
-
+<!-- Full Page -->
 <div class="page-container">
   <div class="question-card">
 
     <!-- Question Header -->
     <div class="question-header">
       <p class="question-label">Question</p>
-      <h1 class="question-title">
-        Q. {{question.question}}
-      </h1>
+      <h1 class="question-title">Q. {{question.question}}</h1>
     </div>
 
     <hr class="divider" />
 
     <!-- Meta Information -->
     <div class="question-meta">
-      <p><strong>Type:</strong>{{question.type}}</p>
-      <p><strong>Added By:</strong>{{question.createdBy}}</p>
+      <p><strong>Type:</strong> {{question.type}}</p>
+      <p><strong>Added By:</strong> {{question.createdBy}}</p>
       <p><strong>Last Modified:</strong> {{ question.modifiedDate | date:'dd MMM, yyyy' }}</p>
     </div>
 
@@ -42,5 +38,89 @@
       <button class="edit-btn" (click)="editQuestion(question.id)">Edit</button>
     </div>
 
+    <!-- ─── Interview Questions Panel (inside same card = same width) ─── -->
+    <div class="interview-panel">
+
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <span class="panel-icon">💬</span>
+          <h2 class="panel-title">Possible Interview Questions</h2>
+          <span class="panel-count">{{ interviewQuestions.length }}</span>
+        </div>
+      </div>
+
+      <div class="iq-list" *ngIf="interviewQuestions.length > 0; else emptyState">
+        <div class="iq-item" *ngFor="let iq of interviewQuestions; let i = index">
+
+          <span class="iq-index">{{ i + 1 }}</span>
+
+          <div class="iq-body">
+            <div class="iq-question">{{ iq.question }}</div>
+            <div class="iq-answer-wrapper" [class.expanded]="iq.expanded">
+              <p class="iq-answer">{{ iq.answer }}</p>
+            </div>
+            <button class="toggle-btn" (click)="toggleAnswer(iq)">
+              {{ iq.expanded ? 'Hide answer ▲' : 'Show answer ▼' }}
+            </button>
+            <div class="iq-meta">
+              <span class="iq-author">👤 {{ iq.addedBy }}</span>
+              <span class="iq-date">{{ iq.createdDate | date:'dd MMM, yyyy' }}</span>
+            </div>
+          </div>
+
+          <div class="iq-actions">
+            <button class="action-btn edit" (click)="editInterviewQuestion(iq)">Edit</button>
+            <button class="action-btn delete" (click)="deleteInterviewQuestion(iq.id)">Delete</button>
+          </div>
+
+        </div>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <p>No interview questions yet.</p>
+        </div>
+      </ng-template>
+
+      <div class="panel-footer">
+        <button class="add-btn" (click)="openAddModal()">+ Add</button>
+      </div>
+
+    </div>
+    <!-- ─── End Interview Panel ─── -->
+
+  </div><!-- end .question-card -->
+</div><!-- end .page-container -->
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ isEditMode ? 'Edit' : 'Add' }} Interview Question</h3>
+      <button class="modal-close" (click)="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <label>Question <span class="required">*</span></label>
+      <input [(ngModel)]="modalForm.question"
+             placeholder="Enter interview question..."
+             class="modal-input" />
+      <label>Answer <span class="required">*</span></label>
+      <textarea [(ngModel)]="modalForm.answer"
+                rows="4"
+                placeholder="Enter the answer..."
+                class="modal-textarea"></textarea>
+      <label>Expanded</label>
+      <select [(ngModel)]="modalForm.expanded" class="modal-input">
+        <option [ngValue]="true">Yes</option>
+        <option [ngValue]="false" selected>No</option>
+      </select>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn-save" (click)="saveInterviewQuestion()">
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+    </div>
   </div>
 </div>
