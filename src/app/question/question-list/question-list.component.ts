@@ -55,6 +55,9 @@ export class QuestionListComponent  implements OnInit {
   sortBy = 'id';
   direction = 'asc';
 
+  isTileView: boolean = false;
+
+
   ngOnInit(): void {
     this.loadDropdown();
     this.loadQuestions();
@@ -180,9 +183,18 @@ export class QuestionListComponent  implements OnInit {
     }, 4000);
   }
 
-  search(){
+  viewMode: 'list' | 'tiles' = 'list';
+
+  toggleTileAndListView(): void {
+    this.viewMode = this.viewMode === 'list' ? 'tiles' : 'list';
 
   }
+
+  get buttonText(): string {
+    return this.viewMode === 'list' ? 'Switch to Tiles' : 'Switch to List';
+  }
+
+
   resetSearch(){
     this.searchForm = {
     category: '',
