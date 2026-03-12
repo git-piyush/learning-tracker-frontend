@@ -29,15 +29,15 @@ export const routes: Routes = [
   
   { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
   { path: 'add-category', component: AddCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
-  { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
+  { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
-  { path: 'feedback-list', component: FeedbackComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
+  { path: 'feedback-list', component: FeedbackComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
   { path: 'profile', component: ProfileComponent, canActivate:[GuardService] },
   { path: 'dashboard', component: DashboardComponent, canActivate:[GuardService] },
   { path: 'auth/social-callback', component: Oauth2LoginComponent },
   { path: 'privacy', component: PrivacyComponent },
-{ path: 'terms', component: TermsComponent },
+  { path: 'terms', component: TermsComponent },
 
 //   WIDE CARD
     {path: "", redirectTo: "/login", pathMatch: 'full'},

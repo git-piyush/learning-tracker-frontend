@@ -13,7 +13,7 @@ export class GuardService implements CanActivate {
 
   canActivate(
     route: ActivatedRouteSnapshot,
-     state: RouterStateSnapshot): boolean {
+    state: RouterStateSnapshot): boolean {
 
     const requiresAdmin = route.data['requiresAdmin'] || false;
 

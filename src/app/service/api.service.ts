@@ -8,15 +8,18 @@ import { environment } from '../environments/environment';
 })
 export class ApiService {
   
-  authStatuschanged = new EventEmitter<void>();
-  private static BASE_URL = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+    authStatuschanged = new EventEmitter<void>();
+
+    private static BASE_URL = environment.apiUrl;
+    
+    constructor(private http: HttpClient) {}
 
     private apiEndPoint = "/weather-api/v1/current.json";
+
     private apiEndPointKey = "d8bcb02f353742858d8110349262202";
 
     // Encrypt data and save to localStorage
-    encryptAndSaveToStorage(key: string, value: string): void {
+    saveToStorage(key: string, value: string): void {
       localStorage.setItem(key, value);
     }
 
@@ -69,7 +72,6 @@ export class ApiService {
       localStorage.removeItem("token");
       localStorage.removeItem("role");
       localStorage.removeItem("username");
-      localStorage.removeItem("ckey");
   }
 
   private getHeader(): HttpHeaders {
@@ -86,7 +88,6 @@ export class ApiService {
 
 
   /***AUTH & USERS API METHODS */
-
   registerUser(body: any): Observable<any> {
     return this.http.post(`${ApiService.BASE_URL}/auth/register`, body);
   }
@@ -101,8 +102,7 @@ export class ApiService {
     });
   }
 
-/**AUTHENTICATION CHECKER */
-    
+  /**AUTHENTICATION CHECKER */  
   logout():void{
     this.clearAuth()
   }

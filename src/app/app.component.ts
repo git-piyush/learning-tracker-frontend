@@ -5,6 +5,7 @@ import { ApiService } from './service/api.service';
 import { LoaderComponent } from './loading-effect/loader/loader.component';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from './shared/notificationService';
+import { feedbackModel } from './shared/app.model';
 
 @Component({
   selector: 'app-root',
@@ -21,14 +22,14 @@ export class AppComponent implements OnInit{
   rating = 0;        // can be 1, 1.5, 2, 2.5, etc.
   feedbackText = '';
   userName:string | null = null;
-  title = 'Tracker';
+  title = 'Make My Notesss';
   message:string | null = null;
 
   
-  feedbackPayload: any = {
-      id:'',
-      rating:'',
-      message:''
+  feedbackPayload: feedbackModel = {
+    id: '',
+    rating: 0,
+    message: ''
   };
 
   constructor(
@@ -83,30 +84,23 @@ ngOnInit(): void {
       message: this.feedbackText
     };
 
-    console.log('Stars:'+this.feedbackPayload.rating, 'Comment:'+this.feedbackPayload.message);
-
-      if( 
-        this.feedbackPayload.rating==0 || 
-        this.feedbackPayload.message==''
-      ){
-        alert("All fields are required");
+    if(this.feedbackPayload.rating==0 || this.feedbackPayload.message==''){
+        alert("All fields are required.");
         return;
       }
 
       this.apiService.saveFeedback(this.feedbackPayload).subscribe({
             next: (res:any) => {
-                  alert('Feedback Sumitted Sucessfully!');
+                  this.notify.info('Feedback Sumitted Sucessfully!');
                 },
                 error: (err: any) => {
                 if(err.error.status===401){
-                  alert('Need Access/Login!');
+                  this.notify.error('Need Access/Login!');
                   this.router.navigate(['/login']);
                 }
-                alert(err.error.message);
+                this.notify.error(err.error.message);
               }
             });
-      
-    // send this.rating and this.feedbackText to backend
     this.closeModal();
   }
 

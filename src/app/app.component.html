@@ -1,11 +1,12 @@
 <!-- Enhanced Navbar + Sidebar + Feedback Modal -->
 <!-- All Angular bindings preserved exactly as original -->
-      <div class="dashboard-container">
-  <app-loader></app-loader>   <!-- ← moved here, out of app shell -->
 
-  <!-- rest of dashboard content -->
-  <div class="stats-cards"> ... </div>
-</div>
+      <div class="dashboard-container">
+        <app-loader></app-loader>   <!-- ← moved here, out of app shell -->
+
+        <!-- rest of dashboard content -->
+        <div class="stats-cards"> ... </div>
+      </div>
 
 
 <!-- ── NAVBAR ── -->
@@ -137,10 +138,10 @@
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
-
-
-
       <router-outlet></router-outlet>
+      <footer style="text-align:center; padding: 1rem; font-size: 0.8rem;">
+  <a href="/privacy">Privacy Policy</a>
+</footer>
   </div>
 
 </div>

@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../service/api.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
+import { NotificationService } from '../shared/notificationService';
 
 @Component({
   selector: 'app-login',
@@ -14,8 +15,10 @@ import { environment } from '../environments/environment';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+
   private static OAUTH_URL = environment.oauthUrl;
-  constructor(private apiService:ApiService, private router:Router){}
+
+  constructor(private apiService:ApiService, private router:Router, private notify:NotificationService){}
 
   formData: any = {
     email: '',
@@ -29,40 +32,25 @@ export class LoginComponent implements OnInit {
   message:string | null = null;
 
   async handleSubmit(){
-    if( 
-      !this.formData.email || 
-      !this.formData.password 
-    ){
-      this.showMessage("All fields are required");
+    if(!this.formData.email || !this.formData.password ){
+      alert("All fields are required.");
       return;
     }
 
     try {
-      const response: any = await firstValueFrom(
-        this.apiService.loginUser(this.formData)
-      );
+      const response: any = await firstValueFrom(this.apiService.loginUser(this.formData));
       if (response.status === 200) {
-        this.apiService.encryptAndSaveToStorage('token', response.token);
-        this.apiService.encryptAndSaveToStorage('role', response.role);
-        this.apiService.encryptAndSaveToStorage('username', response.userName);
+        this.apiService.saveToStorage('token', response.token);
+        this.apiService.saveToStorage('role', response.role);
+        this.apiService.saveToStorage('username', response.userName);
         this.router.navigate(["/dashboard"]);
       }
     } catch (error:any) {
-      console.log(error)
-      this.showMessage(error?.error?.message || error?.message || "Unable to Login a user" + error)
-      
+      this.notify.error(error?.error?.message || error?.message || "Unable to Login a user" + error);      
     }
   }
 
   loginWithGoogle() {
-  window.location.href = `${LoginComponent.OAUTH_URL}/oauth2/authorize/google`;
-}
-
-  showMessage(message:string){
-    this.message = message;
-    setTimeout(() =>{
-      this.message = null
-    }, 4000)
+    window.location.href = `${LoginComponent.OAUTH_URL}/oauth2/authorize/google`;
   }
-
 }
