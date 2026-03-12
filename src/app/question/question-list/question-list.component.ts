@@ -3,28 +3,82 @@ import { CommonModule } from '@angular/common';
 import { QuestionService } from '../service/question.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
+import { CategoryService } from '../../category/service/category.service';
+import { NotificationService } from '../../shared/notificationService';
+
+interface Question {
+    id:string;
+    category:string;
+    subCategory:string;
+    type:string;
+    question:string;
+    answer:string;
+    bookmark:string;
+    level:string;
+    modifiedDate:Date;
+    image:string;
+}
 
 @Component({
   selector: 'app-question-list',
   standalone: true,
-  imports: [MatSnackBarModule,CommonModule],
+  imports: [MatSnackBarModule,CommonModule,FormsModule ],
   templateUrl: './question-list.component.html',
   styleUrl: './question-list.component.css'
 })
 export class QuestionListComponent  implements OnInit {
-  constructor(private questionService: QuestionService, private router: Router,  private snackBar: MatSnackBar) {}
-  products: any[] = [];
+
+  searchForm = {
+    category: '',
+    subCategory: '',
+    type: '',
+    bookmark: ''
+  };
+
+
+  constructor(private questionService: QuestionService, 
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private categoryService:CategoryService,
+    private notify:NotificationService) {}
+  
+  products: Question[] = [];
   message: string = '';
+  categoryList: String[] = [];
+  subCategoryList:string[] = [];
 
   totalPages = 0;
   totalElements = 0;
   page = 0;
-  size = 5;
+  size = 8;
   sortBy = 'id';
   direction = 'asc';
 
   ngOnInit(): void {
-    this.fetchProducts();
+    this.loadDropdown();
+    this.loadQuestions();
+  }
+
+  loadDropdown():void{
+    this.categoryService.getCategoryList().subscribe({
+      next: (res)=>{
+        this.categoryList = res.categoryList;
+        console.log(this.categoryList);
+      },error:(err)=>console.error(err)
+    });
+  }
+
+  onChangeCategory(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const category1 = selectElement.value;
+    this.categoryService.getSubCategoryMap(category1).subscribe({
+      next: (res)=>{
+        this.subCategoryList = res.subCategoryList;
+        console.log(this.subCategoryList);
+      },error:(err)=>this.notify.success(err.error.message)
+    });
+    this.loadQuestions();
   }
 
   getImageSrc(base64String: string): string {
@@ -34,19 +88,16 @@ export class QuestionListComponent  implements OnInit {
     return 'data:image/jpeg;base64,' + base64String;
   }
 
-  //FETCH PRODUCTS
-  fetchProducts(): void {
-    this.questionService.getAllProducts().subscribe({
-      next: (res: any) => {
-        this.products = res.questionList || [];
+  loadQuestions(): void {
+    this.questionService.getAllQuestions(this.page,this.size,this.direction,this.sortBy,this.searchForm).subscribe({
+      next: (res) => {
+        this.products = res.questionList;
+        this.totalPages = res.totalPages;
+        this.totalElements = res.totalElements;
       },
-      error: (error) => {
-        this.showMessage(
-          error?.error?.message ||
-            error?.message ||
-            'Unable to edit category' + error
-        );
-      },
+      error: (err) =>{
+        console.error(err);
+      }
     });
   }
 
@@ -83,17 +134,17 @@ export class QuestionListComponent  implements OnInit {
     })
   }
 
-    changePage(newPage: number): void {
+  changePage(newPage: number): void {
     if (newPage >= 0 && newPage < this.totalPages) {
       this.page = newPage;
-      //this.loadCategories();
+      this.loadQuestions();
     }
   }
 
   changeSize(event: any): void {
     this.size = event.target.value;
     this.page = 0;
-   // this.loadCategories();
+    this.loadQuestions();
   }
 
   sort(column: string): void {
@@ -103,8 +154,22 @@ export class QuestionListComponent  implements OnInit {
       this.sortBy = column;
       this.direction = 'asc';
     }
-    //this.loadCategories();
+    this.loadQuestions();
   }
+
+  goToPage(value: string): void {
+  const pageNumber = parseInt(value, 10);
+
+  // Ignore empty / non-numeric input
+  if (isNaN(pageNumber)) return;
+
+  // Convert from 1-based (what the user sees) to 0-based (what the API uses)
+  const targetPage = pageNumber - 1;
+
+  // Clamp to valid range and only navigate if it's a different page
+  if (targetPage >= 0 && targetPage < this.totalPages && targetPage !== this.page) {
+    this.changePage(targetPage);
+  }}
 
 
   //SHOW ERROR
@@ -113,5 +178,19 @@ export class QuestionListComponent  implements OnInit {
     setTimeout(() => {
       this.message = '';
     }, 4000);
+  }
+
+  search(){
+
+  }
+  resetSearch(){
+    this.searchForm = {
+    category: '',
+    subCategory: '',
+    type: '',
+    bookmark: ''
+  };
+    this.page = 0; // reset to first page
+    this.loadQuestions(); // reload full list
   }
 }

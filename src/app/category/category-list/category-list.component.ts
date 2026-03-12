@@ -17,17 +17,6 @@ interface Category {
   refCodeOrder?: number;
 }
 
-interface ApiResponse {
-  status: number;
-  message: string;
-  totalPages: number;
-  totalElements: number;
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-  categories: Category[];
-}
-
 @Component({
   selector: 'app-category-list',
   standalone: true,

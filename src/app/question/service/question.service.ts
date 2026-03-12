@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -75,7 +75,32 @@ export class QuestionService {
 
 
 
+  getAllQuestions(page:number, size:number, order:string, orderBy:string, searchForm:any): Observable<any> {
+    let params = new HttpParams()
+    .set('page', page)
+    .set('size', size)
+    .set('direction', order)
+    .set('sortBy', orderBy);
 
+      // Add search filters if provided
+      if (searchForm.category) {
+        params = params.set('category', searchForm.category);
+      }
+      if (searchForm.subCategory) {
+        params = params.set('subCategory', searchForm.subCategory);
+      }
+      if (searchForm.type) {
+        params = params.set('type', searchForm.type);
+      }
+      if (searchForm.bookmark) {
+        params = params.set('bookmark', searchForm.bookmark);
+      }
+
+      return this.http.get(`${QuestionService.BASE_URL}/question/all`, {
+        headers: this.getHeader(),
+        params: params
+      });
+  }
 
 
 
@@ -120,88 +145,15 @@ export class QuestionService {
   }
 
 
-
-
-  /** SUPPLIER API */
-  addSupplier(body: any): Observable<any> {
-    return this.http.post(`${QuestionService.BASE_URL}/suppliers/add`, body, {
-      headers: this.getHeader(),
-    });
-  }
-
-  getAllSuppliers(): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/suppliers/all`, {
-      headers: this.getHeader(),
-    });
-  }
-
-  getSupplierById(id: string): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/suppliers/${id}`, {
-      headers: this.getHeader(),
-    });
-  }
-
-  updateSupplier(id: string, body: any): Observable<any> {
-    return this.http.put(
-      `${QuestionService.BASE_URL}/suppliers/update/${id}`,
-      body,
-      {
-        headers: this.getHeader(),
-      }
-    );
-  }
-
-
-
-
-
-
-
-
-
   /**PRODUICTS ENDPOINTS */
-
-
   updateProduct(formData: any): Observable<any> {
     console.log('formData:'+formData);
     return this.http.put(`${QuestionService.BASE_URL}/question/update-question`, formData, {
       headers: this.getHeader(),
     });
   }
-
-  getAllProducts(): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/question/getall-question`, {
-      headers: this.getHeader(),
-    });
-  }
-
   deleteProduct(id: string): Observable<any> {
     return this.http.delete(`${QuestionService.BASE_URL}/products/delete/${id}`, {
-      headers: this.getHeader(),
-    });
-  }
-
-
-
-
-
-
-
-
-  /**Transactions Endpoints */
-
-  purchaseProduct(body: any): Observable<any> {
-    return this.http.post(
-      `${QuestionService.BASE_URL}/transactions/purchase`,
-      body,
-      {
-        headers: this.getHeader(),
-      }
-    );
-  }
-
-  sellProduct(body: any): Observable<any> {
-    return this.http.post(`${QuestionService.BASE_URL}/transactions/sell`, body, {
       headers: this.getHeader(),
     });
   }
