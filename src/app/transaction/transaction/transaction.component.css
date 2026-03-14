@@ -84,11 +84,12 @@
 }
 
 /* ── Table ── */
-.table-wrap {
+
+.tbl-wrap {
+  width: 100%;
   overflow-x: auto;
-  border: 1px solid #2d3245;
   border-radius: 12px;
-  background: #151824;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 table {
@@ -96,101 +97,192 @@ table {
   border-collapse: collapse;
   font-size: 13px;
   table-layout: fixed;
-  min-width: 1100px;
 }
 
 thead tr {
-  background: #1a1e2e;
+  background: linear-gradient(90deg, #1a1f3a, #1a2a2a);
 }
 
 th {
-  padding: 11px 14px;
+  padding: 14px 12px;
   text-align: left;
-  font-weight: 600;
   font-size: 11px;
-  color: #64748b;
-  border-bottom: 1px solid #2d3245;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 600;
+  color: #7a8aaa;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+tbody tr {
+  transition: background 0.15s ease;
+}
+
+tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+tbody tr:hover {
+  background: rgba(99, 179, 237, 0.06);
 }
 
 td {
-  padding: 11px 14px;
-  border-bottom: 1px solid #1e2435;
-  color: #cbd5e1;
+  padding: 13px 12px;
   vertical-align: middle;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+  color: #c8d0e0;
 }
 
-tbody tr:last-child td { border-bottom: none; }
+tr:last-child td {
+  border-bottom: none;
+}
 
-tbody tr:hover { background: #1a1e2e; }
+/* Column widths */
+.col-num         { width: 44px; }
+.col-question    { width: 26%; }
+.col-bookmark    { width: 110px; }
+.col-category    { width: 90px; }
+.col-subcategory { width: 100px; }
+.col-type        { width: 100px; }
+.col-date        { width: 120px; }
+.col-actions     { width: 170px; text-align: center; }
 
-th:nth-child(1),  td:nth-child(1)  { width: 48px; }
-th:nth-child(2),  td:nth-child(2)  { width: 200px; white-space: normal; line-height: 1.4; }
-th:nth-child(3),  td:nth-child(3)  { width: 180px; white-space: normal; line-height: 1.4; }
-th:nth-child(4),  td:nth-child(4)  { width: 90px; }
-th:nth-child(5),  td:nth-child(5)  { width: 100px; }
-th:nth-child(6),  td:nth-child(6)  { width: 110px; }
-th:nth-child(7),  td:nth-child(7)  { width: 90px; }
-th:nth-child(8),  td:nth-child(8)  { width: 100px; }
-th:nth-child(9),  td:nth-child(9)  { width: 110px; }
-th:nth-child(10), td:nth-child(10) { width: 140px; }
+.num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  font-size: 11px;
+  color: #7a8aaa;
+}
 
-.sl-no   { color: #475569; font-weight: 500; }
-.muted   { color: #64748b !important; }
-.ellipsis { overflow: hidden; text-overflow: ellipsis; }
+.question-text {
+  font-weight: 400;
+  line-height: 1.45;
+  color: #dce4f0;
+}
 
-/* ── Badges ── */
+/* Bookmark button */
+.bookmark-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(255, 200, 0, 0.2);
+  background: rgba(255, 200, 0, 0.05);
+  color: #aaa;
+  transition: all 0.2s ease;
+}
+
+.bookmark-btn:hover {
+  border-color: rgba(255, 200, 0, 0.5);
+  background: rgba(255, 200, 0, 0.1);
+  color: gold;
+}
+
+.bookmark-btn.bookmarked {
+  border-color: rgba(255, 200, 0, 0.6);
+  background: rgba(255, 200, 0, 0.12);
+  color: gold;
+}
+
+/* Badges */
 .badge {
   display: inline-block;
-  padding: 3px 10px;
-  border-radius: 99px;
+  padding: 4px 10px;
+  border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
-.badge-cat  { background: #1e3a5f; color: #93c5fd; }
-.badge-sub  { background: #14532d; color: #86efac; }
-.badge-type { background: #3b1f6e; color: #c4b5fd; }
-
-/* ── Bookmark Button ── */
-.bm-btn {
-  padding: 4px 10px;
-  font-size: 11px;
-  border-radius: 99px;
-  border: 1px solid #3a3f4b;
-  background: transparent;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
+.badge-cat {
+  background: rgba(56, 139, 253, 0.15);
+  color: #79b8ff;
+  border: 1px solid rgba(56, 139, 253, 0.25);
 }
 
-.bm-btn:hover { border-color: #f59e0b; color: #fbbf24; }
-.bm-btn.active { background: #292011; color: #fbbf24; border-color: #f59e0b; }
+.badge-sub {
+  background: rgba(100, 220, 180, 0.1);
+  color: #5dcaa5;
+  border: 1px solid rgba(100, 220, 180, 0.2);
+}
 
-/* ── Action Buttons ── */
-.actions { display: flex; gap: 4px; }
+.badge-theory {
+  background: rgba(167, 139, 250, 0.15);
+  color: #c4b5fd;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+}
 
-.action-btn {
-  padding: 4px 10px;
-  font-size: 11px;
+.badge-practical {
+  background: rgba(52, 211, 153, 0.12);
+  color: #6ee7b7;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.date-text {
+  font-size: 12px;
+  color: #7a8aaa;
+}
+
+/* Action Buttons */
+.btn {
+  display: inline-block;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 500;
   border-radius: 6px;
-  border: 1px solid #3a3f4b;
-  background: transparent;
-  color: #94a3b8;
+  border: none;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  margin-right: 4px;
+  transition: opacity 0.15s, transform 0.1s;
 }
 
-.action-btn:hover { background: #2a2f3e; color: #e2e8f0; }
-.action-btn.del:hover { background: #2d1515; color: #f87171; border-color: #7f1d1d; }
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-view {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #fff;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #fff;
+}
+
+/* Empty state */
+.empty-row {
+  text-align: center;
+  color: #555;
+  font-size: 13px;
+  padding: 2.5rem !important;
+}
+
+
+/*EOD OD TABLE*/
 
 /* ── Empty State ── */
 .no-data {

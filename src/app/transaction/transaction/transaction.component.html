@@ -33,60 +33,72 @@
   </div>
 
   <!-- Table -->
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Question</th>
-          <th>Answer</th>
-          <th>Bookmark</th>
-          <th>Category</th>
-          <th>Subcategory</th>
-          <th>Type</th>
-          <th>Created At</th>
-          <th>Last Modified</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of pagedQuestions; let i = index">
-          <td class="sl-no">{{ startIndex + i }}</td>
-          <td class="ellipsis" [title]="item.question">{{ item.question }}</td>
-          <td class="ellipsis muted" [title]="item.answer">{{ item.answer }}</td>
-          <td>
-            <button
-              class="bm-btn"
-              [class.active]="item.bookmarked"
-              (click)="toggleBookmark(item)"
-            >
-              {{ item.bookmarked ? '★ Saved' : '☆ Save' }}
-            </button>
-          </td>
-          <td><span class="badge badge-cat">{{ item.category }}</span></td>
-          <td><span class="badge badge-sub">{{ item.subcategory }}</span></td>
-          <td><span class="badge badge-type">{{ item.type }}</span></td>
-          <td class="muted">{{ item.createdAt }}</td>
-          <td class="muted">{{ item.modifiedAt }}</td>
-          <td>
-            <div class="actions">
-              <button class="action-btn" (click)="onView(item)">View</button>
-              <button class="action-btn" (click)="onEdit(item)">Edit</button>
-              <button class="action-btn del" (click)="onDelete(item)">Delete</button>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="pagedQuestions.length === 0">
-          <td colspan="10" class="no-data">No questions found.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-num">#</th>
+        <th class="col-question">Question</th>
+        <th class="col-bookmark">Bookmark</th>
+        <th class="col-category">Category</th>
+        <th class="col-subcategory">Subcategory</th>
+        <th class="col-type">Type</th>
+        <th class="col-date">Created At</th>
+        <th class="col-date">Last Modified</th>
+        <th class="col-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of questions; let i = index">
+        <td class="col-num"><span class="num">{{ i + 1 }}</span></td>
+        <td class="col-question">
+          <div class="question-text">{{ product.question }}</div>
+        </td>
+        <td class="col-bookmark">
+          <button class="bookmark-btn"
+            [class.bookmarked]="product.bookmarked === 'Yes'"
+            (click)="toggleBookmark(product)">
+            {{ product.bookmarked === 'Yes' ? '★ Saved' : '☆ Save' }}
+          </button>
+        </td>
+        <td class="col-category">
+          <span class="badge badge-cat">{{ product.category }}</span>
+        </td>
+        <td class="col-subcategory">
+          <span class="badge badge-sub">{{ product.subCategory }}</span>
+        </td>
+        <td class="col-type">
+          <span class="badge" [ngClass]="{
+            'badge-theory': product.type === 'theory',
+            'badge-practical': product.type === 'practical'
+          }">{{ product.type }}</span>
+        </td>
+
+        <td class="col-date">
+          <span class="date-text">{{ product.createdDate | date:'dd MMM, yyyy' }}</span>
+        </td>
+
+        <td class="col-date">
+          <span class="date-text">{{ product.modifiedDate | date:'dd MMM, yyyy' }}</span>
+        </td>
+        <td class="col-actions">
+          <button class="btn btn-view" (click)="navigateToViewQuestionDetails(product.id)">View</button>
+          <button class="btn btn-edit" (click)="navigateToEditProductPage(product.id)">Edit</button>
+          <button class="btn btn-delete" (click)="deleteQuestion(product.id)">Delete</button>
+        </td>
+      </tr>
+
+      <tr *ngIf="questions.length === 0">
+        <td colspan="8" class="empty-row">No questions found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
   <!-- Pagination -->
   <div class="pagination-bar">
     <div class="pagination-info">
-      Showing {{ startIndex }}–{{ endIndex }} of {{ filteredQuestions.length }} results
+      Showing {{ page + 1 }}–{{ totalPages }} of {{ questions.length }} results
     </div>
 
     <div class="pagination-controls">
@@ -99,7 +111,8 @@
 
     <div class="page-size-wrap">
       <label>Rows per page</label>
-      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+      <select [(ngModel)]="size" (change)="onPageSizeChange()">
+        <option [value]="2">2</option>
         <option [value]="5">5</option>
         <option [value]="10">10</option>
         <option [value]="25">25</option>

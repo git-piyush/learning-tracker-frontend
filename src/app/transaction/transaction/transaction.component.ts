@@ -1,17 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TransactionService } from '../service/transaction.service';
 
 export interface Question {
   id: number;
   question: string;
   answer: string;
-  bookmarked: boolean;
+  bookmarked: string;
   category: string;
-  subcategory: string;
+  subCategory: string;
   type: string;
-  createdAt: string;
-  modifiedAt: string;
+  createdDate: string;
+  modifiedDate: string;
 }
  
 export interface Filters {
@@ -30,6 +31,15 @@ export interface Filters {
   styleUrl: './transaction.component.css'
 })
 export class TransactionComponent  implements OnInit {
+
+  constructor(private transactionService:TransactionService){}
+
+  searchForm = {
+    category: '',
+    subCategory: '',
+    type: '',
+    bookmark: ''
+  };
  
   questions: Question[] = [];
   filteredQuestions: Question[] = [];
@@ -46,14 +56,10 @@ export class TransactionComponent  implements OnInit {
   subcategories: string[] = [];
  
   // Pagination
-  currentPage = 1;
-  pageSize = 10;
-  pages: number[] = [];
-
   totalPages = 0;
   totalElements = 0;
   page = 0;
-  size = 8;
+  size = 2;
   sortBy = 'id';
   direction = 'asc';
 
@@ -61,18 +67,24 @@ export class TransactionComponent  implements OnInit {
 
  
   ngOnInit(): void {
-    // TODO: Replace with your service call, e.g.:
-    // this.questionService.getAll().subscribe(data => {
-    //   this.questions = data;
-    //   this.initFilters();
-    //   this.applyFilters();
-    // });
+    this.resetFilters();
+    this.loadQuestions();
   }
- 
-  private initFilters(): void {
-    this.categories    = [...new Set(this.questions.map(q => q.category))];
-    this.subcategories = [...new Set(this.questions.map(q => q.subcategory))];
+
+
+  loadQuestions(): void {
+    this.transactionService.getAllQuestions(this.page,this.size,this.direction,this.sortBy,this.searchForm).subscribe({
+      next: (res) => {
+        this.questions = res.questionList;
+        this.totalPages = res.totalPages;
+        this.totalElements = res.totalElements;
+      },
+      error: (err) =>{
+        console.error(err);
+      }
+    });
   }
+
  
   applyFilters(): void {
     const { category, subcategory, bookmark, search } = this.filters;
@@ -80,52 +92,41 @@ export class TransactionComponent  implements OnInit {
  
     this.filteredQuestions = this.questions.filter(item => {
       const matchCat  = !category    || item.category    === category;
-      const matchSub  = !subcategory || item.subcategory === subcategory;
+      const matchSub  = !subcategory || item.subCategory === subcategory;
       const matchBm   = bookmark === '' || String(item.bookmarked) === bookmark;
       const matchText = !q || item.question.toLowerCase().includes(q)
                            || item.answer.toLowerCase().includes(q);
       return matchCat && matchSub && matchBm && matchText;
     });
- 
-    this.currentPage = 1;
     this.updatePagination();
   }
  
   resetFilters(): void {
-    this.filters = { category: '', subcategory: '', bookmark: '', search: '' };
-    this.filteredQuestions = [...this.questions];
-    this.currentPage = 1;
-    this.updatePagination();
+      this.totalPages = 0;
+      this.totalElements = 0;
+      this.page = 0;
+      this.size = 2;
+      this.sortBy = 'id';
+      this.direction = 'asc';
   }
  
   private updatePagination(): void {
-    this.totalPages = Math.ceil(this.filteredQuestions.length / this.pageSize) || 1;
-    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-    this.slicePage();
+    
   }
- 
-  private slicePage(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    this.pagedQuestions = this.filteredQuestions.slice(start, start + this.pageSize);
-  }
- 
-  // goToPage(page: number): void {
-  //   if (page < 1 || page > this.totalPages) return;
-  //   this.currentPage = page;
-  //   this.slicePage();
-  // }
+
  
   onPageSizeChange(): void {
-    this.currentPage = 1;
-    this.updatePagination();
+    this.size = this.size;
+    this.loadQuestions();
   }
  
-  toggleBookmark(item: Question): void {
-    item.bookmarked = !item.bookmarked;
-  }
  
   onView(item: Question): void {
     console.log('View:', item);
+  }
+
+  toggleBookmark(item: Question):void{
+
   }
  
   onEdit(item: Question): void {
@@ -139,17 +140,29 @@ export class TransactionComponent  implements OnInit {
     }
   }
 
+  deleteQuestion(id:number):void{
+
+  }
+
+  navigateToEditProductPage(id:number):void{
+
+  }
+
+  navigateToViewQuestionDetails(id:number):void{
+
+  }
+
     changePage(newPage: number): void {
     if (newPage >= 0 && newPage < this.totalPages) {
       this.page = newPage;
-     // this.loadQuestions();
+      this.loadQuestions();
     }
   }
 
   changeSize(event: any): void {
     this.size = event.target.value;
     this.page = 0;
-    //this.loadQuestions();
+    this.loadQuestions();
   }
 
   sort(column: string): void {
@@ -163,24 +176,6 @@ export class TransactionComponent  implements OnInit {
   }
 
   goToPage(value: string): void {
-  const pageNumber = parseInt(value, 10);
-
-  // Ignore empty / non-numeric input
-  if (isNaN(pageNumber)) return;
-
-  // Convert from 1-based (what the user sees) to 0-based (what the API uses)
-  const targetPage = pageNumber - 1;
-
-  // Clamp to valid range and only navigate if it's a different page
-  if (targetPage >= 0 && targetPage < this.totalPages && targetPage !== this.page) {
-    this.changePage(targetPage);
-  }}
- 
-  get startIndex(): number {
-    return this.filteredQuestions.length === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
-  }
- 
-  get endIndex(): number {
-    return Math.min(this.currentPage * this.pageSize, this.filteredQuestions.length);
+    const pageNumber = parseInt(value, 10);
   }
 }
