@@ -57,9 +57,14 @@
 
       <div class="product-image-wrap">
         <img [src]="getImageSrc(product.image)"
-             [alt]="product.category"
-             class="product-image"/>
+            [alt]="product.category"
+            class="product-image"
+            (error)="onImageError($event)"/>
         <div class="image-overlay"></div>
+            <!-- ✅ Bookmark Star -->
+        <span class="bookmark-star" [class.bookmarked]="product.bookmark === 'Yes'">
+            {{ product.bookmark === 'Yes' ? '★' : '☆' }}
+        </span>
       </div>
 
       <div class="product-body">
@@ -96,6 +101,7 @@
         <th class="col-type">Type</th>
         <th class="col-level">Level</th>
         <th class="col-date">Modified</th>
+        <th class="col-bookmark">Bookmark</th>
         <th class="col-actions">Actions</th>
       </tr>
     </thead>
@@ -108,7 +114,7 @@
         <!-- Thumbnail -->
         <td class="col-thumb">
           <div class="thumb-wrap">
-            <img [src]="getImageSrc(product.image)" [alt]="product.category" />
+            <img [src]="getImageSrc(product.image)" [alt]="product.category" (error)="onImageError($event)"/>
           </div>
         </td>
 
@@ -134,7 +140,10 @@
 
         <!-- Date -->
         <td class="col-date">{{ product.modifiedDate | date:'dd MMM, yyyy' }}</td>
-
+        <td class="col-bookmark">
+            <span *ngIf="product.bookmark === 'Yes'" style="color: gold; font-size: 1.2rem;">&#9733;</span>
+            <span *ngIf="product.bookmark === 'No'" style="color: gray; font-size: 1.2rem;">&#9734;</span>
+        </td>
         <!-- Actions -->
         <td class="col-actions">
           <div class="action-group">
@@ -178,21 +187,6 @@
   </table>
 </div>
   <!--Eod of grid-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <div class="empty-state" *ngIf="products.length === 0">
     <p>No questions found.</p>

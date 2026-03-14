@@ -5,6 +5,7 @@ import { CategoryService } from '../../category/service/category.service';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { QuestionService } from '../service/question.service';
+import { Newlinepipe } from '../../shared/newlinepipe';
 
 export interface InterviewQuestion {
   id: string;
@@ -20,13 +21,13 @@ export interface InterviewQuestion {
 @Component({
   selector: 'app-question-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Newlinepipe],
   templateUrl: './question-details.component.html',
   styleUrl: './question-details.component.css'
 })
 export class QuestionDetailsComponent implements OnInit{
 
-    interviewQuestions: InterviewQuestion[] = [];
+  interviewQuestions: InterviewQuestion[] = [];
 
   isModalOpen = false;
   isEditMode = false;
@@ -69,33 +70,37 @@ export class QuestionDetailsComponent implements OnInit{
     }
 
     prevQuestion(id:string) {
-      alert(id);
+      this.questionService.getPrevQuestionById(id).subscribe({
+            next: (res)=>{
+                this.question = res.question;
+                this.loadInterviewQuestions(id);
+              },error:(err)=>console.error(err)
+        });
+        
     }
 
     nextQuestion(id:string) {
-      alert(id);
+      this.questionService.getNextQuestionById(id).subscribe({
+            next: (res)=>{
+                this.question = res.question;
+                this.loadInterviewQuestions(id);
+              },error:(err)=>console.error(err)
+        });
     }
+
+    imageErrored = false;
+
+    onImageError(event: Event) {
+      (event.target as HTMLImageElement).src = 'defaultquestion.png';
+      this.imageErrored = true;
+    }
+
 
     goBack() {
       // logic to navigate back
     }
 
-    changePage(newPage: number): void {
-      
-    }
-
-    changeSize(event: any): void {
-      
-    }
-
-    sort(column: string): void {
-      
-      //this.loadCategories();
-    }
-
-
-
-     // ─── Interview Questions ──────────────────────────────────
+  // ─── Interview Questions ──────────────────────────────────
 
   loadInterviewQuestions(parentId: string): void {
     this.questionService.getInterviewQuestions(parentId).subscribe({

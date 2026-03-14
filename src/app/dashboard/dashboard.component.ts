@@ -380,13 +380,12 @@ loadSubscribedMatches(){
   loadDashboardDate():void{
     this.dashboardService.getDashboardData().subscribe({
       next: (res: any) => {
-          this.dashboardData = res.dashboardResponse;
-          this.summaryCards[0].value = this.dashboardData.totalQuestions;
-          this.summaryCards[1].value = this.dashboardData.totalQuestionsAddedByYou;
-          this.summaryCards[2].value = this.dashboardData.userBookmarked;
-          this.summaryCards[4].value = this.dashboardData.unreadFeedBackCount;
-          //this.subCategoryCountMap = res.dashboardResponse.countMap;
-          this.subCategoryCountMap = new Map(Object.entries(res.dashboardResponse.countMap));
+          this.dashboardData = res.dashboard;
+          this.summaryCards[0].value = this.dashboardData.totalQuestion;
+          this.summaryCards[1].value = this.dashboardData.userTotalQuestion;
+          this.summaryCards[2].value = this.dashboardData.userTotalBookmark;
+          this.summaryCards[4].value = this.dashboardData.unreadFeedback;
+          this.subCategoryCountMap = new Map(Object.entries(this.dashboardData.countMap));
           this.educationalStages = Array.from(this.subCategoryCountMap.entries()).map(
             ([key, value], index) => ({
               name: key,
@@ -395,7 +394,7 @@ loadSubscribedMatches(){
             })
           );
 
-          this.todo1list = res.dashboardResponse.toDoList;
+          this.todo1list = this.dashboardData.toDoList;
           this.todos = this.todo1list.map((item: Todo1) => ({
             id:item.id,
             completed:item.completed,
@@ -403,9 +402,9 @@ loadSubscribedMatches(){
             checked: item.completed === 'Y'
           }));
 
-          this.toDoMap = res.dashboardResponse.toDoMap;
+          this.toDoMap = this.dashboardData.toDoMap;
           
-          this.dailyQuestionCountMap = new Map(Object.entries(res.dashboardResponse.dailyQuestionCountMap));
+          this.dailyQuestionCountMap = new Map(Object.entries(this.dashboardData.dailyQuestionCountMap));
           this.loadDailyChart(this.dailyQuestionCountMap);
 
         },

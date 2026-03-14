@@ -558,6 +558,13 @@
   color: #000;   /* black font */
 }
 
+.iq-answer {
+    white-space: pre-wrap;    /* ✅ preserves newlines + indentation */
+    font-family: inherit;     /* ✅ keeps your existing font */
+    margin: 0;                /* ✅ removes default <pre> margin */
+    word-break: break-word;   /* ✅ prevents horizontal overflow */
+    line-height: 1.6;
+}
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

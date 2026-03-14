@@ -5,29 +5,31 @@
     <!-- Question Header -->
     <div class="question-header">
       <p class="question-label">Question</p>
-      <h1 class="question-title">Q. {{question.question}}</h1>
+      <h1 class="question-title">Q. {{question?.question}}</h1>
     </div>
 
     <hr class="divider" />
 
     <!-- Meta Information -->
     <div class="question-meta">
-      <p><strong>Type:</strong> {{question.type}}</p>
-      <p><strong>Added By:</strong> {{question.createdBy}}</p>
-      <p><strong>Last Modified:</strong> {{ question.modifiedDate | date:'dd MMM, yyyy' }}</p>
+      <p><strong>Type:</strong> {{question?.type}}</p>
+      <p><strong>Added By:</strong> {{question?.createdBy}}</p>
+      <p><strong>Last Modified:</strong> {{ question?.modifiedDate | date:'dd MMM, yyyy' }}</p>
     </div>
 
     <!-- Answer Section -->
     <div class="answer-section">
       <h2>Answer</h2>
-      <p [innerHTML]="question.answer"></p>
+      <p [innerHTML]="question?.answer"></p>
     </div>
 
     <!-- Image -->
     <div class="image-container">
       <img [src]="getImageSrc(question.image)"
-           [alt]="question.category"
-           class="question-image"/>
+          [alt]="question.category"
+          class="question-image"
+          (error)="onImageError($event)"
+          [title]="imageErrored ? 'This is a default image added by system since there is no reference image added by user. You can add your image in Edit section.' : ''"/>
     </div>
 
     <!-- Pagination -->

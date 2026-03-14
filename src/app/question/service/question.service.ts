@@ -17,18 +17,11 @@ export class QuestionService {
 
   constructor(private http: HttpClient) {}
 
-    // Encrypt data and save to localStorage
-    encryptAndSaveToStorage(key: string, value: string): void {
-      //const encryptedValue = CryptoJS.AES.encrypt(value, QuestionService.ENCRYPTION_KEY).toString();
-      localStorage.setItem(key, value);
-    }
-  
     // Retreive from localStorage and Decrypt
-    private getFromStorageAndDecrypt(key: string): any {
+    private getFromStorage(key: string): any {
       try {
         const encryptedValue = localStorage.getItem(key);
         if (!encryptedValue) return null;
-        //return CryptoJS.AES.decrypt(encryptedValue, QuestionService.ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
         return encryptedValue;
       } catch (error) {
         return null;
@@ -44,7 +37,7 @@ export class QuestionService {
 
 
   private getHeader(): HttpHeaders {
-    const token = this.getFromStorageAndDecrypt("token");
+    const token = this.getFromStorage("token");
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -111,6 +104,18 @@ export class QuestionService {
 
   getQuestionById(id: string): Observable<any> {
     return this.http.get(`${QuestionService.BASE_URL}/question/get-question/${id}`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  getNextQuestionById(id: string): Observable<any> {
+    return this.http.get(`${QuestionService.BASE_URL}/question/get-next-question/${id}`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  getPrevQuestionById(id: string): Observable<any> {
+    return this.http.get(`${QuestionService.BASE_URL}/question/get-prev-question/${id}`, {
       headers: this.getHeader(),
     });
   }
@@ -211,33 +216,6 @@ export class QuestionService {
     return this.http.delete<void>(`${QuestionService.BASE_URL}/delete-interviewquestion/${id}`, {
         headers: this.getHeader(),
     });
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-/**AUTHENTICATION CHECKER */
-    
-  logout():void{
-    this.clearAuth()
-  }
-
-  isAuthenticated():boolean{
-    const token = this.getFromStorageAndDecrypt("token");
-    return !!token;
-  }
-
-  isAdmin():boolean {
-    const role = this.getFromStorageAndDecrypt("role");
-    return role === "ADMIN";
   }
 
 }

@@ -27,8 +27,8 @@
     <select [(ngModel)]="searchForm.seen" name="seen">
       <option value="">Seen Status</option>
       <option value="">All</option>
-      <option value="Y">Read</option>
-      <option value="N">Unread</option>
+      <option value="Yes">Read</option>
+      <option value="No">Unread</option>
     </select>
 
     <div class="date-field">
@@ -61,7 +61,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let feedback of feedbacks" [class.unread-row]="feedback.seen === 'N'">
+        <tr *ngFor="let feedback of feedbacks" [class.unread-row]="feedback.seen === 'No'">
           <td class="col-id">{{feedback.id}}</td>
           <td class="col-stars">
             <ng-container *ngFor="let star of [].constructor(feedback.rating)">⭐</ng-container>
@@ -73,13 +73,13 @@
           </td>
           <td class="col-actions">
             <button
-              *ngIf="feedback.seen === 'N'"
+              *ngIf="feedback.seen === 'No'"
               class="action-btn read"
               (click)="markAsRead(feedback.id)">
               Mark Read
             </button>
             <button
-              *ngIf="feedback.seen === 'Y'"
+              *ngIf="feedback.seen === 'Yes'"
               class="action-btn un-read"
               (click)="markAsRead(feedback.id)">
               Mark Unread

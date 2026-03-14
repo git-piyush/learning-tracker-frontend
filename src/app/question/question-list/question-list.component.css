@@ -254,6 +254,24 @@
   background: linear-gradient(to bottom, transparent 40%, rgba(12, 14, 22, 0.85) 100%);
 }
 
+.product-image-wrap {
+    position: relative;  /* ✅ required for absolute positioning of star */
+}
+
+.bookmark-star {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: gray;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.bookmark-star.bookmarked {
+    color: gold;
+}
+
 /* ── Card Body ── */
 .product-body {
   padding: 20px 22px 22px;
@@ -546,7 +564,13 @@
 .col-type    { width: 120px; }
 .col-level   { width: 130px; }
 .col-date    { width: 130px; white-space: nowrap; color: #6b7280; font-size: 0.8rem; }
-.col-actions { width: 200px; }
+.col-bookmark{width: 60px;}
+.col-actions { 
+    width: 200px; 
+    text-align: center;  /* ✅ centers the header text */
+}
+
+
 
 .col-question {
   min-width: 160px;

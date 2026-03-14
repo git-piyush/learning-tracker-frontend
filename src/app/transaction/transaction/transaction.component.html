@@ -1,1 +1,110 @@
-<p>transaction works!</p>
+<div class="page-container">
+
+  <!-- Page Title -->
+  <h2 class="page-title">All Transactions</h2>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <select [(ngModel)]="filters.category" (change)="applyFilters()">
+      <option value="">All Categories</option>
+      <option *ngFor="let cat of categories">{{ cat }}</option>
+    </select>
+
+    <select [(ngModel)]="filters.subcategory" (change)="applyFilters()">
+      <option value="">All Subcategories</option>
+      <option *ngFor="let sub of subcategories">{{ sub }}</option>
+    </select>
+
+    <select [(ngModel)]="filters.bookmark" (change)="applyFilters()">
+      <option value="">All Bookmarks</option>
+      <option value="true">Bookmarked</option>
+      <option value="false">Not Bookmarked</option>
+    </select>
+
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search questions..."
+      [(ngModel)]="filters.search"
+      (input)="applyFilters()"
+    />
+
+    <button class="reset-btn" (click)="resetFilters()">Reset</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Question</th>
+          <th>Answer</th>
+          <th>Bookmark</th>
+          <th>Category</th>
+          <th>Subcategory</th>
+          <th>Type</th>
+          <th>Created At</th>
+          <th>Last Modified</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of pagedQuestions; let i = index">
+          <td class="sl-no">{{ startIndex + i }}</td>
+          <td class="ellipsis" [title]="item.question">{{ item.question }}</td>
+          <td class="ellipsis muted" [title]="item.answer">{{ item.answer }}</td>
+          <td>
+            <button
+              class="bm-btn"
+              [class.active]="item.bookmarked"
+              (click)="toggleBookmark(item)"
+            >
+              {{ item.bookmarked ? '★ Saved' : '☆ Save' }}
+            </button>
+          </td>
+          <td><span class="badge badge-cat">{{ item.category }}</span></td>
+          <td><span class="badge badge-sub">{{ item.subcategory }}</span></td>
+          <td><span class="badge badge-type">{{ item.type }}</span></td>
+          <td class="muted">{{ item.createdAt }}</td>
+          <td class="muted">{{ item.modifiedAt }}</td>
+          <td>
+            <div class="actions">
+              <button class="action-btn" (click)="onView(item)">View</button>
+              <button class="action-btn" (click)="onEdit(item)">Edit</button>
+              <button class="action-btn del" (click)="onDelete(item)">Delete</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="pagedQuestions.length === 0">
+          <td colspan="10" class="no-data">No questions found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-bar">
+    <div class="pagination-info">
+      Showing {{ startIndex }}–{{ endIndex }} of {{ filteredQuestions.length }} results
+    </div>
+
+    <div class="pagination-controls">
+        <button (click)="changePage(0)" [disabled]="page === 0" class="page-btn">First</button>
+        <button (click)="changePage(page - 1)" [disabled]="page === 0" class="page-btn">← Prev</button>
+        <span>Page {{ page + 1 }} of {{ totalPages }}</span>
+        <button  class="page-btn" (click)="changePage(page + 1)" [disabled]="(page + 1) >= totalPages">Next →</button>
+        <button (click)="changePage(totalPages - 1)" [disabled]="(page + 1) >= totalPages" class="page-btn">Last</button>
+    </div>
+
+    <div class="page-size-wrap">
+      <label>Rows per page</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+  </div>
+</div>

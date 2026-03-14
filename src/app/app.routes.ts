@@ -15,6 +15,7 @@ import { FeedbackComponent } from './feedback/feedback/feedback.component';
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
+import { TransactionComponent } from './transaction/transaction/transaction.component';
 
 export const routes: Routes = [
 
@@ -32,7 +33,7 @@ export const routes: Routes = [
   { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
   { path: 'feedback-list', component: FeedbackComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-
+  { path: 'transaction', component: TransactionComponent, canActivate:[GuardService] },
   { path: 'profile', component: ProfileComponent, canActivate:[GuardService] },
   { path: 'dashboard', component: DashboardComponent, canActivate:[GuardService] },
   { path: 'auth/social-callback', component: Oauth2LoginComponent },

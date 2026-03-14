@@ -205,4 +205,8 @@ export class QuestionListComponent  implements OnInit {
     this.page = 0; // reset to first page
     this.loadQuestions(); // reload full list
   }
+
+  onImageError(event: Event) {
+  (event.target as HTMLImageElement).src = 'defaultquestion.png';
+}
 }
