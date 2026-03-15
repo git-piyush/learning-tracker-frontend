@@ -155,6 +155,8 @@ getAvatarColor(name: string): string {
       this.startTenMinTask();
 
       this.loadOnlineUsers();
+
+      
   }
 
     loadOnlineUsers(): void {
