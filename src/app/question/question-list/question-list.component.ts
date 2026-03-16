@@ -161,18 +161,19 @@ export class QuestionListComponent  implements OnInit {
   }
 
   goToPage(value: string): void {
-  const pageNumber = parseInt(value, 10);
+    const pageNumber = parseInt(value, 10);
 
-  // Ignore empty / non-numeric input
-  if (isNaN(pageNumber)) return;
+    // Ignore empty / non-numeric input
+    if (isNaN(pageNumber)) return;
 
-  // Convert from 1-based (what the user sees) to 0-based (what the API uses)
-  const targetPage = pageNumber - 1;
+    // Convert from 1-based (what the user sees) to 0-based (what the API uses)
+    const targetPage = pageNumber - 1;
 
-  // Clamp to valid range and only navigate if it's a different page
-  if (targetPage >= 0 && targetPage < this.totalPages && targetPage !== this.page) {
-    this.changePage(targetPage);
-  }}
+    // Clamp to valid range and only navigate if it's a different page
+    if (targetPage >= 0 && targetPage < this.totalPages && targetPage !== this.page) {
+      this.changePage(targetPage);
+    }
+  }
 
 
   //SHOW ERROR
@@ -197,16 +198,16 @@ export class QuestionListComponent  implements OnInit {
 
   resetSearch(){
     this.searchForm = {
-    category: '',
-    subCategory: '',
-    type: '',
-    bookmark: ''
-  };
+      category: '',
+      subCategory: '',
+      type: '',
+      bookmark: ''
+    };
     this.page = 0; // reset to first page
     this.loadQuestions(); // reload full list
   }
 
   onImageError(event: Event) {
-  (event.target as HTMLImageElement).src = 'defaultquestion.png';
-}
+    (event.target as HTMLImageElement).src = 'defaultquestion.png';
+  }
 }

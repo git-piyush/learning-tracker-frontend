@@ -105,22 +105,26 @@ export class TransactionComponent  implements OnInit {
       this.totalPages = 0;
       this.totalElements = 0;
       this.page = 0;
-      this.size = 2;
+      this.size = 10;
       this.sortBy = 'id';
       this.direction = 'asc';
+  }
+
+  resetSearch(){
+    this.searchForm = {
+      category: '',
+      subCategory: '',
+      type: '',
+      bookmark: ''
+    };
+    this.page = 0; // reset to first page
+    this.loadQuestions(); // reload full list
   }
  
   private updatePagination(): void {
     
   }
 
- 
-  onPageSizeChange(): void {
-    this.size = this.size;
-    this.loadQuestions();
-  }
- 
- 
   onView(item: Question): void {
     console.log('View:', item);
   }
@@ -140,19 +144,8 @@ export class TransactionComponent  implements OnInit {
     }
   }
 
-  deleteQuestion(id:number):void{
 
-  }
-
-  navigateToEditProductPage(id:number):void{
-
-  }
-
-  navigateToViewQuestionDetails(id:number):void{
-
-  }
-
-    changePage(newPage: number): void {
+  changePage(newPage: number): void {
     if (newPage >= 0 && newPage < this.totalPages) {
       this.page = newPage;
       this.loadQuestions();
@@ -172,10 +165,33 @@ export class TransactionComponent  implements OnInit {
       this.sortBy = column;
       this.direction = 'asc';
     }
-    //this.loadQuestions();
+    this.loadQuestions();
   }
 
   goToPage(value: string): void {
-    const pageNumber = parseInt(value, 10);
+      const pageNumber = parseInt(value, 10);
+
+      // Ignore empty / non-numeric input
+      if (isNaN(pageNumber)) return;
+
+      // Convert from 1-based (what the user sees) to 0-based (what the API uses)
+      const targetPage = pageNumber - 1;
+
+      // Clamp to valid range and only navigate if it's a different page
+      if (targetPage >= 0 && targetPage < this.totalPages && targetPage !== this.page) {
+        this.changePage(targetPage);
+      }
+    }
+
+  deleteQuestion(id:number):void{
+
+  }
+
+  navigateToEditProductPage(id:number):void{
+
+  }
+
+  navigateToViewQuestionDetails(id:number):void{
+
   }
 }

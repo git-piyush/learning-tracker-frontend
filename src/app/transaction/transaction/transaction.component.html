@@ -109,15 +109,13 @@
         <button (click)="changePage(totalPages - 1)" [disabled]="(page + 1) >= totalPages" class="page-btn">Last</button>
     </div>
 
-    <div class="page-size-wrap">
-      <label>Rows per page</label>
-      <select [(ngModel)]="size" (change)="onPageSizeChange()">
-        <option [value]="2">2</option>
-        <option [value]="5">5</option>
-        <option [value]="10">10</option>
-        <option [value]="25">25</option>
-        <option [value]="50">50</option>
+    <label class="page-size-wrap">
+      Page Size:
+      <select (change)="changeSize($event)" [value]="size">
+        <option *ngFor="let s of [2, 5, 10, 20]" [value]="s">{{ s }}</option>
       </select>
-    </div>
+    </label>
+
+
   </div>
 </div>
