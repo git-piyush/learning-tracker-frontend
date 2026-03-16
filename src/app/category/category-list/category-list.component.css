@@ -196,7 +196,7 @@ thead th {
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.10em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   color: #64748b;
   padding: 14px 18px;
   text-align: left;

@@ -242,52 +242,49 @@
 /* ── Button Group ── */
 .button-group {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
   gap: 10px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.btn {
-  font-family: 'DM Sans', sans-serif;
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px auto 0;
+  gap: 10px;
+}
+
+.button-group button {
+  padding: 8px 20px;
   font-size: 13px;
-  font-weight: 600;
-  padding: 11px 28px;
-  border-radius: 10px;
+  font-weight: 500;
   border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
   cursor: pointer;
-  letter-spacing: 0.04em;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-.btn.btn-primary {
-  background: linear-gradient(135deg, #14b8a6, #0d9488);
-  color: #fff;
-  box-shadow: 0 4px 18px rgba(20, 184, 166, 0.35);
-}
-
-.btn.btn-primary:hover {
-  background: linear-gradient(135deg, #2dd4bf, #14b8a6);
-  box-shadow: 0 6px 24px rgba(20, 184, 166, 0.52);
-  transform: translateY(-2px);
-}
-
-.btn.btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  color: #94a3b8;
-}
-
-.btn.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #e2e8f0;
+/* Hover effect */
+.button-group button:hover {
   transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.btn:active {
-  transform: translateY(0);
+/* Click effect */
+.button-group button:active {
+  transform: scale(0.98);
 }
+
+.button-group button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 
 /* ── Animation ── */
 @keyframes fadeUp {

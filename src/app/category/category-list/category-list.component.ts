@@ -4,18 +4,8 @@ import { Router } from '@angular/router';
 import { CategoryService } from '../service/category.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BaseComponent } from '../../baseComponent';
-
-
-interface Category {
-  id: number;
-  refCode: string;
-  refCodeLongName: string;
-  category: string;
-  subCategory:string;
-  active: string;
-  refCodeOrder?: number;
-}
+import { BaseComponent } from '../../shared/baseComponent';
+import { Category } from '../../shared/app.model';
 
 @Component({
   selector: 'app-category-list',
@@ -28,13 +18,14 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
 
   searchForm = {
     category: '',
-    refCode: '',
-    refCodeLongName: '',
+    topic:'',
     active: '',
     subCategory:''
   };
   categoryList: String[] = [];
-  categories: Category[] = [];
+  subCategoryList: String[] = [];
+  topicList: String[] = [];
+  categories: Category[] = []
   totalPages = 0;
   totalElements = 0;
   page = 0;
@@ -54,10 +45,9 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
   resetSearch(): void {
     this.searchForm = {
       category: '',
-      refCode: '',
-      refCodeLongName: '',
       active: '',
-      subCategory:''
+      subCategory:'',
+      topic:''
     };
     this.page = 0; // reset to first page
     this.loadCategories(); // reload full list
@@ -137,6 +127,37 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
               alert(err.error.message);
             }
     });
+  }
+
+  onCategoryChange(event: Event):void{
+    const selectElement = event.target as HTMLSelectElement;
+    const category = selectElement.value;
+    this.categoryService.getSubCategoryList(category).subscribe({
+      next: (res)=>{
+        this.subCategoryList = res.subCategoryList;
+         this.searchForm.subCategory='';
+         this.searchForm.topic='';
+        this.search();
+      },error:(err)=>{
+        this.notify.error(err.error.message);
+      }
+    });
+  }
+
+  onSubCategoryChange(event: Event):void{
+    const selectElement = event.target as HTMLSelectElement;
+    const subCat = selectElement.value;
+    this.categoryService.getTopicList(subCat).subscribe({
+      next: (res)=>{
+        this.topicList = res.topicList;
+        this.searchForm.topic='';
+        this.search();
+      },error:(err)=>console.error(err)
+    });
+  }
+
+  ontopicChange(event: Event):void{
+    this.search();
   }
 
   // Search method

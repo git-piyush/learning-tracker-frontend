@@ -94,6 +94,10 @@
   gap: 20px;
 }
 
+.form-row.two-col {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .form-row.three-col {
   grid-template-columns: 1fr 1fr 1fr;
 }

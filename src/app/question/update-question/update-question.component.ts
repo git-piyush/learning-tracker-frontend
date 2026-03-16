@@ -137,7 +137,7 @@ export class UpdateQuestionComponent  implements OnInit {
    }
 
   loadSubcategory(cat:string):void{
-    this.categoryService.getSubCategoryMap(cat).subscribe({
+    this.categoryService.getSubCategoryList(cat).subscribe({
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
         console.log(this.subCategoryList);
@@ -150,7 +150,7 @@ export class UpdateQuestionComponent  implements OnInit {
   onChangeCategory(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const category1 = selectElement.value;
-    this.categoryService.getSubCategoryMap(category1).subscribe({
+    this.categoryService.getSubCategoryList(category1).subscribe({
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
         console.log(this.subCategoryList);

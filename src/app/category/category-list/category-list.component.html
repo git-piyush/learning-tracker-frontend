@@ -16,16 +16,22 @@
 
   <!-- Search Form -->
   <div class="search-form">
-    <select [(ngModel)]="searchForm.category" name="category">
+    <select [(ngModel)]="searchForm.category" name="category" (change)="onCategoryChange($event)">
       <option value="">Select Category</option>
       <option *ngFor="let cat of categoryList" [value]="cat">{{cat}}</option>
     </select>
 
-    <input type="text" placeholder="Ref Code" [(ngModel)]="searchForm.refCode" name="refCode">
+    <select [(ngModel)]="searchForm.subCategory" name="subCategory" (change)="onSubCategoryChange($event)">
+      <option value="">Select SubCategory</option>
+      <option *ngFor="let subCat of subCategoryList" [value]="subCat">{{subCat}}</option>
+    </select>
 
-    <input type="text" placeholder="Ref Code Long Name" [(ngModel)]="searchForm.refCodeLongName" name="refCodeLongName">
+    <select [(ngModel)]="searchForm.topic" name="topic" (change)="ontopicChange($event)">
+      <option value="">Select Category</option>
+      <option *ngFor="let topic of topicList" [value]="topic">{{topic}}</option>
+    </select>
 
-    <select [(ngModel)]="searchForm.active" name="active">
+    <select [(ngModel)]="searchForm.active" name="active" (change)="search()">
       <option value="">Active?</option>
       <option value="Y">Yes</option>
       <option value="N">No</option>
@@ -39,39 +45,37 @@
 
   <!-- Table -->
   <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th (click)="sort('id')">ID <span class="sort-icon">↕</span></th>
-          <th (click)="sort('category')">Category <span class="sort-icon">↕</span></th>
-          <th>Sub Category</th>
-          <th (click)="sort('refCode')">Ref Code <span class="sort-icon">↕</span></th>
-          <th (click)="sort('refCodeLongName')">Ref Code Long Name <span class="sort-icon">↕</span></th>
-          <th (click)="sort('active')">Active <span class="sort-icon">↕</span></th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cat of categories">
-          <td class="col-id">{{cat.id}}</td>
-          <td><span class="category-pill">{{cat.category}}</span></td>
-          <td>{{cat.subCategory}}</td>
-          <td><code class="ref-code">{{cat.refCode}}</code></td>
-          <td>{{cat.refCodeLongName}}</td>
-          <td>
-            <span class="active-badge" [class.active]="cat.active === 'Yes' || cat.active === 'Y'">
-              {{cat.active}}
-            </span>
-          </td>
-          <td class="col-actions">
-            <button class="action-btn view" (click)="viewCategory(cat.id)">View</button>
-            <button class="action-btn edit" (click)="updateCategory(cat.id)">Edit</button>
-            <button class="action-btn delete" (click)="deleteCategory(cat.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-id" (click)="sort('id')">ID <span class="sort-icon">↕</span></th>
+        <th (click)="sort('category')">Category <span class="sort-icon">↕</span></th>
+        <th (click)="sort('subCategory')">SubCategory <span class="sort-icon">↕</span></th>
+        <th (click)="sort('topic')">Topic <span class="sort-icon">↕</span></th>
+        <th (click)="sort('active')">Active <span class="sort-icon">↕</span></th>
+        <th class="col-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cat of categories">
+        <td class="col-id">{{cat.id}}</td>
+        <td><span class="category-pill">{{cat.category}}</span></td>
+        <td>{{cat.subCategory}}</td>
+        <td><code class="ref-code">{{cat.topic}}</code></td>
+        <td class="col-active">
+          <span class="active-badge" [class.active]="cat.active === 'Yes' || cat.active === 'Y'">
+            {{cat.active}}
+          </span>
+        </td>
+        <td class="col-actions">
+          <button class="action-btn view" (click)="viewCategory(cat.id)">View</button>
+          <button class="action-btn edit" (click)="updateCategory(cat.id)">Edit</button>
+          <button class="action-btn delete" (click)="deleteCategory(cat.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 </div>
 

@@ -75,7 +75,7 @@ export class QuestionListComponent  implements OnInit {
   onChangeCategory(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const category1 = selectElement.value;
-    this.categoryService.getSubCategoryMap(category1).subscribe({
+    this.categoryService.getSubCategoryList(category1).subscribe({
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
         console.log(this.subCategoryList);

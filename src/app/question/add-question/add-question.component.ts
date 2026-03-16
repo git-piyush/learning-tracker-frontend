@@ -26,6 +26,7 @@ export class AddQuestionComponent implements OnInit {
   qId: string | null = null
   category:string = '';
   subCategory:string='';
+  topic:string='';
   type:string='';
   question:string='';
   bookmark:string='';
@@ -37,6 +38,7 @@ export class AddQuestionComponent implements OnInit {
   message:string = '';
   categoryList: String[] = [];
   subCategoryList:string[] = [];
+  topicList:string[] = [];
 
 
 
@@ -92,6 +94,7 @@ export class AddQuestionComponent implements OnInit {
     event.preventDefault()
     const formData = new FormData();
     formData.append("category", this.category);
+    formData.append("topic", this.topic);
     formData.append("type", this.type);
     formData.append("bookmark", this.bookmark);
     formData.append("level", this.level);
@@ -121,10 +124,20 @@ export class AddQuestionComponent implements OnInit {
   onChangeCategory(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const category1 = selectElement.value;
-    this.categoryService.getSubCategoryMap(category1).subscribe({
+    this.categoryService.getSubCategoryList(category1).subscribe({
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
         console.log(this.subCategoryList);
+      },error:(err)=>this.notify.success(err.error.message)
+    });
+  }
+
+  onChangeSubCategory(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const subCat = selectElement.value;
+    this.categoryService.getTopicList(subCat).subscribe({
+      next: (res)=>{
+        this.topicList = res.topicList;
       },error:(err)=>this.notify.success(err.error.message)
     });
   }

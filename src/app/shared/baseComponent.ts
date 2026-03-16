@@ -3,7 +3,7 @@ import { Injector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { NotificationService } from './shared/notificationService';
+import { NotificationService } from './notificationService';
 
 export abstract class BaseComponent {
 

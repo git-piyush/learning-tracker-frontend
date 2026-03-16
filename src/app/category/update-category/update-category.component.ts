@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from '../service/category.service';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { BaseComponent } from '../../shared/baseComponent';
 
 @Component({
   selector: 'app-update-category',
@@ -12,25 +13,24 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './update-category.component.html',
   styleUrl: './update-category.component.css'
 })
-export class UpdateCategoryComponent implements OnInit{
+export class UpdateCategoryComponent extends BaseComponent implements OnInit{
   categoryId!: string;
 
-  constructor(private route: ActivatedRoute, private categoryService: CategoryService,
-    private router: Router,private fb: FormBuilder, private http: HttpClient
-  ){}
-
+    constructor(injector:Injector, private categoryService:CategoryService){
+      super(injector);
+    }
     formData: any = {
       id:'',
-      refCode: '',
-      refCodeLongName: '',
       category: '',
       active: '',
+      topic:'',
       subCategory:''
   };
   
   message:string | null = null;
   categoryList: String[] = [];
   subCategoryList: String[] = [];
+  topicList: String[] = [];
 
 
 
@@ -61,7 +61,7 @@ export class UpdateCategoryComponent implements OnInit{
                   subCategory: res.category.subCategory
                 };
                 this.loadSubcategory(res.category.category, res.category.subCategory);
-                
+                this.loadTopic(res.category.subCategory, res.category.topic);
               },
               error: (err: any) => {
               if(err.error.status==401){
@@ -76,13 +76,12 @@ export class UpdateCategoryComponent implements OnInit{
 
   handleSubmit() { 
     if( 
-      !this.formData.refCode || 
-      !this.formData.refCodeLongName || 
-      !this.formData.category || 
+      !this.formData.category ||
+      !this.formData.topic ||
       !this.formData.active ||
       !this.formData.subCategory
     ){
-      this.showMessage("All fields are required");
+      this.notify.error("All fields are required");
       return;
     }
     console.log('Update: '+this.formData.subCategory);
@@ -102,29 +101,43 @@ export class UpdateCategoryComponent implements OnInit{
   }
 
   loadSubcategory(cat:string, subCategory:string):void{
-      this.categoryService.getSubCategoryMap(cat).subscribe({
+      this.categoryService.getSubCategoryList(cat).subscribe({
         next: (res)=>{
           this.subCategoryList = res.subCategoryList;
+
         },error:(err)=>console.error(err)
       });
       this.formData.subCategory = subCategory;
   }
 
- onChangeCategory(event: Event): void {
+  loadTopic(subCategory:string, topic:string):void{
+      this.categoryService.getTopicList(subCategory).subscribe({
+        next: (res)=>{
+          this.topicList = res.topicList;
+          
+        },error:(err)=>console.error(err)
+      });
+      this.formData.topic = topic;
+  }
+
+  onChangeCategory(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const category = selectElement.value;
-    this.categoryService.getSubCategoryMap(category).subscribe({
+    this.categoryService.getSubCategoryList(category).subscribe({
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
       },error:(err)=>console.error(err)
     });
   }
 
-  showMessage(message:string){
-    this.message = message;
-    setTimeout(() =>{
-      this.message = null
-    }, 4000)
+ onChangeSubCategory(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const category = selectElement.value;
+    this.categoryService.getTopicList(category).subscribe({
+      next: (res)=>{
+        this.topicList = res.topicList;
+      },error:(err)=>console.error(err)
+    });
   }
 
 }

@@ -82,11 +82,12 @@ export class CategoryService {
   if (searchForm.category) {
     params = params.set('category', searchForm.category);
   }
-  if (searchForm.refCode) {
-    params = params.set('refCode', searchForm.refCode);
+
+  if (searchForm.subCategory) {
+    params = params.set('subCategory', searchForm.subCategory);
   }
-  if (searchForm.refCodeLongName) {
-    params = params.set('longName', searchForm.refCodeLongName);
+  if (searchForm.topic) {
+    params = params.set('topic', searchForm.topic);
   }
   if (searchForm.active) {
     params = params.set('active', searchForm.active);
@@ -104,8 +105,14 @@ export class CategoryService {
     });
   }
 
-  getSubCategoryMap(cat: string): Observable<any> {
-    return this.http.get(`${CategoryService.BASE_URL}/categories/getsubcategory-map/${cat}`, {
+  getSubCategoryList(cat: string): Observable<any> {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/getsubcategory-list/${cat}`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  getTopicList(subcat: string): Observable<any> {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/gettopic-list/${subcat}`, {
       headers: this.getHeader(),
     });
   }
