@@ -173,30 +173,37 @@ tr:last-child td {
 
 /* Bookmark button */
 .bookmark-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid rgba(255, 200, 0, 0.2);
-  background: rgba(255, 200, 0, 0.05);
-  color: #aaa;
-  transition: all 0.2s ease;
+  justify-content: center;
+  transition: transform 0.15s ease;
 }
 
 .bookmark-btn:hover {
-  border-color: rgba(255, 200, 0, 0.5);
-  background: rgba(255, 200, 0, 0.1);
-  color: gold;
+  transform: scale(1.2);
 }
 
-.bookmark-btn.bookmarked {
-  border-color: rgba(255, 200, 0, 0.6);
-  background: rgba(255, 200, 0, 0.12);
-  color: gold;
+.star-icon {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: #aaa;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+.bookmark-btn:hover .star-icon {
+  stroke: rgb(41, 107, 0);
+}
+
+.bookmark-btn.bookmarked .star-icon {
+  fill: rgb(41, 107, 0);
+  stroke: rgb(41, 107, 0);
 }
 
 /* Badges */

@@ -56,16 +56,25 @@ export class TransactionService {
         params = params.set('category', searchForm.category);
       }
       if (searchForm.subCategory) {
-        params = params.set('subCategory', searchForm.subCategory);
+        params = params.set('subcategory', searchForm.subCategory);
+      }
+      if (searchForm.topic) {
+        params = params.set('topic', searchForm.topic);
       }
       if (searchForm.type) {
         params = params.set('type', searchForm.type);
       }
+      if (searchForm.level) {
+        params = params.set('level', searchForm.level);
+      }
       if (searchForm.bookmark) {
         params = params.set('bookmark', searchForm.bookmark);
       }
+      if (searchForm.searchText) {
+        params = params.set('question', searchForm.searchText);
+      }
 
-      return this.http.get(`${TransactionService.BASE_URL}/question/all-questions`, {
+      return this.http.get(`${TransactionService.BASE_URL}/transaction/all-transaction`, {
         headers: this.getHeader(),
         params: params
       });

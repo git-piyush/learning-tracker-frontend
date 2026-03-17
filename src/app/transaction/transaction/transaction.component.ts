@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TransactionService } from '../service/transaction.service';
+import { BaseComponent } from '../../shared/baseComponent';
+import { CategorySearch } from '../../shared/app.model';
+import { CategoryService } from '../../category/service/category.service';
 
 export interface Question {
+  pid:number;
   id: number;
   question: string;
   answer: string;
-  bookmarked: string;
+  bookmark: string;
   category: string;
   subCategory: string;
   topic:string;
@@ -15,15 +19,7 @@ export interface Question {
   createdDate: string;
   modifiedDate: string;
 }
- 
-export interface Filters {
-  category: string;
-  subcategory: string;
-  bookmark: string;
-  search: string;
-}
- 
-
+  
 @Component({
   selector: 'app-transaction',
   standalone: true,
@@ -31,30 +27,26 @@ export interface Filters {
   templateUrl: './transaction.component.html',
   styleUrl: './transaction.component.css'
 })
-export class TransactionComponent  implements OnInit {
+export class TransactionComponent extends BaseComponent  implements OnInit {
 
-  constructor(private transactionService:TransactionService){}
+  constructor(injector:Injector ,private transactionService:TransactionService, private categoryService:CategoryService){
+    super(injector);
+  }
 
   searchForm = {
     category: '',
     subCategory: '',
+    topic:'',
     type: '',
-    bookmark: ''
+    level:'',
+    bookmark: '',
+    searchText:''
   };
  
   questions: Question[] = [];
-  filteredQuestions: Question[] = [];
-  pagedQuestions: Question[] = [];
- 
-  filters: Filters = {
-    category: '',
-    subcategory: '',
-    bookmark: '',
-    search: ''
-  };
- 
-  categories: string[] = [];
-  subcategories: string[] = [];
+  categoryList: String[] = [];
+  subCategoryList: String[] = [];
+  topicList: String[] = [];
  
   // Pagination
   totalPages = 0;
@@ -64,19 +56,61 @@ export class TransactionComponent  implements OnInit {
   sortBy = 'id';
   direction = 'asc';
 
-
-
  
   ngOnInit(): void {
     this.resetFilters();
+    this.lodCategoryDropdown();
     this.loadQuestions();
+  }
+
+  lodCategoryDropdown():void{
+    this.categoryService.getCategoryList().subscribe({
+      next: (res)=>{
+        this.categoryList = res.categoryList;
+      },error:(err)=>console.error(err)
+    });
+  }
+
+  onCategoryChange(event:Event):void{
+    this.searchForm.subCategory='';
+    this.searchForm.topic='';
+        const selectElement = event.target as HTMLSelectElement;
+        const category = selectElement.value;
+      if(category!=''){
+        this.categoryService.getSubCategoryList(category).subscribe({
+          next: (res)=>{
+            this.subCategoryList = res.subCategoryList;
+          },error:(err)=>{
+            this.notify.error(err.error.message);
+          }
+      });
+    }
+    this.loadQuestions();
+  }
+
+  onSubCategoryChange(event:Event):void{
+        this.searchForm.topic='';
+        const selectElement = event.target as HTMLSelectElement;
+        const category = selectElement.value;
+       if(category!=''){
+         this.categoryService.getTopicList(category).subscribe({
+          next: (res)=>{
+            this.topicList = res.topicList;
+          },error:(err)=>{
+            this.notify.error(err.error.message);
+            }
+        });
+       }
+       this.loadQuestions();
   }
 
 
   loadQuestions(): void {
+    console.log(this.searchForm);
     this.transactionService.getAllQuestions(this.page,this.size,this.direction,this.sortBy,this.searchForm).subscribe({
       next: (res) => {
         this.questions = res.questionList;
+        console.log(this.questions);
         this.totalPages = res.totalPages;
         this.totalElements = res.totalElements;
       },
@@ -86,22 +120,7 @@ export class TransactionComponent  implements OnInit {
     });
   }
 
- 
-  applyFilters(): void {
-    const { category, subcategory, bookmark, search } = this.filters;
-    const q = search.toLowerCase();
- 
-    this.filteredQuestions = this.questions.filter(item => {
-      const matchCat  = !category    || item.category    === category;
-      const matchSub  = !subcategory || item.subCategory === subcategory;
-      const matchBm   = bookmark === '' || String(item.bookmarked) === bookmark;
-      const matchText = !q || item.question.toLowerCase().includes(q)
-                           || item.answer.toLowerCase().includes(q);
-      return matchCat && matchSub && matchBm && matchText;
-    });
-    this.updatePagination();
-  }
- 
+
   resetFilters(): void {
       this.totalPages = 0;
       this.totalElements = 0;
@@ -109,17 +128,6 @@ export class TransactionComponent  implements OnInit {
       this.size = 10;
       this.sortBy = 'id';
       this.direction = 'asc';
-  }
-
-  resetSearch(){
-    this.searchForm = {
-      category: '',
-      subCategory: '',
-      type: '',
-      bookmark: ''
-    };
-    this.page = 0; // reset to first page
-    this.loadQuestions(); // reload full list
   }
  
   private updatePagination(): void {
@@ -131,21 +139,14 @@ export class TransactionComponent  implements OnInit {
   }
 
   toggleBookmark(item: Question):void{
-
+    item.bookmark = item.bookmark === 'Yes' ? 'No' : 'Yes';
+      console.log(item.id);
   }
  
   onEdit(item: Question): void {
     console.log('Edit:', item);
   }
  
-  onDelete(item: Question): void {
-    if (confirm(`Delete question: "${item.question}"?`)) {
-      this.questions = this.questions.filter(q => q.id !== item.id);
-      this.applyFilters();
-    }
-  }
-
-
   changePage(newPage: number): void {
     if (newPage >= 0 && newPage < this.totalPages) {
       this.page = newPage;

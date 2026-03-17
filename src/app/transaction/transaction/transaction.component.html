@@ -5,28 +5,46 @@
 
   <!-- Filter Bar -->
   <div class="filter-bar">
-    <select [(ngModel)]="filters.category" (change)="applyFilters()">
-      <option value="">All Categories</option>
-      <option *ngFor="let cat of categories">{{ cat }}</option>
+    <select [(ngModel)]="searchForm.category" (change)="onCategoryChange($event)">
+      <option value="">Categories</option>
+      <option *ngFor="let cat of categoryList">{{ cat }}</option>
     </select>
 
-    <select [(ngModel)]="filters.subcategory" (change)="applyFilters()">
-      <option value="">All Subcategories</option>
-      <option *ngFor="let sub of subcategories">{{ sub }}</option>
+    <select [(ngModel)]="searchForm.subCategory" (change)="onSubCategoryChange($event)">
+      <option value="">Subcategories</option>
+      <option *ngFor="let sub of subCategoryList">{{ sub }}</option>
     </select>
 
-    <select [(ngModel)]="filters.bookmark" (change)="applyFilters()">
-      <option value="">All Bookmarks</option>
-      <option value="true">Bookmarked</option>
-      <option value="false">Not Bookmarked</option>
+    <select [(ngModel)]="searchForm.topic" (change)="loadQuestions()">
+      <option value="">Topic</option>
+      <option *ngFor="let topic of topicList">{{ topic }}</option>
+    </select>
+
+    <select [(ngModel)]="searchForm.type" (change)="loadQuestions()">
+      <option value="">Type</option>
+      <option value="theory">Theoretical</option>
+      <option value="practical">Hands On</option>
+    </select>
+
+    <select [(ngModel)]="searchForm.level" (change)="loadQuestions()">
+      <option value="" disabled>Level</option>
+      <option value="beginner">Beginner</option>
+      <option value="midium">Medium</option>
+      <option value="experience">Experienced</option>
+    </select>
+
+    <select [(ngModel)]="searchForm.bookmark" (change)="loadQuestions()">
+      <option value="" disabled>Bookmarked</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
     </select>
 
     <input
       type="text"
       class="search-input"
       placeholder="Search questions..."
-      [(ngModel)]="filters.search"
-      (input)="applyFilters()"
+      [(ngModel)]="searchForm.searchText"
+      (input)="loadQuestions()"
     />
 
     <button class="reset-btn" (click)="resetFilters()">Reset</button>
@@ -50,15 +68,17 @@
     </thead>
     <tbody>
       <tr *ngFor="let question of questions; let i = index">
-        <td class="col-num"><span class="num">{{ i + 1 }}</span></td>
+        <td class="col-num"><span class="num">{{ question.pid }}</span></td>
         <td class="col-question">
           <div class="question-text">{{ question.question }}</div>
         </td>
         <td class="col-bookmark">
           <button class="bookmark-btn"
-            [class.bookmarked]="question.bookmarked === 'Yes'"
+            [class.bookmarked]="question.bookmark === 'Yes'"
             (click)="toggleBookmark(question)">
-            {{ question.bookmarked === 'Yes' ? '★' : '☆' }}
+            <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+            </svg>
           </button>
         </td>
         <td class="col-category">
