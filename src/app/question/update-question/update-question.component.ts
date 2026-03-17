@@ -27,6 +27,7 @@ export class UpdateQuestionComponent  implements OnInit {
   qId: string='';
   category:string = '';
   subCategory:string='';
+  topic:string='';
   type:string='';
   question:string='';
   bookmark:string='';
@@ -38,6 +39,7 @@ export class UpdateQuestionComponent  implements OnInit {
   message:string = ''
   categoryList: String[] = [];
   subCategoryList:string[] = [];
+  topicList:string[] = [];
 
   ngOnInit(): void {
     this.loadDropDown();
@@ -61,10 +63,12 @@ export class UpdateQuestionComponent  implements OnInit {
     this.questionService.getQuestionById(productId).subscribe({
       next:(res:any) =>{
         this.loadSubcategory(res.question.category);
+        this.loadTopicList(res.question.subCategory);
         if (res.status === 200) {
-          
-          const q = res.question;
+          console.log(res.question);
+        const q = res.question;
         this.qId=q.id;
+        this.topic=q.topic;
         this.category = q.category;
         this.subCategory = q.subCategory;
         this.bookmark = q.bookmark;
@@ -110,6 +114,7 @@ export class UpdateQuestionComponent  implements OnInit {
     const formData = new FormData();
     formData.append("id", this.qId);
     formData.append("category", this.category);
+     formData.append("topic", this.topic);
     formData.append("type", this.type);
     formData.append("bookmark", this.bookmark);
     formData.append("level", this.level);
@@ -140,11 +145,17 @@ export class UpdateQuestionComponent  implements OnInit {
     this.categoryService.getSubCategoryList(cat).subscribe({
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
-        console.log(this.subCategoryList);
       },error:(err)=>console.error(err)
     });
-    this.subCategoryList[0]="JAVA Basics";
     console.log(this.subCategoryList);
+  }
+
+  loadTopicList(subCat:string):void{
+    this.categoryService.getTopicList(subCat).subscribe({
+      next: (res)=>{
+        this.topicList = res.topicList;
+      },error:(err)=>console.error(err)
+    });
   }
 
   onChangeCategory(event: Event): void {
@@ -154,6 +165,16 @@ export class UpdateQuestionComponent  implements OnInit {
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
         console.log(this.subCategoryList);
+      },error:(err)=>console.error(err)
+    });
+  }
+
+  onSubCategoryChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const subCat = selectElement.value;
+    this.categoryService.getTopicList(subCat).subscribe({
+      next: (res)=>{
+        this.topicList = res.topicList;
       },error:(err)=>console.error(err)
     });
   }

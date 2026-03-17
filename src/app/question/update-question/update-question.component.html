@@ -12,7 +12,7 @@
   <form (submit)="handleSubmit($event)" class="question-form">
 
     <!-- Row 1: Category + Sub Category -->
-    <div class="form-row">
+    <div class="form-row three-col">
       <div class="form-group">
         <label>Category</label>
         <select [(ngModel)]="category" name="category" (change)="onChangeCategory($event)" required>
@@ -23,9 +23,17 @@
 
       <div class="form-group">
         <label>Sub Category</label>
-        <select [(ngModel)]="subCategory" name="subCategory" [ngModelOptions]="{ standalone: true }" required>
+        <select [(ngModel)]="subCategory" name="subCategory" [ngModelOptions]="{ standalone: true }" required (change)="onSubCategoryChange($event)">
           <option value="">Select a Sub Category</option>
           <option *ngFor="let subCategory of subCategoryList" [value]="subCategory">{{ subCategory }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Topic</label>
+        <select [(ngModel)]="topic" name="topic" required>
+          <option value="">Select a Topic</option>
+          <option *ngFor="let topic of topicList" [value]="topic">{{ topic }}</option>
         </select>
       </div>
     </div>

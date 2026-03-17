@@ -143,12 +143,13 @@ tr:last-child td {
 }
 
 /* Column widths */
-.col-num         { width: 44px; }
-.col-question    { width: 26%; }
-.col-bookmark    { width: 110px; }
-.col-category    { width: 90px; }
-.col-subcategory { width: 100px; }
-.col-type        { width: 100px; }
+.col-num         { width: 20px; }
+.col-question    { width: 20%; }
+.col-bookmark    { width: 60px; }
+.col-category    { width: 80px; }
+.col-subcategory { width: 110px; }
+.col-topic       { width: 150px; }
+.col-type        { width: 60px; }
 .col-date        { width: 120px; }
 .col-actions     { width: 170px; text-align: center; }
 

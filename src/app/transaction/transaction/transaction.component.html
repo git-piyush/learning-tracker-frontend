@@ -42,49 +42,48 @@
         <th class="col-bookmark">Bookmark</th>
         <th class="col-category">Category</th>
         <th class="col-subcategory">Subcategory</th>
+         <th class="col-topic">Topic</th>
         <th class="col-type">Type</th>
-        <th class="col-date">Created At</th>
         <th class="col-date">Last Modified</th>
         <th class="col-actions">Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of questions; let i = index">
+      <tr *ngFor="let question of questions; let i = index">
         <td class="col-num"><span class="num">{{ i + 1 }}</span></td>
         <td class="col-question">
-          <div class="question-text">{{ product.question }}</div>
+          <div class="question-text">{{ question.question }}</div>
         </td>
         <td class="col-bookmark">
           <button class="bookmark-btn"
-            [class.bookmarked]="product.bookmarked === 'Yes'"
-            (click)="toggleBookmark(product)">
-            {{ product.bookmarked === 'Yes' ? '★ Saved' : '☆ Save' }}
+            [class.bookmarked]="question.bookmarked === 'Yes'"
+            (click)="toggleBookmark(question)">
+            {{ question.bookmarked === 'Yes' ? '★' : '☆' }}
           </button>
         </td>
         <td class="col-category">
-          <span class="badge badge-cat">{{ product.category }}</span>
+          <span class="badge badge-cat">{{ question.category }}</span>
         </td>
         <td class="col-subcategory">
-          <span class="badge badge-sub">{{ product.subCategory }}</span>
+          <span class="badge badge-sub">{{ question.subCategory }}</span>
+        </td>
+        <td class="col-topic">
+          <span class="badge badge-sub">{{ question.topic }}</span>
         </td>
         <td class="col-type">
           <span class="badge" [ngClass]="{
-            'badge-theory': product.type === 'theory',
-            'badge-practical': product.type === 'practical'
-          }">{{ product.type }}</span>
+            'badge-theory': question.type === 'theory',
+            'badge-practical': question.type === 'practical'
+          }">{{ question.type }}</span>
         </td>
 
         <td class="col-date">
-          <span class="date-text">{{ product.createdDate | date:'dd MMM, yyyy' }}</span>
-        </td>
-
-        <td class="col-date">
-          <span class="date-text">{{ product.modifiedDate | date:'dd MMM, yyyy' }}</span>
+          <span class="date-text">{{ question.modifiedDate | date:'dd MMM, yyyy' }}</span>
         </td>
         <td class="col-actions">
-          <button class="btn btn-view" (click)="navigateToViewQuestionDetails(product.id)">View</button>
-          <button class="btn btn-edit" (click)="navigateToEditProductPage(product.id)">Edit</button>
-          <button class="btn btn-delete" (click)="deleteQuestion(product.id)">Delete</button>
+          <button class="btn btn-view" (click)="navigateToViewQuestionDetails(question.id)">View</button>
+          <button class="btn btn-edit" (click)="navigateToEditProductPage(question.id)">Edit</button>
+          <button class="btn btn-delete" (click)="deleteQuestion(question.id)">Delete</button>
         </td>
       </tr>
 
@@ -112,7 +111,7 @@
     <label class="page-size-wrap">
       Page Size:
       <select (change)="changeSize($event)" [value]="size">
-        <option *ngFor="let s of [2, 5, 10, 20]" [value]="s">{{ s }}</option>
+        <option *ngFor="let s of [5, 10, 15]" [value]="s">{{ s }}</option>
       </select>
     </label>
 

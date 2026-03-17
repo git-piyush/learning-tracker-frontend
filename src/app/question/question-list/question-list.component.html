@@ -51,7 +51,7 @@
     </div>
   </div>
 
-  <!-- PRODUCT LIST -->
+  <!-- Question LIST -->
   <div class="product-list" *ngIf="products.length > 0 && viewMode==='tiles'">
     <div class="product-item" *ngFor="let product of products">
 
@@ -72,7 +72,8 @@
           <h3 class="name">{{ product.question }}</h3>
           <div class="meta-row">
             <span class="meta-badge">{{ product.type }}</span>
-            <span class="meta-badge level">{{ product.level }}</span>
+            <span class="meta-badge subCat">{{ product.subCategory }}</span>
+            <span class="meta-badge topic">{{ product.topic }}</span>
           </div>
           <p class="modified">{{ product.modifiedDate | date:'dd MMM, yyyy' }}</p>
         </div>
@@ -99,9 +100,10 @@
         <th class="col-thumb"></th>
         <th class="col-question">Question</th>
         <th class="col-type">Type</th>
-        <th class="col-level">Level</th>
+        <th class="col-subcat">Sub Category</th>
+        <th class="col-topic">Topic</th>
         <th class="col-date">Modified</th>
-        <th class="col-bookmark">Bookmark</th>
+        <th class="col-bookmark" >Bookmark</th>
         <th class="col-actions">Actions</th>
       </tr>
     </thead>
@@ -129,13 +131,12 @@
         </td>
 
         <!-- Level badge -->
-        <td class="col-level">
-          <span class="badge badge--level"
-                [class.badge--easy]="product.level === 'BEGINNER'"
-                [class.badge--medium]="product.level === 'MIDIUM' || product.level === 'INTERMEDIATE'"
-                [class.badge--hard]="product.level === 'EXPERIENCE' || product.level === 'HARD'">
-            {{ product.level }}
-          </span>
+        <td class="col-subcat">
+          <span class="q-text">{{ product.subCategory }}</span>
+        </td>
+
+        <td class="col-topic">
+          <span class="q-text">{{ product.topic }}</span>
         </td>
 
         <!-- Date -->

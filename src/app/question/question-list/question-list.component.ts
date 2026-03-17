@@ -11,6 +11,7 @@ interface Question {
     id:string;
     category:string;
     subCategory:string;
+    topic:string;
     type:string;
     question:string;
     answer:string;
@@ -32,6 +33,7 @@ export class QuestionListComponent  implements OnInit {
   searchForm = {
     category: '',
     subCategory: '',
+    topic:'',
     type: '',
     bookmark: ''
   };
@@ -95,6 +97,7 @@ export class QuestionListComponent  implements OnInit {
     this.questionService.getAllQuestions(this.page,this.size,this.direction,this.sortBy,this.searchForm).subscribe({
       next: (res) => {
         this.products = res.questionList;
+        console.log(this.products);
         this.totalPages = res.totalPages;
         this.totalElements = res.totalElements;
       },
@@ -201,7 +204,8 @@ export class QuestionListComponent  implements OnInit {
       category: '',
       subCategory: '',
       type: '',
-      bookmark: ''
+      bookmark: '',
+      topic:''
     };
     this.page = 0; // reset to first page
     this.loadQuestions(); // reload full list

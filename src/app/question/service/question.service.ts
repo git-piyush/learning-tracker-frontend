@@ -95,13 +95,6 @@ export class QuestionService {
       });
   }
 
-
-
-
-
-
-
-
   getQuestionById(id: string): Observable<any> {
     return this.http.get(`${QuestionService.BASE_URL}/question/get-question/${id}`, {
       headers: this.getHeader(),
@@ -149,48 +142,10 @@ export class QuestionService {
     });
   }
 
-
-  /**PRODUICTS ENDPOINTS */
   updateProduct(formData: any): Observable<any> {
     console.log('formData:'+formData);
     return this.http.put(`${QuestionService.BASE_URL}/question/update-question`, formData, {
       headers: this.getHeader(),
-    });
-  }
-  deleteProduct(id: string): Observable<any> {
-    return this.http.delete(`${QuestionService.BASE_URL}/products/delete/${id}`, {
-      headers: this.getHeader(),
-    });
-  }
-
-  getAllTransactions(searchText: string): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/transactions/all`, {
-      params: { searchText: searchText },
-      headers: this.getHeader(),
-    });
-  }
-
-  getTransactionById(id: string): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/transactions/${id}`, {
-      headers: this.getHeader(),
-    });
-  }
-
-  
-  updateTransactionStatus(id: string, status: string): Observable<any> {
-    return this.http.put(`${QuestionService.BASE_URL}/transactions/update/${id}`, JSON.stringify(status), {
-      headers: this.getHeader().set("Content-Type", "application/json")
-    });
-  }
-
-
-  getTransactionsByMonthAndYear(month: number, year: number): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/transactions/by-month-year`, {
-      headers: this.getHeader(),
-      params: {
-        month: month,
-        year: year,
-      },
     });
   }
 

@@ -10,6 +10,7 @@ export interface Question {
   bookmarked: string;
   category: string;
   subCategory: string;
+  topic:string;
   type: string;
   createdDate: string;
   modifiedDate: string;
