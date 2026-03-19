@@ -423,6 +423,14 @@ loadSubscribedMatches(){
     if (card.title === 'New Feedback') {
         this.router.navigate(['/feedback-list']);
     }
+
+    if (card.title === 'Your Bookmarked') {
+        this.router.navigate(['/bookmarked-question']);
+    }
+
+    if (card.title === 'Questions Added by You') {
+        this.router.navigate(['/all-question']);
+    }
   }
 
   selected: boolean[] = [];
