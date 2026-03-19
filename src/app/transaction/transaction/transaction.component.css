@@ -198,12 +198,12 @@ tr:last-child td {
 }
 
 .bookmark-btn:hover .star-icon {
-  stroke: rgb(41, 107, 0);
+  stroke: rgb(206, 235, 17);
 }
 
 .bookmark-btn.bookmarked .star-icon {
-  fill: rgb(41, 107, 0);
-  stroke: rgb(41, 107, 0);
+  fill: rgb(206, 235, 17);
+  stroke: rgb(206, 235, 17);
 }
 
 /* Badges */

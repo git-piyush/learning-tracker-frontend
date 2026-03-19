@@ -16,6 +16,7 @@ import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
 import { TransactionComponent } from './transaction/transaction/transaction.component';
+import { BookmarkComponent } from './bookmark/bookmark.component';
 
 export const routes: Routes = [
 
@@ -31,6 +32,8 @@ export const routes: Routes = [
   { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
   { path: 'add-category', component: AddCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
   { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+
+  { path: 'bookmarked-question', component: BookmarkComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
   { path: 'feedback-list', component: FeedbackComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
   { path: 'transaction', component: TransactionComponent, canActivate:[GuardService] },

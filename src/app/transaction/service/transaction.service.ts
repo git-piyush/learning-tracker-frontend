@@ -43,6 +43,12 @@ export class TransactionService {
     });
   }
 
+  toogleBookMark(id:number):Observable<any>{
+    return this.http.get(`${TransactionService.BASE_URL}/transaction/bookmark/`+id, {
+        headers: this.getHeader()
+      });
+  }
+
 
   getAllQuestions(page:number, size:number, order:string, orderBy:string, searchForm:any): Observable<any> {
     let params = new HttpParams()

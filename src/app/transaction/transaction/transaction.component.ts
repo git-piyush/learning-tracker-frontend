@@ -101,7 +101,7 @@ export class TransactionComponent extends BaseComponent  implements OnInit {
             }
         });
        }
-       this.loadQuestions();
+    this.loadQuestions();
   }
 
 
@@ -129,10 +129,6 @@ export class TransactionComponent extends BaseComponent  implements OnInit {
       this.sortBy = 'id';
       this.direction = 'asc';
   }
- 
-  private updatePagination(): void {
-    
-  }
 
   onView(item: Question): void {
     console.log('View:', item);
@@ -140,7 +136,14 @@ export class TransactionComponent extends BaseComponent  implements OnInit {
 
   toggleBookmark(item: Question):void{
     item.bookmark = item.bookmark === 'Yes' ? 'No' : 'Yes';
-      console.log(item.id);
+    this.transactionService.toogleBookMark(item.id).subscribe({
+      next:(res)=>{
+          this.notify.success(res.message);
+      },
+      error: (err) =>{
+        this.notify.error(err.error.message);
+      }
+    })
   }
  
   onEdit(item: Question): void {

@@ -87,17 +87,22 @@
       </li>
       <li *ngIf="isAuth()">
         <a routerLink="/transaction" routerLinkActive="active">
-          <span class="nav-icon">🧾</span> Transactions
+          <span class="nav-icon">🧾</span>All Questions
         </a>
       </li>
       <li *ngIf="isAuth()">
         <a routerLink="/all-question" routerLinkActive="active">
-          <span class="nav-icon">❓</span> All Questions
+          <span class="nav-icon">❓</span> My Questions
         </a>
       </li>
       <li *ngIf="isAuth()">
         <a routerLink="/add-question" routerLinkActive="active">
           <span class="nav-icon">✚</span> Add Question
+        </a>
+      </li>
+      <li *ngIf="isAuth()">
+        <a routerLink="/bookmarked-question" routerLinkActive="active">
+          <span class="nav-icon">⭐️</span> My Bookmarked
         </a>
       </li>
       <li *ngIf="isAdmin()">

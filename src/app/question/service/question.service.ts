@@ -80,7 +80,7 @@ export class QuestionService {
         params = params.set('category', searchForm.category);
       }
       if (searchForm.subCategory) {
-        params = params.set('subCategory', searchForm.subCategory);
+        params = params.set('subcategory', searchForm.subCategory);
       }
       if (searchForm.type) {
         params = params.set('type', searchForm.type);

@@ -27,7 +27,7 @@
     </select>
 
     <select [(ngModel)]="searchForm.topic" name="topic" (change)="ontopicChange($event)">
-      <option value="">Select Category</option>
+      <option value="">Select Topic</option>
       <option *ngFor="let topic of topicList" [value]="topic">{{topic}}</option>
     </select>
 
