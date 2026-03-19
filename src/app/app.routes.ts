@@ -17,6 +17,7 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
 import { TransactionComponent } from './transaction/transaction/transaction.component';
 import { BookmarkComponent } from './bookmark/bookmark.component';
+import { HomeComponent } from './home/home/home.component';
 
 export const routes: Routes = [
 
@@ -42,9 +43,9 @@ export const routes: Routes = [
   { path: 'auth/social-callback', component: Oauth2LoginComponent },
   { path: 'privacy', component: PrivacyComponent },
   { path: 'terms', component: TermsComponent },
+  { path: 'home', component: HomeComponent },
+    {path: "", redirectTo: "/home", pathMatch: 'full'},
+    {path: "home", redirectTo: "/home", pathMatch: 'full'},
 
-//   WIDE CARD
-    {path: "", redirectTo: "/login", pathMatch: 'full'},
-    // {path: "**", redirectTo: "/dashboard"}
 
 ];
