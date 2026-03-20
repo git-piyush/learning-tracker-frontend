@@ -81,9 +81,12 @@
         <!-- PRODUCT ACTIONS -->
         <div class="product-actions">
           <button (click)="navigateToViewQuestionDetails(question.id)" class="view-btn">View</button>
-          <button (click)="navigateToEditProductPage(question.id)" class="edt-btn">Edit</button>
-          <button (click)="deleteQuestion(question.id)" class="delete-btn">Delete</button>
-        </div>
+          <div *ngIf="question.createdByCurrentUser === 'Yes'">
+            <button (click)="navigateToEditProductPage(question.id)" class="edt-btn">Edit</button>
+            <button (click)="deleteQuestion(question.id)" class="delete-btn">Delete</button>
+          </div>
+        </div>          
+
       </div>
 
     </div>
@@ -158,6 +161,7 @@
               </svg>
               View
             </button>
+            <div *ngIf="question.createdByCurrentUser === 'Yes'">
             <button class="q-btn q-btn--edit"
                     (click)="navigateToEditProductPage(question.id)" title="Edit">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
@@ -180,6 +184,7 @@
               </svg>
               Delete
             </button>
+            </div>
           </div>
         </td>
 

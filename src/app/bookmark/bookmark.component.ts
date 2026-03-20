@@ -20,6 +20,7 @@ interface Question {
     level:string;
     modifiedDate:Date;
     image:string;
+    createdByCurrentUser:string;
 }
 
 @Component({
@@ -100,6 +101,7 @@ export class BookmarkComponent  implements OnInit {
     this.bookmarkService.getBookMarkedQuestions(this.page,this.size,this.direction,this.sortBy,this.searchForm).subscribe({
       next: (res) => {
         this.questions = res.questionList;
+        console.log(this.questions);
         this.totalPages = res.totalPages;
         this.totalElements = res.totalElements;
       },
