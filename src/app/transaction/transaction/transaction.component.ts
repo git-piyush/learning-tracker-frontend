@@ -64,7 +64,7 @@ export class TransactionComponent extends BaseComponent  implements OnInit {
   }
 
   lodCategoryDropdown():void{
-    this.categoryService.getCategoryList().subscribe({
+    this.categoryService.getAllCategoryList().subscribe({
       next: (res)=>{
         this.categoryList = res.categoryList;
       },error:(err)=>console.error(err)
@@ -77,7 +77,7 @@ export class TransactionComponent extends BaseComponent  implements OnInit {
         const selectElement = event.target as HTMLSelectElement;
         const category = selectElement.value;
       if(category!=''){
-        this.categoryService.getSubCategoryList(category).subscribe({
+        this.categoryService.getAllSubCategoryList(category).subscribe({
           next: (res)=>{
             this.subCategoryList = res.subCategoryList;
           },error:(err)=>{
@@ -93,7 +93,7 @@ export class TransactionComponent extends BaseComponent  implements OnInit {
         const selectElement = event.target as HTMLSelectElement;
         const category = selectElement.value;
        if(category!=''){
-         this.categoryService.getTopicList(category).subscribe({
+         this.categoryService.getAllTopicList(category).subscribe({
           next: (res)=>{
             this.topicList = res.topicList;
           },error:(err)=>{

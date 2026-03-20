@@ -67,7 +67,7 @@ export class BookmarkComponent  implements OnInit {
   }
 
   loadDropdown():void{
-    this.categoryService.getCategoryList().subscribe({
+    this.categoryService.getAllCategoryList().subscribe({
       next: (res)=>{
         this.categoryList = res.categoryList;
         console.log(this.categoryList);
@@ -79,7 +79,7 @@ export class BookmarkComponent  implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const category1 = selectElement.value;
     this.searchForm.subCategory='';
-    this.categoryService.getSubCategoryList(category1).subscribe({
+    this.categoryService.getAllSubCategoryList(category1).subscribe({
       next: (res)=>{
         this.subCategoryList = res.subCategoryList;
         console.log(this.subCategoryList);

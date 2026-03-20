@@ -29,10 +29,7 @@ export class TransactionService {
     }
 
     
-  private clearAuth() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-  }
+
 
 
 

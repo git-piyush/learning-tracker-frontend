@@ -75,18 +75,42 @@ export class CategoryService {
     });
   }
 
+ //All category list
+  getAllCategoryList(): Observable<any> {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/get-category-list`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  //All Subcategory list wrt to category
+  getAllSubCategoryList(cat: string): Observable<any> {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/get-subcategory-list/${cat}`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  //All topic list wrt to subcategory
+  getAllTopicList(subcat: string): Observable<any> {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/get-topic-list/${subcat}`, {
+      headers: this.getHeader(),
+    });
+  }
+
+  //All category wrt to user
   getCategoryList(): Observable<any> {
     return this.http.get(`${CategoryService.BASE_URL}/categories/user-category-list`, {
       headers: this.getHeader(),
     });
   }
 
+  //All subcategory wrt to category and user
   getSubCategoryList(cat: string): Observable<any> {
     return this.http.get(`${CategoryService.BASE_URL}/categories/get-user-subcategory-list/${cat}`, {
       headers: this.getHeader(),
     });
   }
 
+  //All topic wrt to subcategory and user
   getTopicList(subcat: string): Observable<any> {
     return this.http.get(`${CategoryService.BASE_URL}/categories/get-user-topic-list/${subcat}`, {
       headers: this.getHeader(),
