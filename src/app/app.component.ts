@@ -54,7 +54,7 @@ ngOnInit(): void {
 
   logOut():void{
     this.apiService.logout();
-    this.router.navigate(["/login"])
+    this.router.navigate(["/home"])
     this.cdr.detectChanges();
   }
 

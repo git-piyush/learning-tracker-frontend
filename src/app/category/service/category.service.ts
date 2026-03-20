@@ -12,10 +12,7 @@ export class CategoryService {
 
 
   constructor(private http: HttpClient) {}
-
-    // Encrypt data and save to localStorage
-    encryptAndSaveToStorage(key: string, value: string): void {
-      //const encryptedValue = CryptoJS.AES.encrypt(value, CategoryService.ENCRYPTION_KEY).toString();
+      encryptAndSaveToStorage(key: string, value: string): void {
       localStorage.setItem(key, value);
     }
   
@@ -24,37 +21,16 @@ export class CategoryService {
       try {
         const encryptedValue = localStorage.getItem(key);
         if (!encryptedValue) return null;
-        //return CryptoJS.AES.decrypt(encryptedValue, CategoryService.ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
         return encryptedValue;
       } catch (error) {
         return null;
       }
     }
 
-  private clearAuth() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-  }
-
   private getHeader(): HttpHeaders {
     const token = this.getFromStorageAndDecrypt("token");
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
-    });
-  }
-
-  /***AUTH & USERS API METHODS */
-  registerUser(body: any): Observable<any> {
-    return this.http.post(`${CategoryService.BASE_URL}/auth/register`, body);
-  }
-
-  loginUser(body: any): Observable<any> {
-    return this.http.post(`${CategoryService.BASE_URL}/auth/login`, body);
-  }
-
-  getLoggedInUserInfo(): Observable<any> {
-    return this.http.get(`${CategoryService.BASE_URL}/users/current`, {
-      headers: this.getHeader(),
     });
   }
 
@@ -100,25 +76,19 @@ export class CategoryService {
   }
 
   getCategoryList(): Observable<any> {
-    return this.http.get(`${CategoryService.BASE_URL}/categories/category-list`, {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/user-category-list`, {
       headers: this.getHeader(),
     });
   }
 
   getSubCategoryList(cat: string): Observable<any> {
-    return this.http.get(`${CategoryService.BASE_URL}/categories/getsubcategory-list/${cat}`, {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/get-user-subcategory-list/${cat}`, {
       headers: this.getHeader(),
     });
   }
 
   getTopicList(subcat: string): Observable<any> {
-    return this.http.get(`${CategoryService.BASE_URL}/categories/gettopic-list/${subcat}`, {
-      headers: this.getHeader(),
-    });
-  }
-
-  getCategoryByCategory(cat:string): Observable<any> {
-    return this.http.get(`${CategoryService.BASE_URL}/categories/categoryByCategory/`+cat, {
+    return this.http.get(`${CategoryService.BASE_URL}/categories/get-user-topic-list/${subcat}`, {
       headers: this.getHeader(),
     });
   }
@@ -133,17 +103,6 @@ export class CategoryService {
     return this.http.delete(`${CategoryService.BASE_URL}/categories/delete-category/${id}`, {
       headers: this.getHeader(),
     });
-  }
-
-
-  isAuthenticated():boolean{
-    const token = this.getFromStorageAndDecrypt("token");
-    return !!token;
-  }
-
-  isAdmin():boolean {
-    const role = this.getFromStorageAndDecrypt("role");
-    return role === "ADMIN";
   }
 
 }

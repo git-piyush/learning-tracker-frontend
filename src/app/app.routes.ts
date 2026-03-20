@@ -30,8 +30,8 @@ export const routes: Routes = [
   { path: 'update-question/:id', component: UpdateQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
   
-  { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
-  { path: 'add-category', component: AddCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: true} },
+  { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'add-category', component: AddCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
   { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
 
   { path: 'bookmarked-question', component: BookmarkComponent, canActivate:[GuardService], data: {requiresAdmin: false} },

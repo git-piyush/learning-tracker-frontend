@@ -105,14 +105,5 @@ export class AddCategoryComponent extends BaseComponent implements OnInit{
         this.topicList = res.topicList;
       },error:(err)=>console.error(err)
     });
-  }
-
-
-  showMessage(message:string){
-    this.message = message;
-    setTimeout(() =>{
-      this.message = null
-    }, 4000)
-  }
-    
+  }    
 }

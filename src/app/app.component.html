@@ -105,12 +105,12 @@
           <span class="nav-icon">⭐️</span> My Bookmarked
         </a>
       </li>
-      <li *ngIf="isAdmin()">
+      <li *ngIf="isAuth()">
         <a routerLink="/all-category" routerLinkActive="active">
           <span class="nav-icon">🗂️</span> All Category
         </a>
       </li>
-      <li *ngIf="isAdmin()">
+      <li *ngIf="isAuth()">
         <a routerLink="/add-category" routerLinkActive="active">
           <span class="nav-icon">➕</span> Add Category
         </a>
