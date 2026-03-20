@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ApiService } from './service/api.service';
 import { LoaderComponent } from './loading-effect/loader/loader.component';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { feedbackModel } from './shared/app.model';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule,LoaderComponent,FormsModule, CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule,LoaderComponent,FormsModule, CommonModule,RouterLinkActive],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

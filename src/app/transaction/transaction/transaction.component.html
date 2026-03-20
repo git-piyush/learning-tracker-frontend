@@ -102,8 +102,10 @@
         </td>
         <td class="col-actions">
           <button class="btn btn-view" (click)="navigateToViewQuestionDetails(question.id)">View</button>
-          <button class="btn btn-edit" (click)="navigateToEditProductPage(question.id)">Edit</button>
-          <button class="btn btn-delete" (click)="deleteQuestion(question.id)">Delete</button>
+          <ng-container *ngIf="question.createdByCurrentUser === 'Yes'">
+            <button class="btn btn-edit" (click)="navigateToEditProductPage(question.id)">Edit</button>
+            <button class="btn btn-delete" (click)="deleteQuestion(question.id)">Delete</button>
+          </ng-container>
         </td>
       </tr>
 

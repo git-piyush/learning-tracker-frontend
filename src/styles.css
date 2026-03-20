@@ -70,5 +70,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-style: normal;
 }
 
+.green-text {
+  color: rgb(0, 167, 25);
+  text-decoration: underline;
+  font-weight: 500;
+  font-style: normal;
+}
+
 
 

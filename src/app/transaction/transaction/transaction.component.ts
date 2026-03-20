@@ -5,6 +5,7 @@ import { TransactionService } from '../service/transaction.service';
 import { BaseComponent } from '../../shared/baseComponent';
 import { CategorySearch } from '../../shared/app.model';
 import { CategoryService } from '../../category/service/category.service';
+import { QuestionService } from '../../question/service/question.service';
 
 export interface Question {
   pid:number;
@@ -18,6 +19,7 @@ export interface Question {
   type: string;
   createdDate: string;
   modifiedDate: string;
+  createdByCurrentUser:string;
 }
   
 @Component({
@@ -29,7 +31,8 @@ export interface Question {
 })
 export class TransactionComponent extends BaseComponent  implements OnInit {
 
-  constructor(injector:Injector ,private transactionService:TransactionService, private categoryService:CategoryService){
+  constructor(injector:Injector ,private transactionService:TransactionService, 
+    private categoryService:CategoryService, private questionService:QuestionService){
     super(injector);
   }
 
@@ -189,14 +192,29 @@ export class TransactionComponent extends BaseComponent  implements OnInit {
     }
 
   deleteQuestion(id:number):void{
+    if(!confirm("Are you sure you want to delete this Question?")){
+      return;
+    }
+    this.questionService.deleteQuestionById(id.toString()).subscribe({
+      next: (res:any)=>{
+        this.notify.info(res.message);
+        const currentUrl = this.router.url;
 
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate([currentUrl]);
+        });
+
+      },error:(err)=>{
+        this.notify.error(err.error.message);
+      }
+    })
   }
 
   navigateToEditProductPage(id:number):void{
-
+    this.router.navigate([`/update-question/${id}`]);
   }
 
   navigateToViewQuestionDetails(id:number):void{
-
+      this.router.navigate([`/question-details/${id}`]);
   }
 }

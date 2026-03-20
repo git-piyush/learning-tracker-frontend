@@ -439,3 +439,18 @@
     radial-gradient(ellipse 50% 40% at 90% 85%, rgba(20, 184, 166, 0.07) 0%, transparent 55%);
   overflow-x: hidden;
 }
+
+/* Hover */
+.nav-links li a:hover {
+  background: rgba(99, 102, 241, 0.07);
+  color: #a5b4fc;
+}
+
+/* Active — must come AFTER hover and use same/higher specificity */
+.nav-links li a.active,
+.nav-links li a.active:hover {   /* ← this is the key line */
+  background: linear-gradient(90deg, rgba(128, 129, 190, 0.2), transparent);
+  color: #818cf8 !important;
+  border-left: 3px solid #6366f1;
+  font-weight: 600;
+}
