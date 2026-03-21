@@ -18,6 +18,7 @@ import { TermsComponent } from './terms/terms.component';
 import { TransactionComponent } from './transaction/transaction/transaction.component';
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { HomeComponent } from './home/home/home.component';
+import { EventComponent } from './event/event.component';
 
 export const routes: Routes = [
 
@@ -43,6 +44,7 @@ export const routes: Routes = [
   { path: 'auth/social-callback', component: Oauth2LoginComponent },
   { path: 'privacy', component: PrivacyComponent },
   { path: 'terms', component: TermsComponent },
+  { path: 'event', component: EventComponent },
   { path: 'home', component: HomeComponent },
     {path: "", redirectTo: "/home", pathMatch: 'full'},
     {path: "home", redirectTo: "/home", pathMatch: 'full'},

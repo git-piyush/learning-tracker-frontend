@@ -115,6 +115,11 @@
           <span class="nav-icon">➕</span> Add Category
         </a>
       </li>
+      <li *ngIf="isAuth()">
+        <a routerLink="/event" routerLinkActive="active" >
+          <span class="nav-icon">🗓️</span> Events
+        </a>
+      </li>
       <li *ngIf="isAdmin()">
         <a (click)="resetCricketKeys()" routerLinkActive="active" >
           <span class="nav-icon">🔄️</span> Reset Keys

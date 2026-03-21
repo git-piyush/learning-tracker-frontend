@@ -16,6 +16,7 @@ export interface InterviewQuestion {
   modifiedDate:Date;
   expanded?: boolean;
   parentQuestionId: string;
+ 
 }
 
 @Component({
@@ -45,11 +46,11 @@ export class QuestionDetailsComponent implements OnInit{
 
   ngOnInit(): void {
     this.questionId = this.route.snapshot.paramMap.get('qId') || '';
-    this.loadQuestionDetaisl(this.questionId);
+    this.loadQuestionDetails(this.questionId);
     this.loadInterviewQuestions(this.questionId);
   }
 
-    loadQuestionDetaisl(qId: string): void {
+    loadQuestionDetails(qId: string): void {
       this.questionService.getQuestionById(qId).subscribe({
             next: (res)=>{
                 this.question = res.question;

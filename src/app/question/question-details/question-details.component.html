@@ -39,7 +39,9 @@
       <button (click)="prevQuestion(question.id)">← Prev</button>
       <span></span>
       <button (click)="nextQuestion(question.id)">Next →</button>
-      <button class="edit-btn" (click)="editQuestion(question.id)">Edit</button>
+      <div *ngIf="question.createdByCurrentUser === 'Yes'">
+        <button class="edit-btn" (click)="editQuestion(question.id)">Edit</button>
+      </div>
     </div>
 
     <!-- ─── Interview Questions Panel (inside same card = same width) ─── -->
