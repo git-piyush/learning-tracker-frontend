@@ -3,6 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { InterviewQuestion } from '../question-details/question-details.component';
+import { ApiService } from '../../service/api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,29 +13,19 @@ export class QuestionService {
 
   authStatuschanged = new EventEmitter<void>();
   private static BASE_URL = environment.apiUrl;
-  private static ENCRYPTION_KEY = "phegon-dev-inventory";
 
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private apiService:ApiService) {}
 
     // Retreive from localStorage and Decrypt
     private getFromStorage(key: string): any {
       try {
-        const encryptedValue = localStorage.getItem(key);
-        if (!encryptedValue) return null;
-        return encryptedValue;
+        const token = this.apiService.getStorage('token');
+        if (!token) return null;
+        return token;
       } catch (error) {
         return null;
       }
     }
-
-    
-  private clearAuth() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-  }
-
-
 
   private getHeader(): HttpHeaders {
     const token = this.getFromStorage("token");
@@ -42,32 +33,6 @@ export class QuestionService {
       Authorization: `Bearer ${token}`,
     });
   }
-
-
-
-
-
-
-
-  /***AUTH & USERS API METHODS */
-
-  registerUser(body: any): Observable<any> {
-    return this.http.post(`${QuestionService.BASE_URL}/auth/register`, body);
-  }
-
-  loginUser(body: any): Observable<any> {
-    return this.http.post(`${QuestionService.BASE_URL}/auth/login`, body);
-  }
-
-  getLoggedInUserInfo(): Observable<any> {
-    return this.http.get(`${QuestionService.BASE_URL}/users/current`, {
-      headers: this.getHeader(),
-    });
-  }
-
-
-
-
   getAllQuestions(page:number, size:number, order:string, orderBy:string, searchForm:any): Observable<any> {
     let params = new HttpParams()
     .set('page', page)

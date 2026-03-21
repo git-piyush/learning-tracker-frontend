@@ -1,77 +1,61 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 import CryptoJS from "crypto-js";
 import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  
-    authStatuschanged = new EventEmitter<void>();
 
-    private static BASE_URL = environment.apiUrl;
-    
-    constructor(private http: HttpClient) {}
+  authStatuschanged = new EventEmitter<void>();
 
-    private apiEndPoint = "/weather-api/v1/current.json";
+  private static BASE_URL = environment.apiUrl;
+  private platformId = inject(PLATFORM_ID);
 
-    private apiEndPointKey = "d8bcb02f353742858d8110349262202";
+  constructor(private http: HttpClient) {}
 
-    // Encrypt data and save to localStorage
-    saveToStorage(key: string, value: string): void {
+  private apiEndPoint = "/weather-api/v1/current.json";
+  private apiEndPointKey = "d8bcb02f353742858d8110349262202";
+  private cityUrl = "https://api-bdc.io/data/reverse-geocode-client?";
+
+  // ✅ single safe accessor — all localStorage calls go through here
+  public getStorage(key: string): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  }
+
+  // ✅ getter — evaluated on demand, not at class construction
+  private get cricketData(): string {
+    return `https://api.cricapi.com/v1/cricScore?apikey=${this.getStorage('ckey')}`;
+  }
+
+  saveToStorage(key: string, value: string): void {
+    if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem(key, value);
     }
+  }
 
-    getCurrentWeather(cityName:string): Observable<any>  {
-      console.log('cityName: '+cityName);
-       return this.http.get(`${this.apiEndPoint}?key=${this.apiEndPointKey}&q=${cityName}`);
-    }
-
-    private cityUrl = "https://api-bdc.io/data/reverse-geocode-client?";
-
-    getCity(lat:number, lon:number): Observable<any>{
-      console.log('lat: '+lat);
-      console.log('lon: '+lon);
-      return this.http.get(`${this.cityUrl}?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
-    }
-
-    private key = localStorage.getItem('ckey');
-    private cricketData = "https://api.cricapi.com/v1/cricScore?apikey="+this.key;
-    
-    getcricketData(): Observable<any>{
-      return this.http.get(this.cricketData);
-    }
-
-    increaseKeyHits():Observable<any> {
-      return this.http.get(`${ApiService.BASE_URL}/key/increase-hits/`+localStorage.getItem('ckey'), {
-        headers: this.getHeader(),
-      });
-    }
-
-    loadOnlineUsers():Observable<any> {
-      return this.http.get(`${ApiService.BASE_URL}/users/online`, {
-        headers: this.getHeader(),
-      });
-    }
-
-
-    // Retreive from localStorage and Decrypt
-    private getFromStorageAndDecrypt(key: string): any {
-      try {
-        const encryptedValue = localStorage.getItem(key);
-        if (!encryptedValue) return null;
-        return encryptedValue;
-      } catch (error) {
-        return null;
-      }
-    }
-
-    
-  private clearAuth() {
+  private clearAuth(): void {
+    if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem("token");
       localStorage.removeItem("role");
       localStorage.removeItem("username");
+    }
+  }
+
+  private getFromStorageAndDecrypt(key: string): any {
+    try {
+      const encryptedValue = this.getStorage(key);
+      if (!encryptedValue) return null;
+      return encryptedValue;
+    } catch (error) {
+      return null;
+    }
   }
 
   private getHeader(): HttpHeaders {
@@ -81,13 +65,26 @@ export class ApiService {
     });
   }
 
+  getCurrentWeather(cityName: string): Observable<any> {
+    return this.http.get(`${this.apiEndPoint}?key=${this.apiEndPointKey}&q=${cityName}`);
+  }
 
+  getCity(lat: number, lon: number): Observable<any> {
+    return this.http.get(`${this.cityUrl}?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+  }
 
+  increaseKeyHits(): Observable<any> {
+    return this.http.get(`${ApiService.BASE_URL}/key/increase-hits/` + this.getStorage('ckey'), {
+      headers: this.getHeader(),
+    });
+  }
 
+  loadOnlineUsers(): Observable<any> {
+    return this.http.get(`${ApiService.BASE_URL}/users/online`, {
+      headers: this.getHeader(),
+    });
+  }
 
-
-
-  /***AUTH & USERS API METHODS */
   registerUser(body: any): Observable<any> {
     return this.http.post(`${ApiService.BASE_URL}/auth/register`, body);
   }
@@ -102,32 +99,29 @@ export class ApiService {
     });
   }
 
-  /**AUTHENTICATION CHECKER */  
-  logout():void{
-    this.clearAuth()
+  logout(): void {
+    this.clearAuth();
   }
 
-  isAuthenticated():boolean{
+  isAuthenticated(): boolean {
     const token = this.getFromStorageAndDecrypt("token");
     return !!token;
   }
 
-  isAdmin():boolean {
+  isAdmin(): boolean {
     const role = this.getFromStorageAndDecrypt("role");
     return role === "ADMIN";
   }
 
-  //
   saveFeedback(formData: any): Observable<any> {
     return this.http.post(`${ApiService.BASE_URL}/feedback/save`, formData, {
       headers: this.getHeader(),
     });
   }
 
-  resetCricketKeys():Observable<any>{
-    return this.http.post(`${ApiService.BASE_URL}/key/reset`,{}, {
+  resetCricketKeys(): Observable<any> {
+    return this.http.post(`${ApiService.BASE_URL}/key/reset`, {}, {
       headers: this.getHeader(),
     });
   }
-
 }

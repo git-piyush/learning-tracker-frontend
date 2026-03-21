@@ -1,4 +1,4 @@
-import { bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication, provideClientHydration } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -11,7 +11,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([loaderInterceptor])
-    ), provideAnimationsAsync()
+    ), provideAnimationsAsync(), provideClientHydration()
   ]
 }).catch((err) => console.error(err));
 

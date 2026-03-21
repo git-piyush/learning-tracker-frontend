@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ApiService } from './service/api.service';
 import { LoaderComponent } from './loading-effect/loader/loader.component';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from './shared/notificationService';
 import { feedbackModel } from './shared/app.model';
+import { Component, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit{
   userName:string | null = null;
   title = 'Make My Notesss';
   message:string | null = null;
+  private platformId = inject(PLATFORM_ID);
 
   
   feedbackPayload: feedbackModel = {
@@ -40,11 +42,15 @@ export class AppComponent implements OnInit{
   ) {}
 
 ngOnInit(): void {
-  this.userName = localStorage.getItem("username");
+  if (isPlatformBrowser(this.platformId)) {
+    this.userName = localStorage.getItem("username");
+  }
 }
 
   isAuth():boolean{
-    this.userName = localStorage.getItem("username");
+    if (isPlatformBrowser(this.platformId)) {
+      this.userName = localStorage.getItem("username");
+    }
     return this.apiService.isAuthenticated();
   }
 
