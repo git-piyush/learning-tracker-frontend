@@ -261,10 +261,6 @@ export class EventComponent extends BaseComponent implements OnInit {
       // TODO: Replace with backend PUT call
       this.updateEventInStore(this.form);
     } else {
-      // TODO: Replace with backend POST call
-      console.log(this.form);
-      this.addEventToStore({ ...this.form, id: this.generateId() });
-
       this.eventService.saveEvent(this.form).subscribe({
         next: (res: any) => {
           this.notify.success(res.message);
@@ -336,9 +332,8 @@ export class EventComponent extends BaseComponent implements OnInit {
   }
 
   private updateEventInStore(event: CalendarEvent): void {
-    const idx = this.allEvents.findIndex(e => e.id === event.id);
-    if (idx > -1) this.allEvents[idx] = { ...event };
-    this.saveToStorage();
+    console.log(event);
+    this.eventService.saveEvent(event);
   }
 
   private saveToStorage(): void {

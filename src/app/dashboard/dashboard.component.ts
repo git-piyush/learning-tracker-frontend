@@ -270,7 +270,7 @@ getAvatarColor(name: string): string {
     { title: 'Total Questions', value: 0, color: '#f28b82', icon: '❓' },
     { title: 'Questions Added by You', value: 0, color: '#5f63f2', icon: '❓' },
     { title: 'Your Bookmarked', value: 0, color: '#34a853', icon: '⭐' },
-    { title: 'New Messages', value: 0, color: '#fbbc04', icon: '💬' },
+    { title: 'UpComing Events', value: 0, color: '#fbbc04', icon: '🗓️' },
     { title: 'New Feedback', value: 0, color: '#cf7eb9', icon: '🗪' }
   ];
 
@@ -278,12 +278,6 @@ getAvatarColor(name: string): string {
     'All','January', 'February', 'March', 
     'April','May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'
-  ];
-
-  topStudents = [
-
-    { name: 'Rony Beyablo', percent: '98.17%', rank: '2nd', color: '#34a853' },
-    { name: 'Adam Hisham', percent: '97.32%', rank: '3rd', color: '#fbbc04' }
   ];
 
   todos: {id:string; task: string;completed:string; checked: boolean }[] = [];
@@ -343,35 +337,27 @@ loadCricketData() {
 }
 
 
-loadSubscribedMatches(){
+  loadSubscribedMatches(){
   
-  this.dashboardService.getSubscribedMatch().subscribe(res => {
-    this.slides = [];
-              console.log(JSON.stringify(res, null, 2));
+    this.dashboardService.getSubscribedMatch().subscribe(res => {
+        this.slides = [];
+        this.subscribedMatches = res.matches;
+        this.subscribedMatches.forEach(m => {
+        this.slides.push({
+            type: 'subscribed',
+            data: m
+            });
+        });
 
-              //console.log('subscribedMatches2:', JSON.stringify(res.matches, null, 2));
-              this.subscribedMatches = res.matches;
-             console.log('subscribedMatches length: '+this.subscribedMatches.length);
-                this.subscribedMatches.forEach(m => {
-                  this.slides.push({
-                    type: 'subscribed',
-                    data: m
-                  });
-                });
-
-                this.liveScoreCards = res.liveScoreDetails;
-
-                console.log('liveScoreCards length: '+this.liveScoreCards.length);
-                this.liveScoreCards.forEach(m => {
-                  this.slides.push({
-                    type: 'live',
-                    data: m
-                  });
-                });
-                console.log('Slides length:', this.slides.length);
-                this.startAutoSlide2();
-                
+        this.liveScoreCards = res.liveScoreDetails;
+        this.liveScoreCards.forEach(m => {
+          this.slides.push({
+            type: 'live',
+            data: m
           });
+        });
+      this.startAutoSlide2();           
+    });
   }
 
   getColor(index: number): string {
@@ -386,6 +372,7 @@ loadSubscribedMatches(){
           this.summaryCards[0].value = this.dashboardData.totalQuestion;
           this.summaryCards[1].value = this.dashboardData.userTotalQuestion;
           this.summaryCards[2].value = this.dashboardData.userTotalBookmark;
+          this.summaryCards[3].value = this.dashboardData.futureEvents;
           this.summaryCards[4].value = this.dashboardData.unreadFeedback;
           this.subCategoryCountMap = new Map(Object.entries(this.dashboardData.countMap));
           this.educationalStages = Array.from(this.subCategoryCountMap.entries()).map(
