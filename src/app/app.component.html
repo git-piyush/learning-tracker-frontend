@@ -151,7 +151,7 @@
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
-      <router-outlet></router-outlet>
+      <router-outlet *ngIf="isNavReady" />
       <footer style="text-align:center; padding: 1rem; font-size: 0.8rem;">
   <a href="/privacy">Privacy Policy</a>
 </footer>

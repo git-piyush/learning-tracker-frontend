@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ApiService } from './service/api.service';
 import { LoaderComponent } from './loading-effect/loader/loader.component';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { NotificationService } from './shared/notificationService';
 import { feedbackModel } from './shared/app.model';
 import { Component, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -41,10 +42,21 @@ export class AppComponent implements OnInit{
     private cdr: ChangeDetectorRef
   ) {}
 
+// Add property
+isNavReady = false;
+
+// Update ngOnInit
 ngOnInit(): void {
   if (isPlatformBrowser(this.platformId)) {
     this.userName = localStorage.getItem("username");
   }
+
+  // ✅ ADD THIS — hide outlet until first navigation completes
+  this.router.events.pipe(
+    filter(event => event instanceof NavigationEnd)
+  ).subscribe(() => {
+    this.isNavReady = true;
+  });
 }
 
   isAuth():boolean{
