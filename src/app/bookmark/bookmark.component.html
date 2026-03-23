@@ -208,7 +208,7 @@
         <!-- Answer — fixed height + vertical scroll -->
         <td class="qr-col-answer">
           <div class="qr-answer-cell">
-            <span *ngIf="question.answer">{{ question.answer }}</span>
+            <span *ngIf="question.answer" [innerHTML]="question?.answer"></span>
             <span *ngIf="!question.answer" class="qr-no-answer">Answer will come here</span>
           </div>
         </td>
