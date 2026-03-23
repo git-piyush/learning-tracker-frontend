@@ -259,7 +259,7 @@ export class EventComponent extends BaseComponent implements OnInit {
 
     if (this.isEditMode) {
       // TODO: Replace with backend PUT call
-      this.updateEventInStore(this.form);
+      this.updateEvent(this.form);
     } else {
       this.eventService.saveEvent(this.form).subscribe({
         next: (res: any) => {
@@ -294,7 +294,6 @@ export class EventComponent extends BaseComponent implements OnInit {
   deleteEvent(): void {
     // TODO: Replace with backend DELETE call
     this.allEvents = this.allEvents.filter(e => e.id !== this.form.id);
-    this.saveToStorage();
     this.buildCalendar();
     this.closePopup();
   }
@@ -326,20 +325,19 @@ export class EventComponent extends BaseComponent implements OnInit {
     });
   }
 
-  private addEventToStore(event: CalendarEvent): void {
-    this.allEvents.push(event);
-    this.saveToStorage();
-  }
-
-  private updateEventInStore(event: CalendarEvent): void {
-    console.log(event);
-    this.eventService.saveEvent(event);
-  }
-
-  private saveToStorage(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.allEvents));
-    }
+  private updateEvent(event: CalendarEvent): void {
+    this.eventService.saveEvent(this.form).subscribe({
+        next: (res: any) => {
+          this.notify.success(res.message);
+        },
+        error: (err: any) => {
+          if (err.error.status === 401) {
+            this.notify.error('Need Access/Login!');
+            this.router.navigate(['/login']);
+          }
+          this.notify.info(err.error.message);
+        }
+    });
   }
 
   // ── Timezone-safe date string ────────────────────────────────
@@ -352,21 +350,5 @@ export class EventComponent extends BaseComponent implements OnInit {
 
   private emptyForm(): CalendarEvent {
     return { id: '', eventName: '', startDate: '', endDate: '', purpose: 'MEETING', status: 'SCHEDULED' };
-  }
-
-  private generateId(): string {
-    return `evt_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-  }
-
-  private getDummyEvents(): CalendarEvent[] {
-    const y = this.viewYear;
-    const m = String(this.viewMonth + 1).padStart(2, '0');
-    return [
-      { id: 'dummy_1', eventName: 'Sprint Planning', startDate: `${y}-${m}-03`, endDate: `${y}-${m}-03`, purpose: 'MEETING',   status: 'COMPLETED'   },
-      { id: 'dummy_2', eventName: 'Client Travel',   startDate: `${y}-${m}-07`, endDate: `${y}-${m}-09`, purpose: 'TRAVEL',    status: 'COMPLETED'   },
-      { id: 'dummy_3', eventName: 'Tech Interview',  startDate: `${y}-${m}-14`, endDate: `${y}-${m}-14`, purpose: 'INTERVIEW', status: 'SCHEDULED'   },
-      { id: 'dummy_4', eventName: 'Team Offsite',    startDate: `${y}-${m}-18`, endDate: `${y}-${m}-20`, purpose: 'MEETING',   status: 'IN_PROGRESS' },
-      { id: 'dummy_5', eventName: 'Vendor Review',   startDate: `${y}-${m}-25`, endDate: `${y}-${m}-25`, purpose: 'OTHERS',    status: 'SCHEDULED'   },
-    ];
   }
 }

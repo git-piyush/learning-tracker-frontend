@@ -15,6 +15,7 @@ export class EventService extends BaseComponent {
   }
 
 saveEvent(event: any): Observable<any> {
+  console.log("Event: "+JSON.stringify(event));
   return this.http.post(`${EventService.BASE_URL}/event/save-event`, event, {
      headers: this.apiService.getHeader()
     });
