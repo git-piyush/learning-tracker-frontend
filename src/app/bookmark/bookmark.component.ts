@@ -191,12 +191,40 @@ export class BookmarkComponent  implements OnInit {
     }, 4000);
   }
 
-  viewMode: 'list' | 'tiles' = 'list';
 
-  toggleTileAndListView(): void {
-    this.viewMode = this.viewMode === 'list' ? 'tiles' : 'list';
 
-  }
+
+
+  // 1. Extend the type
+viewMode: 'list' | 'tiles' | 'quickread' = 'list';
+
+// 2. Keep this exactly as-is — no changes needed
+toggleTileAndListView(): void {
+  this.viewMode = this.viewMode === 'list' ? 'tiles' : 'list';
+}
+
+// 3. Add this new method
+toggleQuickReadView(): void {
+  this.viewMode = this.viewMode === 'quickread' ? 'list' : 'quickread';
+}
+
+// 4. Add these for the image popup
+popupImage: string | null = null;
+popupQuestion: string = '';
+
+openImagePopup(question: any): void {
+  const src = this.getImageSrc(question.image);
+  if (!src) return; // don't open popup if no image
+  this.popupImage = src;
+  this.popupQuestion = question.question;
+}
+
+closeImagePopup(): void {
+  this.popupImage = null;
+  this.popupQuestion = '';
+}
+
+
 
   get buttonText(): string {
     return this.viewMode === 'list' ? 'Switch to Tiles' : 'Switch to List';
@@ -218,4 +246,5 @@ export class BookmarkComponent  implements OnInit {
   onImageError(event: Event) {
     (event.target as HTMLImageElement).src = 'defaultquestion.png';
   }
+  
 }
