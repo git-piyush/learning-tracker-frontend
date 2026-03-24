@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { GuardService } from './service/guard.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -19,35 +18,37 @@ import { TransactionComponent } from './transaction/transaction/transaction.comp
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { HomeComponent } from './home/home/home.component';
 import { EventComponent } from './event/event.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
 
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login',     component: LoginComponent },
+  { path: 'register',  component: RegisterComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
 
-  { path: 'question-details/:qId', component: QuestionDetailsComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-  { path: 'all-question', component: QuestionListComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-  { path: 'add-question', component: AddQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-  { path: 'update-question/:id', component: UpdateQuestionComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'home', component: HomeComponent },
+  {path: "", redirectTo: "/home", pathMatch: 'full'},
+  {path: "home", redirectTo: "/home", pathMatch: 'full'},
+
+  { path: 'question-details/:qId', component: QuestionDetailsComponent, canActivate: [authGuard] },
+  { path: 'all-question', component: QuestionListComponent , canActivate: [authGuard] },
+  { path: 'add-question', component: AddQuestionComponent, canActivate: [authGuard] },
+  { path: 'update-question/:id', component: UpdateQuestionComponent, canActivate: [authGuard] },
 
   
-  { path: 'all-category', component: CategoryListComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-  { path: 'add-category', component: AddCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-  { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'all-category', component: CategoryListComponent, canActivate: [authGuard]  },
+  { path: 'add-category', component: AddCategoryComponent, canActivate: [authGuard]  },
+  { path: 'update-category/:catId', component: UpdateCategoryComponent, canActivate: [authGuard]  },
 
-  { path: 'bookmarked-question', component: BookmarkComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
+  { path: 'bookmarked-question', component: BookmarkComponent, canActivate: [authGuard]  },
 
-  { path: 'feedback-list', component: FeedbackComponent, canActivate:[GuardService], data: {requiresAdmin: false} },
-  { path: 'transaction', component: TransactionComponent, canActivate:[GuardService] },
-  { path: 'profile', component: ProfileComponent, canActivate:[GuardService] },
-  { path: 'dashboard', component: DashboardComponent, canActivate:[GuardService] },
+  { path: 'feedback-list', component: FeedbackComponent, canActivate: [authGuard]  },
+  { path: 'transaction', component: TransactionComponent, canActivate: [authGuard]  },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'auth/social-callback', component: Oauth2LoginComponent },
   { path: 'privacy', component: PrivacyComponent },
   { path: 'terms', component: TermsComponent },
-  { path: 'event', component: EventComponent },
-  { path: 'home', component: HomeComponent },
-    {path: "", redirectTo: "/home", pathMatch: 'full'},
-    {path: "home", redirectTo: "/home", pathMatch: 'full'},
+  { path: 'event', component: EventComponent }
 
 
 ];
