@@ -131,16 +131,6 @@
           <span class="nav-icon">👤</span> Profile
         </a>
       </li>
-      <li *ngIf="!isAuth()">
-        <a routerLink="/login" routerLinkActive="active">
-          <span class="nav-icon">🔓</span> Login
-        </a>
-      </li>
-      <li *ngIf="!isAuth()">
-        <a routerLink="/register" routerLinkActive="active">
-          <span class="nav-icon">🔖</span> Register
-        </a>
-      </li>
       <li *ngIf="isAuth()" class="logout-item">
         <a (click)="logOut()">
           <span class="nav-icon">🔒</span> Logout
