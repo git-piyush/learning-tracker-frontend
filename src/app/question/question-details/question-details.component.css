@@ -523,6 +523,10 @@
   border-color: #3b4fd8;
 }
 
+p {
+  white-space: pre-wrap;
+}
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;
