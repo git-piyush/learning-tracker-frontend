@@ -259,6 +259,25 @@
   background: rgba(52, 211, 153, 0.08);
 }
 
+.picker-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.picker-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.picker-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* remove the old margin-top: 12px */
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
