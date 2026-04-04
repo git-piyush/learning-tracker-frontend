@@ -83,11 +83,6 @@
   letter-spacing: -0.01em;
 }
 
-/* ── Divider ── */
-.divider {
-  display: none; /* replaced by header border */
-}
-
 /* ── Meta ── */
 .question-meta {
   display: flex;
@@ -126,12 +121,10 @@
   position: relative;
   overflow: hidden;
   animation: fadeUp 0.45s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* ── existing styles below unchanged ── */
 
 .answer-section::before {
   content: '"';
@@ -143,6 +136,7 @@
   color: rgba(99, 102, 241, 0.07);
   line-height: 1;
   pointer-events: none;
+  transition: color 0.3s ease;
 }
 
 .answer-section h2 {
@@ -156,6 +150,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: color 0.3s ease;
 }
 
 .answer-section h2::before {
@@ -164,13 +159,112 @@
   height: 2px;
   background: #6366f1;
   border-radius: 2px;
+  transition: background 0.3s ease;
 }
 
-.answer-section p {
-  font-size: 15px;
-  line-height: 1.75;
-  color: #cbd5e1;
-  font-weight: 300;
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  padding: 2px 4px;
+  cursor: pointer;
+  margin: 0 40px 10px;
+  transition: background 0.2s;
+}
+
+.theme-picker {
+  margin: 0 40px 12px;
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.14);
+  border-radius: 12px;
+  padding: 16px 18px;
+  animation: fadeUp 0.2s ease both;
+}
+
+.picker-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.picker-tabs button {
+  font-size: 12px; padding: 4px 14px; border-radius: 999px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: none; color: #94a3b8; cursor: pointer;
+}
+.picker-tabs button.active { background: #6366f1; color: #fff; border-color: transparent; }
+
+.swatch-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatch {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.swatch:hover { transform: scale(1.12); }
+.swatch.active { border-color: #818cf8; }
+
+.custom-swatch input[type=color] {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px dashed rgba(99,102,241,0.4);
+  cursor: pointer; padding: 2px; background: none;
+}
+
+.reset-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.picker-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.save-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.22);
+}
+
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.save-btn.saved {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
 }
 
 /* ── Image Container ── */
@@ -248,17 +342,6 @@
   color: #fff;
   transform: translateY(-2px);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /* ─── Interview Panel ─── */
 /* Remove outer margin/border since it now lives inside .question-card */

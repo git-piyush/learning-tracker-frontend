@@ -60,6 +60,13 @@ export class QuestionService {
       });
   }
 
+ saveTheme(questionId: number, bgColor: string, textColor: string): Observable<void> {
+  return this.http.patch<void>(`${QuestionService.BASE_URL}/question/${questionId}/theme`,
+    { bgColor, textColor },
+    { headers: this.getHeader() }
+  );
+}
+
   getQuestionById(id: string): Observable<any> {
     return this.http.get(`${QuestionService.BASE_URL}/question/get-question/${id}`, {
       headers: this.getHeader(),

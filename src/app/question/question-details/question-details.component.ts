@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from '../../category/service/category.service';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { QuestionService } from '../service/question.service';
-import { Newlinepipe } from '../../shared/newlinepipe';
+import { finalize } from 'rxjs';
 
 export interface InterviewQuestion {
   id: string;
@@ -13,36 +13,65 @@ export interface InterviewQuestion {
   answer: string;
   addedBy: string;
   createdDate: Date;
-  modifiedDate:Date;
+  modifiedDate: Date;
   expanded?: boolean;
   parentQuestionId: string;
- 
 }
 
 @Component({
   selector: 'app-question-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, Newlinepipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './question-details.component.html',
   styleUrl: './question-details.component.css'
 })
-export class QuestionDetailsComponent implements OnInit{
+export class QuestionDetailsComponent implements OnInit {
 
   interviewQuestions: InterviewQuestion[] = [];
-
   isModalOpen = false;
   isEditMode = false;
   modalForm: Partial<InterviewQuestion> = {};
 
-  constructor(private route: ActivatedRoute, private categoryService: CategoryService,
-    private router: Router,private fb: FormBuilder, private http: HttpClient,
-     private questionService: QuestionService){}
-  
   questionId!: string;
-  question :any;
+  question: any = {};
 
-  hasPrev = true;
-  hasNext = true;
+  themeOpen = false;
+  activeTab: 'bg' | 'text' = 'bg';
+  currentBg = '#0d0f1a';
+  currentText = '#cbd5e1';
+  isSaving = false;
+  saveSuccess = false;
+  imageErrored = false;
+
+  readonly DEFAULT_BG = '#0d0f1a';
+  readonly DEFAULT_TEXT = '#cbd5e1';
+
+  bgPresets = [
+    { color: '#0d0f1a', label: 'Dark navy' },
+    { color: '#1a1a2e', label: 'Deep indigo' },
+    { color: '#0f1117', label: 'True dark' },
+    { color: '#fafaf9', label: 'Paper white' },
+    { color: '#0a1628', label: 'Midnight' }
+  ];
+
+  textPresets = [
+    { color: '#cbd5e1', label: 'Muted white' },
+    { color: '#ffffff', label: 'Pure white' },
+    { color: '#1e293b', label: 'Dark slate' },
+    { color: '#374151', label: 'Dark gray' },
+    { color: '#818cf8', label: 'Indigo' },
+    { color: '#34d399', label: 'Teal' },
+    { color: '#fbbf24', label: 'Amber' },
+    { color: '#f472b6', label: 'Pink' },
+  ];
+
+  constructor(
+    private route: ActivatedRoute,
+    private categoryService: CategoryService,
+    private router: Router,
+    private http: HttpClient,
+    private questionService: QuestionService
+  ) {}
 
   ngOnInit(): void {
     this.questionId = this.route.snapshot.paramMap.get('qId') || '';
@@ -50,58 +79,71 @@ export class QuestionDetailsComponent implements OnInit{
     this.loadInterviewQuestions(this.questionId);
   }
 
-    loadQuestionDetails(qId: string): void {
-      this.questionService.getQuestionById(qId).subscribe({
-            next: (res)=>{
-                this.question = res.question;
-                console.log(this.question);
-              },error:(err)=>console.error(err)
-        });
-    }
+  loadQuestionDetails(qId: string): void {
+    this.questionService.getQuestionById(qId).subscribe({
+      next: (res) => {
+        this.question = res.question;
+        if (this.question?.bgColor)   this.currentBg   = this.question.bgColor;
+        if (this.question?.textColor) this.currentText = this.question.textColor;
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
-    getImageSrc(base64String: string): string {
-        if (!base64String) {
-          return '';
-        }
-        return 'data:image/jpeg;base64,' + base64String;
-      }
+  saveTheme(): void {
+    if (!this.question?.id) return;
+    this.isSaving = true;
+    this.questionService.saveTheme(this.question.id, this.currentBg, this.currentText)
+      .pipe(finalize(() => this.isSaving = false))
+      .subscribe({
+        next: () => {
+          this.saveSuccess = true;
+          setTimeout(() => this.saveSuccess = false, 2000);
+        },
+        error: (err) => console.error('Failed to save theme', err)
+      });
+  }
 
-    editQuestion(id:string):void{
-      this.router.navigate([`/update-question/${id}`]);
-    }
+  resetTheme(): void {
+    this.currentBg   = this.DEFAULT_BG;
+    this.currentText = this.DEFAULT_TEXT;
+  }
 
-    prevQuestion(id:string) {
-      this.questionService.getPrevQuestionById(id).subscribe({
-            next: (res)=>{
-                this.question = res.question;
-                this.loadInterviewQuestions(id);
-              },error:(err)=>console.error(err)
-        });
-        
-    }
+  getImageSrc(base64String: string): string {
+    if (!base64String) return '';
+    return 'data:image/jpeg;base64,' + base64String;
+  }
 
-    nextQuestion(id:string) {
-      this.questionService.getNextQuestionById(id).subscribe({
-            next: (res)=>{
-                this.question = res.question;
-                this.loadInterviewQuestions(id);
-              },error:(err)=>console.error(err)
-        });
-    }
+  onImageError(event: Event) {
+    (event.target as HTMLImageElement).src = 'defaultquestion.png';
+    this.imageErrored = true;
+  }
 
-    imageErrored = false;
+  editQuestion(id: string): void {
+    this.router.navigate([`/update-question/${id}`]);
+  }
 
-    onImageError(event: Event) {
-      (event.target as HTMLImageElement).src = 'defaultquestion.png';
-      this.imageErrored = true;
-    }
+  prevQuestion(id: string) {
+    this.questionService.getPrevQuestionById(id).subscribe({
+      next: (res) => {
+        this.question = res.question;
+        this.loadInterviewQuestions(id);
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
+  nextQuestion(id: string) {
+    this.questionService.getNextQuestionById(id).subscribe({
+      next: (res) => {
+        this.question = res.question;
+        this.loadInterviewQuestions(id);
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
-    goBack() {
-      // logic to navigate back
-    }
-
-  // ─── Interview Questions ──────────────────────────────────
+  // ─── Interview Questions ───────────────────────────────────
 
   loadInterviewQuestions(parentId: string): void {
     this.questionService.getInterviewQuestions(parentId).subscribe({
@@ -115,9 +157,6 @@ export class QuestionDetailsComponent implements OnInit{
     iq.expanded = !iq.expanded;
   }
 
-
-  // ─── Add ─────────────────────────────────────────────────
-
   openAddModal(): void {
     this.isEditMode = false;
     this.modalForm = {
@@ -129,15 +168,11 @@ export class QuestionDetailsComponent implements OnInit{
     this.isModalOpen = true;
   }
 
-  // ─── Edit ────────────────────────────────────────────────
-
   editInterviewQuestion(iq: InterviewQuestion): void {
     this.isEditMode = true;
     this.modalForm = { ...iq };
     this.isModalOpen = true;
   }
-
-  // ─── Save (Add or Update) ─────────────────────────────────
 
   saveInterviewQuestion(): void {
     if (!this.modalForm.question?.trim() || !this.modalForm.answer?.trim()) {
@@ -149,7 +184,7 @@ export class QuestionDetailsComponent implements OnInit{
         next: (updated) => {
           const index = this.interviewQuestions.findIndex(q => q.id === updated.interviewQuestionDTO.id);
           if (index > -1) {
-            this.interviewQuestions[index] = { ...updated.interviewQuestionDTO, expanded: false?false:true };
+            this.interviewQuestions[index] = { ...updated.interviewQuestionDTO, expanded: false ? false : true };
           }
           this.closeModal();
         },
@@ -163,18 +198,13 @@ export class QuestionDetailsComponent implements OnInit{
       };
       this.questionService.addInterviewQuestion(newIQ).subscribe({
         next: (res) => {
-          console.log(res);
-          this.interviewQuestions.push({ ...res.interviewQuestionDTO, expanded: false?false:true });
+          this.interviewQuestions.push({ ...res.interviewQuestionDTO, expanded: false ? false : true });
           this.closeModal();
         },
-        error: (err) => {
-          console.error('Failed to add', err.error.message);
-        }
+        error: (err) => console.error('Failed to add', err.error.message)
       });
     }
   }
-
-  // ─── Delete ───────────────────────────────────────────────
 
   deleteInterviewQuestion(id: string): void {
     if (!confirm('Delete this interview question?')) return;
@@ -186,11 +216,8 @@ export class QuestionDetailsComponent implements OnInit{
     });
   }
 
-  // ─── Close Modal ──────────────────────────────────────────
-
   closeModal(): void {
     this.isModalOpen = false;
     this.modalForm = {};
   }
 }
-
