@@ -52,7 +52,7 @@ bgPresets = [
   { color: '#1a1a2e', label: 'Deep indigo' },
   { color: '#ffffff', label: 'White' },
   { color: '#d4a853', label: 'Golden' },
-  { color: '#2d6a4f', label: 'Forest green' },
+  { color: '#054348', label: 'Forest green' },
   { color: '#7b2d8b', label: 'Deep purple' },
   { color: '#8b1a1a', label: 'Dark red' },
   { color: '#1a4a6b', label: 'Ocean blue' },

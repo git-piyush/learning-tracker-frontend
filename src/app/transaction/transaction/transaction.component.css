@@ -84,7 +84,6 @@
 }
 
 /* ── Table ── */
-
 .tbl-wrap {
   width: 100%;
   overflow-x: auto;
@@ -113,6 +112,7 @@ th {
   text-transform: uppercase;
   white-space: nowrap;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  user-select: none;
 }
 
 tbody tr {
@@ -143,15 +143,15 @@ tr:last-child td {
 }
 
 /* Column widths */
-.col-num         { width: 20px; }
+.col-num         { width: 40px; }
 .col-question    { width: 20%; }
 .col-bookmark    { width: 60px; }
-.col-category    { width: 80px; }
-.col-subcategory { width: 110px; }
+.col-category    { width: 100px; }
+.col-subcategory { width: 120px; }
 .col-topic       { width: 150px; }
-.col-type        { width: 60px; }
+.col-type        { width: 80px; }
 .col-date        { width: 120px; }
-.col-actions     { width: 170px; text-align: center; }
+.col-actions     { width: 180px; text-align: center; }
 
 .num {
   display: inline-flex;
@@ -171,7 +171,7 @@ tr:last-child td {
   color: #dce4f0;
 }
 
-/* Bookmark button */
+/* ── Bookmark button ── */
 .bookmark-btn {
   background: none;
   border: none;
@@ -206,7 +206,11 @@ tr:last-child td {
   stroke: rgb(206, 235, 17);
 }
 
-/* Badges */
+/* ── Badges ──────────────────────────────────────────────────────────────────
+   Category  → color applied via [ngStyle] getCategoryStyle()
+   Subcategory → color applied via [ngStyle] getSubCategoryStyle()
+   Topic / Type → static classes below
+── */
 .badge {
   display: inline-block;
   padding: 4px 10px;
@@ -214,20 +218,18 @@ tr:last-child td {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.03em;
+  white-space: nowrap;
+  /* border is set inline via ngStyle for cat/sub; static for others */
 }
 
-.badge-cat {
-  background: rgba(56, 139, 253, 0.15);
-  color: #79b8ff;
-  border: 1px solid rgba(56, 139, 253, 0.25);
+/* Topic badge — neutral slate */
+.badge-topic {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.22);
 }
 
-.badge-sub {
-  background: rgba(100, 220, 180, 0.1);
-  color: #5dcaa5;
-  border: 1px solid rgba(100, 220, 180, 0.2);
-}
-
+/* Type badges */
 .badge-theory {
   background: rgba(167, 139, 250, 0.15);
   color: #c4b5fd;
@@ -240,12 +242,13 @@ tr:last-child td {
   border: 1px solid rgba(52, 211, 153, 0.2);
 }
 
+/* ── Date ── */
 .date-text {
   font-size: 12px;
   color: #7a8aaa;
 }
 
-/* Action Buttons */
+/* ── Action Buttons ── */
 .btn {
   display: inline-block;
   padding: 5px 11px;
@@ -258,46 +261,19 @@ tr:last-child td {
   transition: opacity 0.15s, transform 0.1s;
 }
 
-.btn:hover {
-  opacity: 0.85;
-}
+.btn:hover  { opacity: 0.85; }
+.btn:active { transform: scale(0.97); }
 
-.btn:active {
-  transform: scale(0.97);
-}
+.btn-view   { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; }
+.btn-edit   { background: linear-gradient(135deg, #059669, #047857); color: #fff; }
+.btn-delete { background: linear-gradient(135deg, #dc2626, #b91c1c); color: #fff; }
 
-.btn-view {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #fff;
-}
-
-.btn-edit {
-  background: linear-gradient(135deg, #059669, #047857);
-  color: #fff;
-}
-
-.btn-delete {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  color: #fff;
-}
-
-/* Empty state */
+/* ── Empty state ── */
 .empty-row {
   text-align: center;
   color: #555;
   font-size: 13px;
   padding: 2.5rem !important;
-}
-
-
-/*EOD OD TABLE*/
-
-/* ── Empty State ── */
-.no-data {
-  text-align: center;
-  padding: 2.5rem !important;
-  color: #475569;
-  font-size: 14px;
 }
 
 /* ── Pagination Bar ── */
@@ -318,7 +294,13 @@ tr:last-child td {
 .pagination-controls {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+}
+
+.page-indicator {
+  font-size: 13px;
+  color: #94a3b8;
+  padding: 0 4px;
 }
 
 .page-btn {
@@ -350,12 +332,6 @@ tr:last-child td {
 .page-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-}
-
-.ellipsis-page {
-  font-size: 13px;
-  color: #475569;
-  padding: 0 4px;
 }
 
 .page-size-wrap {

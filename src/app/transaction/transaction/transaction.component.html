@@ -27,14 +27,14 @@
     </select>
 
     <select [(ngModel)]="searchForm.level" (change)="loadQuestions()">
-      <option value="" disabled>Level</option>
+      <option value="">Level</option>
       <option value="beginner">Beginner</option>
       <option value="midium">Medium</option>
       <option value="experience">Experienced</option>
     </select>
 
     <select [(ngModel)]="searchForm.bookmark" (change)="loadQuestions()">
-      <option value="" disabled>Bookmarked</option>
+      <option value="">Bookmarked</option>
       <option value="Yes">Yes</option>
       <option value="No">No</option>
     </select>
@@ -51,92 +51,123 @@
   </div>
 
   <!-- Table -->
-    <div class="tbl-wrap">
-  <table>
-    <thead>
-      <tr>
-        <th class="col-num">#</th>
-        <th class="col-question">Question</th>
-        <th class="col-bookmark">Bookmark</th>
-        <th class="col-category">Category</th>
-        <th class="col-subcategory">Subcategory</th>
-         <th class="col-topic">Topic</th>
-        <th class="col-type">Type</th>
-        <th class="col-date">Last Modified</th>
-        <th class="col-actions">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let question of questions; let i = index">
-        <td class="col-num"><span class="num">{{ question.pid }}</span></td>
-        <td class="col-question">
-          <div class="question-text">{{ question.question }}</div>
-        </td>
-        <td class="col-bookmark">
-          <button class="bookmark-btn"
-            [class.bookmarked]="question.bookmark === 'Yes'"
-            (click)="toggleBookmark(question)">
-            <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
-            </svg>
-          </button>
-        </td>
-        <td class="col-category">
-          <span class="badge badge-cat">{{ question.category }}</span>
-        </td>
-        <td class="col-subcategory">
-          <span class="badge badge-sub">{{ question.subCategory }}</span>
-        </td>
-        <td class="col-topic">
-          <span class="badge badge-sub">{{ question.topic }}</span>
-        </td>
-        <td class="col-type">
-          <span class="badge" [ngClass]="{
-            'badge-theory': question.type === 'theory',
-            'badge-practical': question.type === 'practical'
-          }">{{ question.type }}</span>
-        </td>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-question" (click)="sort('question')" style="cursor:pointer">
+            Question
+            <span *ngIf="sortBy === 'question'">{{ direction === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th class="col-bookmark">Bookmark</th>
+          <th class="col-category">Category</th>
+          <th class="col-subcategory">Subcategory</th>
+          <th class="col-topic">Topic</th>
+          <th class="col-type">Type</th>
+          <th class="col-date" (click)="sort('modifiedDate')" style="cursor:pointer">
+            Last Modified
+            <span *ngIf="sortBy === 'modifiedDate'">{{ direction === 'asc' ? '▲' : '▼' }}</span>
+          </th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let question of questions; let i = index">
 
-        <td class="col-date">
-          <span class="date-text">{{ question.modifiedDate | date:'dd MMM, yyyy' }}</span>
-        </td>
-        <td class="col-actions">
-          <button class="btn btn-view" (click)="navigateToViewQuestionDetails(question.id)">View</button>
-          <ng-container *ngIf="question.createdByCurrentUser === 'Yes'">
-            <button class="btn btn-edit" (click)="navigateToEditProductPage(question.id)">Edit</button>
-            <button class="btn btn-delete" (click)="deleteQuestion(question.id)">Delete</button>
-          </ng-container>
-        </td>
-      </tr>
+          <!-- # -->
+          <td class="col-num">
+            <span class="num">{{ question.pid }}</span>
+          </td>
 
-      <tr *ngIf="questions.length === 0">
-        <td colspan="8" class="empty-row">No questions found.</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          <!-- Question -->
+          <td class="col-question">
+            <div class="question-text">{{ question.question }}</div>
+          </td>
+
+          <!-- Bookmark -->
+          <td class="col-bookmark">
+            <button
+              class="bookmark-btn"
+              [class.bookmarked]="question.bookmark === 'Yes'"
+              (click)="toggleBookmark(question)"
+              [title]="question.bookmark === 'Yes' ? 'Remove bookmark' : 'Add bookmark'"
+            >
+              <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+              </svg>
+            </button>
+          </td>
+
+          <!-- Category — dynamic color per unique category value -->
+          <td class="col-category">
+            <span class="badge" [ngStyle]="getCategoryStyle(question.category)">
+              {{ question.category }}
+            </span>
+          </td>
+
+          <!-- Subcategory — dynamic color per unique subcategory value -->
+          <td class="col-subcategory">
+            <span class="badge" [ngStyle]="getSubCategoryStyle(question.subCategory)">
+              {{ question.subCategory }}
+            </span>
+          </td>
+
+          <!-- Topic -->
+          <td class="col-topic">
+            <span class="badge badge-topic">{{ question.topic }}</span>
+          </td>
+
+          <!-- Type -->
+          <td class="col-type">
+            <span class="badge" [ngClass]="{
+              'badge-theory':    question.type === 'theory',
+              'badge-practical': question.type === 'practical'
+            }">{{ question.type }}</span>
+          </td>
+
+          <!-- Last Modified -->
+          <td class="col-date">
+            <span class="date-text">{{ question.modifiedDate | date:'dd MMM, yyyy' }}</span>
+          </td>
+
+          <!-- Actions -->
+          <td class="col-actions">
+            <button class="btn btn-view"   (click)="navigateToViewQuestionDetails(question.id)">View</button>
+            <ng-container *ngIf="question.createdByCurrentUser === 'Yes'">
+              <button class="btn btn-edit"   (click)="navigateToEditProductPage(question.id)">Edit</button>
+              <button class="btn btn-delete" (click)="deleteQuestion(question.id)">Delete</button>
+            </ng-container>
+          </td>
+        </tr>
+
+        <!-- Empty state -->
+        <tr *ngIf="questions.length === 0">
+          <td colspan="9" class="empty-row">No questions found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Pagination -->
   <div class="pagination-bar">
     <div class="pagination-info">
-      Showing {{ page + 1 }}–{{ totalPages }} of {{ questions.length }} results
+      Showing {{ page * size + 1 }}–{{ page * size + questions.length }} of {{ totalElements }} results
     </div>
 
     <div class="pagination-controls">
-        <button (click)="changePage(0)" [disabled]="page === 0" class="page-btn">First</button>
-        <button (click)="changePage(page - 1)" [disabled]="page === 0" class="page-btn">← Prev</button>
-        <span>Page {{ page + 1 }} of {{ totalPages }}</span>
-        <button  class="page-btn" (click)="changePage(page + 1)" [disabled]="(page + 1) >= totalPages">Next →</button>
-        <button (click)="changePage(totalPages - 1)" [disabled]="(page + 1) >= totalPages" class="page-btn">Last</button>
+      <button (click)="changePage(0)"              [disabled]="page === 0"                    class="page-btn">First</button>
+      <button (click)="changePage(page - 1)"       [disabled]="page === 0"                    class="page-btn">← Prev</button>
+      <span class="page-indicator">Page {{ page + 1 }} of {{ totalPages }}</span>
+      <button (click)="changePage(page + 1)"       [disabled]="(page + 1) >= totalPages"      class="page-btn">Next →</button>
+      <button (click)="changePage(totalPages - 1)" [disabled]="(page + 1) >= totalPages"      class="page-btn">Last</button>
     </div>
 
     <label class="page-size-wrap">
       Page Size:
       <select (change)="changeSize($event)" [value]="size">
-        <option *ngFor="let s of [5, 10, 15]" [value]="s">{{ s }}</option>
+        <option *ngFor="let s of [5, 10, 15, 25]" [value]="s">{{ s }}</option>
       </select>
     </label>
-
-
   </div>
 </div>
