@@ -10,7 +10,7 @@ import { loaderService } from '../loader.service';
   template: `
     <div class="overlay" *ngIf="loader.loading$ | async">
       <div class="spinner"></div>
-      <p>Loading...</p>
+      <p style="color: #ffffff">Loading...</p>
     </div>
   `,
   styleUrls: ['./loader.component.css']
