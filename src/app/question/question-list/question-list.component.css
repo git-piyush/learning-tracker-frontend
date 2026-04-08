@@ -542,13 +542,23 @@
 /* ── Column sizing ── */
 .col-num      { width: 48px;  color: #4b5563; font-size: 0.78rem; text-align: center; }
 .col-thumb    { width: 70px; }
-.col-question { width: 250px; }
 .col-type     { width: 100px; }
-.col-subcat   { width: 130px; }
-.col-topic    { width: 100px; }
 .col-date     { width: 130px; white-space: nowrap; color: #6b7280; font-size: 0.8rem; }
 .col-bookmark { width: 60px; text-align: center; }
 .col-actions  { width: 200px; text-align: center; }
+.col-subcat   { width: 200px; }
+.col-topic    { width: 160px; }   /* was 130px — "Language Basics" needs ~145px */
+.col-question { width: 190px; }   /* trim a bit more to compensate */
+
+.subcat-badge {
+  border-radius: 20px;
+  white-space: nowrap;   /* add this */
+}
+.col-topic .q-text {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  display: block;
+}
 
 /* ── Thumbnail ── */
 .thumb-wrap {
