@@ -133,7 +133,9 @@
 
           <!-- SubCategory — dynamic color badge -->
           <td class="col-subcat">
-            <span class="badge subcat-badge" [ngStyle]="getSubCategoryStyle(product.subCategory)">
+            <span class="badge subcat-badge"
+                  [ngStyle]="getSubCategoryStyle(product.subCategory)"
+                  [title]="product.subCategory">
               {{ product.subCategory }}
             </span>
           </td>
