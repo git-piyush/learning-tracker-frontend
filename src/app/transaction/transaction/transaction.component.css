@@ -147,11 +147,28 @@ tr:last-child td {
 .col-question    { width: 20%; }
 .col-bookmark    { width: 60px; }
 .col-category    { width: 100px; }
-.col-subcategory { width: 120px; }
-.col-topic       { width: 150px; }
 .col-type        { width: 80px; }
 .col-date        { width: 120px; }
 .col-actions     { width: 180px; text-align: center; }
+
+.col-subcategory { width: 160px; }
+.col-topic       { width: 130px; }
+
+/* Truncate long badges with ellipsis */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  max-width: 100%;          /* add */
+  overflow: hidden;         /* add */
+  text-overflow: ellipsis;  /* add */
+  vertical-align: middle;   /* add */
+  cursor: default;          /* add */
+}
 
 .num {
   display: inline-flex;
@@ -207,21 +224,6 @@ tr:last-child td {
 }
 
 /* ── Badges ──────────────────────────────────────────────────────────────────
-   Category  → color applied via [ngStyle] getCategoryStyle()
-   Subcategory → color applied via [ngStyle] getSubCategoryStyle()
-   Topic / Type → static classes below
-── */
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  /* border is set inline via ngStyle for cat/sub; static for others */
-}
-
 /* Topic badge — neutral slate */
 .badge-topic {
   background: rgba(148, 163, 184, 0.12);

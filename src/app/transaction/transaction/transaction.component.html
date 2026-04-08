@@ -107,15 +107,21 @@
           </td>
 
           <!-- Subcategory — dynamic color per unique subcategory value -->
+          <!-- Subcategory -->
           <td class="col-subcategory">
-            <span class="badge" [ngStyle]="getSubCategoryStyle(question.subCategory)">
+            <span class="badge"
+                  [ngStyle]="getSubCategoryStyle(question.subCategory)"
+                  [title]="question.subCategory">
               {{ question.subCategory }}
             </span>
           </td>
 
           <!-- Topic -->
           <td class="col-topic">
-            <span class="badge badge-topic">{{ question.topic }}</span>
+            <span class="badge badge-topic"
+                  [title]="question.topic">
+              {{ question.topic }}
+            </span>
           </td>
 
           <!-- Type -->
