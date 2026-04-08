@@ -46,31 +46,31 @@ export class QuestionDetailsComponent implements OnInit {
   readonly DEFAULT_BG = '#0d0f1a';
   readonly DEFAULT_TEXT = '#cbd5e1';
 
-bgPresets = [
-  { color: '#0d0f1a', label: 'Dark navy' },
-  { color: '#0a1628', label: 'Midnight blue' },
-  { color: '#1a1a2e', label: 'Deep indigo' },
-  { color: '#ffffff', label: 'White' },
-  { color: '#d4a853', label: 'Golden' },
-  { color: '#054348', label: 'Forest green' },
-  { color: '#7b2d8b', label: 'Deep purple' },
-  { color: '#8b1a1a', label: 'Dark red' },
-  { color: '#1a4a6b', label: 'Ocean blue' },
-  { color: '#4a3728', label: 'Dark brown' },
-];
+  bgPresets = [
+    { color: '#0d0f1a', label: 'Dark navy' },
+    { color: '#0a1628', label: 'Midnight blue' },
+    { color: '#1a1a2e', label: 'Deep indigo' },
+    { color: '#ffffff', label: 'White' },
+    { color: '#d4a853', label: 'Golden' },
+    { color: '#054348', label: 'Forest green' },
+    { color: '#7b2d8b', label: 'Deep purple' },
+    { color: '#8b1a1a', label: 'Dark red' },
+    { color: '#1a4a6b', label: 'Ocean blue' },
+    { color: '#4a3728', label: 'Dark brown' },
+  ];
 
-textPresets = [
-  { color: '#ffffff', label: 'White' },
-  { color: '#cbd5e1', label: 'Muted silver' },
-  { color: '#000000', label: 'Black' },
-  { color: '#1e293b', label: 'Dark slate' },
-  { color: '#6366f1', label: 'Indigo' },
-  { color: '#14b8a6', label: 'Teal' },
-  { color: '#f43f5e', label: 'Rose' },
-  { color: '#f59e0b', label: 'Amber' },
-  { color: '#22c55e', label: 'Green' },
-  { color: '#e879f9', label: 'Fuchsia' },
-];
+  textPresets = [
+    { color: '#ffffff', label: 'White' },
+    { color: '#cbd5e1', label: 'Muted silver' },
+    { color: '#000000', label: 'Black' },
+    { color: '#1e293b', label: 'Dark slate' },
+    { color: '#6366f1', label: 'Indigo' },
+    { color: '#14b8a6', label: 'Teal' },
+    { color: '#f43f5e', label: 'Rose' },
+    { color: '#f59e0b', label: 'Amber' },
+    { color: '#22c55e', label: 'Green' },
+    { color: '#e879f9', label: 'Fuchsia' },
+  ];
 
   constructor(
     private route: ActivatedRoute,
