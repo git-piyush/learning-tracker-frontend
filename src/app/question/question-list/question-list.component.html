@@ -117,7 +117,11 @@
           <!-- Thumbnail -->
           <td class="col-thumb">
             <div class="thumb-wrap">
-              <img [src]="getImageSrc(product.image)" [alt]="product.category" (error)="onImageError($event)"/>
+              <img 
+                [src]="product.imageurl" 
+                [alt]="product.category"
+                (error)="onImageError($event)"
+              />
             </div>
           </td>
 

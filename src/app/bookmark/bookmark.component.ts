@@ -20,6 +20,7 @@ interface Question {
     level:string;
     modifiedDate:Date;
     image:string;
+    imageurl:string;
     createdByCurrentUser:string;
 }
 
@@ -213,7 +214,7 @@ popupImage: string | null = null;
 popupQuestion: string = '';
 
 openImagePopup(question: any): void {
-  const src = this.getImageSrc(question.image);
+  const src = question.imageurl;
   if (!src) return; // don't open popup if no image
   this.popupImage = src;
   this.popupQuestion = question.question;

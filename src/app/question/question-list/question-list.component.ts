@@ -19,6 +19,7 @@ interface Question {
     level: string;
     modifiedDate: Date;
     image: string;
+    imageurl:string;
 }
 
 // ── SubCategory color palettes ───────────────────────────────────────────────
@@ -134,7 +135,7 @@ export class QuestionListComponent implements OnInit {
         this.products = res.questionList;
         this.totalPages = res.totalPages;
         this.totalElements = res.totalElements;
-        // Pre-warm color map so colors stay stable across pages
+        console.log(this.products);
         this.products.forEach(p => this.getSubCategoryIndex(p.subCategory));
       },
       error: (err) => console.error(err)

@@ -81,7 +81,7 @@
   <div class="product-list" *ngIf="questions.length > 0 && viewMode==='tiles'">
     <div class="product-item" *ngFor="let question of questions">
       <div class="product-image-wrap">
-        <img [src]="getImageSrc(question.image)"
+        <img [src]="question.imageurl"
              [alt]="question.category"
              class="question-image"
              (error)="onImageError($event)"/>
@@ -134,7 +134,7 @@
           <td class="col-num">{{ (page * size) + i + 1 }}</td>
           <td class="col-thumb">
             <div class="thumb-wrap">
-              <img [src]="getImageSrc(question.image)" [alt]="question.category" (error)="onImageError($event)"/>
+              <img [src]="question.imageurl" [alt]="question.category" (error)="onImageError($event)"/>
             </div>
           </td>
           <td class="col-question"><span class="q-text">{{ question.question }}</span></td>

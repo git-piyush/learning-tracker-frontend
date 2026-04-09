@@ -76,12 +76,7 @@ export class UpdateQuestionComponent  implements OnInit {
         this.level = q.level;
         this.question = q.question;
         this.answer = q.answer;
-
-
-        // 🔹 Image preview (if image exists)
-        if (q.image) {
-          this.imageUrl = `data:image/png;base64,${q.image}`;
-        }
+        this.imageUrl = q.imageurl;
           
         }
       },

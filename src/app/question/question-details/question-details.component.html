@@ -121,11 +121,13 @@
 
     <!-- Image -->
     <div class="image-container">
-      <img [src]="getImageSrc(question.image)"
-           [alt]="question.category"
-           class="question-image"
-           (error)="onImageError($event)"
-           [title]="imageErrored ? 'This is a default image added by system since there is no reference image added by user. You can add your image in Edit section.' : ''"/>
+      <img 
+                [src]="question.imageurl" 
+                [alt]="question.category"
+                class="question-image"
+                (error)="onImageError($event)"
+                [title]="imageErrored ? 'This is a default image added by system since there is no reference image added by user. You can add your image in Edit section.' : ''"
+              />
     </div>
 
     <!-- Pagination -->
