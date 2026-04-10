@@ -87,7 +87,7 @@ export class QuestionDetailsComponent implements OnInit {
   }
 
   loadQuestionDetails(qId: string): void {
-    this.questionService.getQuestionById(qId).subscribe({
+    this.questionService.getQuestionDetailsById(qId).subscribe({
       next: (res) => {
         this.question = res.question;
         if (this.question?.bgColor)   this.currentBg   = this.question.bgColor;

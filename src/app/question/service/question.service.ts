@@ -73,6 +73,12 @@ export class QuestionService {
     });
   }
 
+  getQuestionDetailsById(id: string): Observable<any> {
+    return this.http.get(`${QuestionService.BASE_URL}/question/get-question-details/${id}`, {
+      headers: this.getHeader(),
+    });
+  }
+
   getNextQuestionById(id: string): Observable<any> {
     return this.http.get(`${QuestionService.BASE_URL}/question/get-next-question/${id}`, {
       headers: this.getHeader(),

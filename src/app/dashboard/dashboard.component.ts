@@ -134,6 +134,8 @@ getAvatarColor(name: string): string {
 
   dailyQuestionCountMap: Map<string, number> = new Map();
 
+  userMonthlyRevisionReport: Map<string, number> = new Map();
+
   educationalStages: { name: string; value: number; color: string }[] = [];
 
   constructor(private dashboardService: DashboardService, 
@@ -145,14 +147,12 @@ getAvatarColor(name: string): string {
 
     ngOnInit(): void {
       this.userName = localStorage.getItem("username");
-      this.loadDashboardDate();
+      this.loadDashboardData();
       this.loadTemperature();
 
       this.loadCricketData();
 
       this.loadSubscribedMatches();
-
-      this.startTenMinTask();
 
       this.loadOnlineUsers();
 
@@ -165,19 +165,6 @@ getAvatarColor(name: string): string {
          console.log(this.registeredUsers);
        });
     }
-
-      startTenMinTask(): void {
-        console.log('inside startTenMinTask');
-        if (this.tenMinSub) {
-          return; // already running
-        }
-
-        this.tenMinSub = timer(0, 10 * 60 * 1000).subscribe(() => {
-          if (this.isTenMinEnabled) {
-            this.executeEveryTenMinutes();
-          }
-        });
-      }
 
       stopTenMinTask(): void {
         this.tenMinSub?.unsubscribe();
@@ -365,7 +352,7 @@ loadCricketData() {
     return colors[index % colors.length];
   }
 
-  loadDashboardDate():void{
+  loadDashboardData():void{
     this.dashboardService.getDashboardData().subscribe({
       next: (res: any) => {
           this.dashboardData = res.dashboard;
@@ -375,6 +362,7 @@ loadCricketData() {
           this.summaryCards[3].value = this.dashboardData.futureEvents;
           this.summaryCards[4].value = this.dashboardData.unreadFeedback;
           this.subCategoryCountMap = new Map(Object.entries(this.dashboardData.countMap));
+
           this.educationalStages = Array.from(this.subCategoryCountMap.entries()).map(
             ([key, value], index) => ({
               name: key,
@@ -394,8 +382,12 @@ loadCricketData() {
           this.toDoMap = this.dashboardData.toDoMap;
           
           this.dailyQuestionCountMap = new Map(Object.entries(this.dashboardData.dailyQuestionCountMap));
+          
           this.loadDailyChart(this.dailyQuestionCountMap);
 
+          this.userMonthlyRevisionReport = new Map(Object.entries(this.dashboardData.userMonthlyRevisionReport));
+
+          this.loadRevisionChart(this.userMonthlyRevisionReport);
         },
         error: (error) => {
         
@@ -517,5 +509,63 @@ loadCricketData() {
       minute: '2-digit'
     });
   }
+
+  isAdmin():boolean{
+    return this.apiService.isAdmin();
+  }
+
+  loadRevisionChart(revisionMap: Map<string, number>) {
+      const today = new Date();
+      const monthName = today.toLocaleString('default', { month: 'long' });
+
+      const labels = Array.from(revisionMap.keys());
+      const data = Array.from(revisionMap.values());
+
+      new Chart('revisionChart', {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: `Questions Revised in ${monthName}`,
+            data,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.15)',
+            borderWidth: 2,
+            pointBackgroundColor: '#3b82f6',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 1.5,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: '#a0aec0'
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#a0aec0' },
+              grid: { color: 'rgba(255,255,255,0.05)' }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                color: '#a0aec0'
+              },
+              grid: { color: 'rgba(255,255,255,0.05)' }
+            }
+          }
+        }
+      });
+    }
 
 }

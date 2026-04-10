@@ -53,89 +53,95 @@
 
     <!-- Activities & Events -->
     <div class="panel events-panel">
-      <h3 class="panel-title">📋 Add Your Activities & Events</h3>
-
-      <div class="events-scroll">
-        <!-- Display mode -->
-        <ul class="events-list" *ngIf="!isEditing">
-          <ul *ngFor="let entry of toDoMap | keyvalue : dateDescOrder">
-            <label class="date-label">{{ entry.key | date:'MMM dd, yyyy' }}</label>
-            <li *ngFor="let todo of entry.value" class="todo-item">
-              <input type="checkbox" [checked]="todo.completed === 'Y'" class="readonly-check"/>
-              <span>{{ todo.task }}</span>
-            </li>
-          </ul>
-        </ul>
-
-        <!-- Edit mode -->
-        <div *ngIf="isEditing">
-          <div *ngFor="let todo of todos; let i = index" class="event-row">
-            <input type="checkbox" [(ngModel)]="todo.checked" />
-            <input type="text" [(ngModel)]="todo.task" placeholder="Edit event" class="edit-input" />
-            <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
-          </div>
-        </div>
+      <!-- User Monthly Line graph -->
+      <div *ngIf="!isAdmin()" style="margin-top: 16px;">
+        <h3 class="panel-title">📊 Daily Revision – Current Month</h3>
+        <canvas id="revisionChart"></canvas>
       </div>
 
-      <div class="buttons">
-        <button class="add-btn" *ngIf="isEditing" (click)="addEvent()">+ Add</button>
-        <button class="edit-btn" (click)="toggleEdit()">
-          {{ isEditing ? '💾 Save' : '✏️ Edit' }}
-        </button>
-      </div>
-
-        <!-- User Table -->
-       <div class="panel user-table-panel">
-          <h3 class="panel-title">👥 Registered Users</h3>
-          <div class="table-scroll">
-            <table class="user-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Provider</th>
-                  <th>Joined</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let user of registeredUsers">
-                  <td>{{ user.id }}</td>
-                  <td>
-                    <div class="user-cell">
-                      <div class="avatar" [style.background]="getAvatarColor(user.name)">
-                        {{ getInitial(user.name) }}
+      <!-- User Table -->
+        <div *ngIf="isAdmin()">
+            <div class="panel user-table-panel">
+            <h3 class="panel-title">👥 Registered Users</h3>
+            <div class="table-scroll">
+              <table class="user-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Provider</th>
+                    <th>Joined</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of registeredUsers">
+                    <td>{{ user.id }}</td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar" [style.background]="getAvatarColor(user.name)">
+                          {{ getInitial(user.name) }}
+                        </div>
+                        {{ user.name }}
                       </div>
-                      {{ user.name }}
-                    </div>
-                  </td>
-                  <td>{{ user.email }}</td>
-                  <td>
-                    <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'admin' : 'manager'">
-                      {{ user.role }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="badge" [ngClass]="user.provider === 'GOOGLE' ? 'google' : 'local'">
-                      {{ user.provider }}
-                    </span>
-                  </td>
-                  <td>{{ user.joined | date:'MMM d, yyyy' }}</td>
-                  <td>
-                    <span class="status" [ngClass]="user.online ? 'active' : 'inactive'">
-                      ● {{ user.online ? 'Active' : 'Inactive' }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'admin' : 'manager'">
+                        {{ user.role }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="user.provider === 'GOOGLE' ? 'google' : 'local'">
+                        {{ user.provider }}
+                      </span>
+                    </td>
+                    <td>{{ user.joined | date:'MMM d, yyyy' }}</td>
+                    <td>
+                      <span class="status" [ngClass]="user.online ? 'active' : 'inactive'">
+                        ● {{ user.online ? 'Active' : 'Inactive' }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <!-- User Table Ends here -->
+      <!-- User Table Ends here -->
+      <div class="panel user-table-panel">  
+          <h3 class="panel-title">📋 Add Your Activities & Events</h3>
+          <div class="events-scroll">
+            <!-- Display mode -->
+            <ul class="events-list" *ngIf="!isEditing">
+              <ul *ngFor="let entry of toDoMap | keyvalue : dateDescOrder">
+                <label class="date-label">{{ entry.key | date:'MMM dd, yyyy' }}</label>
+                <li *ngFor="let todo of entry.value" class="todo-item">
+                  <input type="checkbox" [checked]="todo.completed === 'Y'" class="readonly-check"/>
+                  <span>{{ todo.task }}</span>
+                </li>
+              </ul>
+            </ul>
 
+            <!-- Edit mode -->
+            <div *ngIf="isEditing">
+              <div *ngFor="let todo of todos; let i = index" class="event-row">
+                <input type="checkbox" [(ngModel)]="todo.checked" />
+                <input type="text" [(ngModel)]="todo.task" placeholder="Edit event" class="edit-input" />
+                <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
+              </div>
+            </div>
+          </div>
 
+          <div class="buttons">
+            <button class="add-btn" *ngIf="isEditing" (click)="addEvent()">+ Add</button>
+            <button class="edit-btn" (click)="toggleEdit()">
+              {{ isEditing ? '💾 Save' : '✏️ Edit' }}
+            </button>
+          </div>
+      </div>
     </div>
     
 
