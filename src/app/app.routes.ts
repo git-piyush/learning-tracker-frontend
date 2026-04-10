@@ -19,6 +19,7 @@ import { BookmarkComponent } from './bookmark/bookmark.component';
 import { HomeComponent } from './home/home/home.component';
 import { EventComponent } from './event/event.component';
 import { authGuard } from './guards/auth.guard';
+import { LogoutGuard } from './guards/logout.guard';
 
 export const routes: Routes = [
 
@@ -26,10 +27,16 @@ export const routes: Routes = [
   { path: 'register',  component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
 
-  { path: 'home', component: HomeComponent },
-  {path: "", redirectTo: "/home", pathMatch: 'full'},
-  {path: "home", redirectTo: "/home", pathMatch: 'full'},
-
+  {
+  path: 'home',
+  component: HomeComponent,
+  canActivate: [LogoutGuard]
+},
+{
+  path: '',
+  redirectTo: '/home',
+  pathMatch: 'full'
+},
   { path: 'question-details/:qId', component: QuestionDetailsComponent, canActivate: [authGuard] },
   { path: 'all-question', component: QuestionListComponent , canActivate: [authGuard] },
   { path: 'add-question', component: AddQuestionComponent, canActivate: [authGuard] },
