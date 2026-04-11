@@ -22,27 +22,13 @@ interface WeatherCard {
   lastUpdated: string;
 }
 
-interface Match {
-  id: string;
-  dateTimeGMT: string;
-  dateTimeIST: string;
-  matchType: string;
-  status: string;
-  ms: string;
-  t1: string;
-  t2: string;
-  t1s: string;
-  t2s: string;
-  t1img: string;
-  t2img: string;
-  series: string;
-  date: string;
-  time: string;
-  strdate: string;
-  strtime: string;
-  teams: string;
-  flgMatchStarted: string;
-  flgMatchEnded: string;
+interface FutureEvent {
+  id: number;
+  eventName: string;
+  startDate: string;   // ISO date string e.g. '2026-04-20'
+  endDate: string;
+  purpose: string;     // EventPurpose enum value
+  status: string;      // EventStatus enum value
 }
 
 interface RegisteredUser {
@@ -64,11 +50,12 @@ interface RegisteredUser {
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  nextFiveMatches: Match[] = [];
-  registeredUsers: RegisteredUser[] = [];
+  // ── Future Events ─────────────────────────────────────────
+  futureEventList: FutureEvent[] = [];
+  currentEventIndex = 0;
+  eventSlideInterval: any;
 
-  currentIndex = 0;
-  slideInterval: any;
+  registeredUsers: RegisteredUser[] = [];
 
   weatherCard: WeatherCard = {
     city: '',
@@ -113,55 +100,77 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.userName = localStorage.getItem("username");
     this.loadDashboardData();
     this.loadTemperature();
-    this.loadCricketData();
     this.loadOnlineUsers();
   }
 
   ngOnDestroy(): void {
-    if (this.slideInterval) clearInterval(this.slideInterval);
+    if (this.eventSlideInterval) clearInterval(this.eventSlideInterval);
   }
 
-  // ── Cricket ──────────────────────────────────────────────
+  // ── Future Events Slider ──────────────────────────────────
 
-  loadCricketData(): void {
-    this.dashboardService.getNextFiveMatches().subscribe({
-      next: (res: any) => {
-        this.nextFiveMatches = res.matches;
-        if (this.nextFiveMatches.length > 0) {
-          this.currentIndex = 0;
-          this.startAutoSlide();
-        }
-      },
-      error: err => {
-        console.error('Cricket API error:', err);
-        this.nextFiveMatches = [];
-      }
-    });
+  startEventSlide(): void {
+    if (this.futureEventList.length <= 1) return;
+    this.eventSlideInterval = setInterval(() => {
+      this.currentEventIndex = (this.currentEventIndex + 1) % this.futureEventList.length;
+    }, 4000);
   }
 
-  startAutoSlide(): void {
-    this.slideInterval = setInterval(() => {
-      this.currentIndex = (this.currentIndex + 1) % this.nextFiveMatches.length;
-    }, 3000);
-  }
-
-  pauseAutoSlide(): void {
-    if (this.slideInterval) {
-      clearInterval(this.slideInterval);
-      this.slideInterval = null;
+  pauseEventSlide(): void {
+    if (this.eventSlideInterval) {
+      clearInterval(this.eventSlideInterval);
+      this.eventSlideInterval = null;
     }
   }
 
-  resumeAutoSlide(): void {
-    if (!this.slideInterval) this.startAutoSlide();
+  resumeEventSlide(): void {
+    if (!this.eventSlideInterval) this.startEventSlide();
   }
 
-  saveSubscription(match: Match): void {
-    this.dashboardService.saveSubscription(match).subscribe({
-      next: res => this.notify.info(res.message),
-      error: err => this.notify.error(err.error.message)
-    });
-    setTimeout(() => this.reloadDashboard(), 3000);
+  goToEvent(index: number): void {
+    this.currentEventIndex = index;
+  }
+
+  /** Returns how many days until the event starts (0 if today or past) */
+  getDaysUntil(startDate: string): number {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? diff : 0;
+  }
+
+  /** Returns duration in days (inclusive) */
+  getDurationDays(startDate: string, endDate: string): number {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    return diff >= 0 ? diff + 1 : 1;
+  }
+
+  /** Maps EventPurpose enum → CSS class for the badge */
+  getPurposeClass(purpose: string): string {
+    const map: Record<string, string> = {
+      EXAM:     'purpose-exam',
+      STUDY:    'purpose-study',
+      PROJECT:  'purpose-project',
+      MEETING:  'purpose-meeting',
+      HOLIDAY:  'purpose-holiday',
+      OTHER:    'purpose-other'
+    };
+    return map[purpose?.toUpperCase()] ?? 'purpose-other';
+  }
+
+  /** Maps EventStatus enum → CSS class for the status chip */
+  getStatusClass(status: string): string {
+    const map: Record<string, string> = {
+      UPCOMING:  'status-upcoming',
+      ONGOING:   'status-ongoing',
+      COMPLETED: 'status-completed',
+      CANCELLED: 'status-cancelled'
+    };
+    return map[status?.toUpperCase()] ?? 'status-upcoming';
   }
 
   // ── Users ─────────────────────────────────────────────────
@@ -288,6 +297,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Theory vs Practical chart
         const theorayPracticalData: any[] = this.dashboardData.theorayPracticalData || [];
         setTimeout(() => this.loadTypeRevisionChart(theorayPracticalData), 0);
+
+        // Future events slider
+        this.futureEventList = this.dashboardData.futureEventList || [];
+        if (this.futureEventList.length > 0) {
+          this.currentEventIndex = 0;
+          this.startEventSlide();
+        }
       },
       error: () => {}
     });
@@ -381,7 +397,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const month = today.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Build day labels
     const labels: string[] = [];
     for (let d = 1; d <= daysInMonth; d++) {
       labels.push(
@@ -389,7 +404,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Build lookup maps keyed by 'YYYY-MM-DD'
     const theoryMap: Record<string, number> = {};
     const practicalMap: Record<string, number> = {};
 

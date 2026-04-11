@@ -152,7 +152,7 @@
 
     </div>
 
-    <!-- Right Column: Weather + Theory/Practical + Next Matches -->
+    <!-- Right Column: Weather + Theory/Practical + Future Events -->
     <div class="right-column">
 
       <!-- Weather Card -->
@@ -171,7 +171,7 @@
       </div>
 
       <!-- Theory vs Practical Graph (non-admin only) -->
-      <div class="panel theory-practical-card">  <!--*ngIf="!isAdmin()"-->
+      <div class="panel theory-practical-card">
         <p class="cricket-label">📊 Theory vs Practical – This Month</p>
         <div class="chart-container">
           <canvas id="typeRevisionChart"></canvas>
@@ -186,25 +186,73 @@
         </div>
       </div>
 
-      <!-- Next Five Matches -->
-      <div class="panel cricket-card" *ngIf="nextFiveMatches.length">
-        <div class="card-content">
-          <div class="slide" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
-            <p class="cricket-label">🏏 Next Match</p>
-            <div class="teams">{{ nextFiveMatches[currentIndex].t1 }} vs {{ nextFiveMatches[currentIndex].t2 }}</div>
-            <div class="datetime">
-              {{ nextFiveMatches[currentIndex].dateTimeIST | date:'MMM d, y' }} •
-              {{ nextFiveMatches[currentIndex].dateTimeIST | date:'hh:mm a' }}
+      <!-- Future Events Slider -->
+      <div class="panel future-events-card" *ngIf="futureEventList && futureEventList.length > 0">
+        <div class="fe-card-content">
+          <div class="fe-slide" (mouseenter)="pauseEventSlide()" (mouseleave)="resumeEventSlide()">
+
+            <!-- Header row -->
+            <div class="fe-header-row">
+              <span class="fe-label">📅 Upcoming Event</span>
+              <span class="fe-counter">{{ currentEventIndex + 1 }} / {{ futureEventList.length }}</span>
             </div>
-            <div class="match-type">{{ nextFiveMatches[currentIndex].matchType }}</div>
-            <div class="match-type">{{ nextFiveMatches[currentIndex].series }}</div>
-            <button class="subscribe-btn" (click)="saveSubscription(nextFiveMatches[currentIndex])">
-              + Subscribe
-            </button>
+
+            <!-- Event name -->
+            <div class="fe-event-name">{{ futureEventList[currentEventIndex].eventName }}</div>
+
+            <!-- Purpose badge -->
+            <div class="fe-purpose-badge" [ngClass]="getPurposeClass(futureEventList[currentEventIndex].purpose)">
+              {{ futureEventList[currentEventIndex].purpose }}
+            </div>
+
+            <!-- Date range row -->
+            <div class="fe-date-row">
+              <div class="fe-date-block">
+                <span class="fe-date-lbl">START</span>
+                <span class="fe-date-val">{{ futureEventList[currentEventIndex].startDate | date:'MMM d, y' }}</span>
+              </div>
+              <div class="fe-date-arrow">→</div>
+              <div class="fe-date-block">
+                <span class="fe-date-lbl">END</span>
+                <span class="fe-date-val">{{ futureEventList[currentEventIndex].endDate | date:'MMM d, y' }}</span>
+              </div>
+            </div>
+
+            <!-- Duration -->
+            <div class="fe-duration">
+              ⏱ {{ getDurationDays(futureEventList[currentEventIndex].startDate, futureEventList[currentEventIndex].endDate) }} day(s) duration
+            </div>
+
+            <!-- Days remaining -->
+            <div class="fe-days-remaining">
+              <span class="fe-days-num">{{ getDaysUntil(futureEventList[currentEventIndex].startDate) }}</span>
+              <span class="fe-days-suffix">days away</span>
+            </div>
+
+            <!-- Status chip -->
+            <div class="fe-status-chip" [ngClass]="getStatusClass(futureEventList[currentEventIndex].status)">
+              {{ futureEventList[currentEventIndex].status }}
+            </div>
+
           </div>
-          <div class="dots">
-            <span *ngFor="let m of nextFiveMatches; let i = index" [class.active]="i === currentIndex"></span>
+
+          <!-- Dot indicators -->
+          <div class="fe-dots">
+            <span
+              *ngFor="let e of futureEventList; let i = index"
+              [class.active]="i === currentEventIndex"
+              (click)="goToEvent(i)"
+            ></span>
           </div>
+        </div>
+      </div>
+
+      <!-- Empty state when no future events -->
+      <div class="panel future-events-card future-events-empty" *ngIf="!futureEventList || futureEventList.length === 0">
+        <div class="fe-empty">
+          <span class="fe-empty-icon">🗓️</span>
+          <p class="fe-empty-title">No Upcoming Events</p>
+          <p class="fe-empty-sub">Your scheduled events will appear here.</p>
         </div>
       </div>
 

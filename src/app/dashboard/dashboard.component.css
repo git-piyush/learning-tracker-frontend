@@ -316,7 +316,7 @@ input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
 }
 
 .weather-card,
-.cricket-card,
+.future-events-card,
 .theory-practical-card {
   min-width: 0;
   width: 100%;
@@ -418,92 +418,230 @@ input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
 .legend-item.practical .legend-dot { background: #2dd4bf; }
 .legend-item.practical { color: #2dd4bf; }
 
-/* Cricket Cards */
-.cricket-card {
-  height: 280px;
-  overflow: hidden;
-}
-
-.card-content {
-  height: 100%;
+/* ── Future Events Card ── */
+.future-events-card {
+  background: linear-gradient(135deg, #0f1a2e 0%, #111827 100%);
+  border-color: #1e2d45;
+  min-height: 260px;
   display: flex;
   flex-direction: column;
 }
 
-.cricket-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #6699cc;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 10px;
+.fe-card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.teams {
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-.datetime {
-  font-size: 12px;
-  color: #7799bb;
-  margin-bottom: 6px;
-}
-
-.match-type {
-  font-size: 11px;
-  color: #556677;
-  margin-bottom: 3px;
-}
-
-.subscribe-btn {
-  margin-top: 12px;
-  width: 100%;
-  background: #6366f1;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: 'Sora', sans-serif;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.subscribe-btn:hover { background: #5254cc; }
-
-/* Dots indicator */
-.slide {
+.fe-slide {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
   padding-right: 4px;
 }
 
-.slide::-webkit-scrollbar { width: 4px; }
-.slide::-webkit-scrollbar-track { background: transparent; }
-.slide::-webkit-scrollbar-thumb { background: rgba(225,225,225,0.996); border-radius: 2px; }
+.fe-slide::-webkit-scrollbar { width: 3px; }
+.fe-slide::-webkit-scrollbar-track { background: transparent; }
+.fe-slide::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.4); border-radius: 2px; }
 
-.dots {
+/* Header row */
+.fe-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.fe-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.fe-counter {
+  font-size: 10px;
+  color: #3a4a6a;
+  font-weight: 500;
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.15);
+  border-radius: 20px;
+  padding: 2px 8px;
+}
+
+/* Event name */
+.fe-event-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f0f4ff;
+  line-height: 1.35;
+  margin-bottom: 10px;
+  letter-spacing: -0.2px;
+}
+
+/* Purpose badge */
+.fe-purpose-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+
+.fe-purpose-badge.purpose-exam     { background: rgba(239,68,68,0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+.fe-purpose-badge.purpose-study    { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+.fe-purpose-badge.purpose-project  { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.fe-purpose-badge.purpose-meeting  { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+.fe-purpose-badge.purpose-holiday  { background: rgba(45,212,191,0.12); color: #2dd4bf; border: 1px solid rgba(45,212,191,0.2); }
+.fe-purpose-badge.purpose-other    { background: rgba(156,163,175,0.1); color: #9ca3af; border: 1px solid rgba(156,163,175,0.2); }
+
+/* Date range */
+.fe-date-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid #1e2d45;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.fe-date-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.fe-date-lbl {
+  font-size: 9px;
+  font-weight: 600;
+  color: #3a4a6a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fe-date-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: #c7d2fe;
+}
+
+.fe-date-arrow {
+  font-size: 14px;
+  color: #3a4a6a;
+  flex-shrink: 0;
+}
+
+/* Duration */
+.fe-duration {
+  font-size: 11px;
+  color: #4a5a7a;
+  margin-bottom: 12px;
+}
+
+/* Days remaining big number */
+.fe-days-remaining {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.fe-days-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: #6366f1;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.fe-days-suffix {
+  font-size: 12px;
+  color: #4a5a7a;
+  font-weight: 500;
+}
+
+/* Status chip */
+.fe-status-chip {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+.fe-status-chip.status-upcoming   { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+.fe-status-chip.status-ongoing    { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.fe-status-chip.status-completed  { background: rgba(156,163,175,0.1); color: #9ca3af; border: 1px solid rgba(156,163,175,0.2); }
+.fe-status-chip.status-cancelled  { background: rgba(239,68,68,0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+
+/* Dots */
+.fe-dots {
   display: flex;
   justify-content: center;
   gap: 6px;
-  padding: 8px 0;
+  padding: 10px 0 0;
+  flex-shrink: 0;
 }
 
-.dots span {
-  width: 8px;
-  height: 8px;
+.fe-dots span {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.3);
+  background: rgba(99,102,241,0.2);
   display: inline-block;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
 }
 
-.dots span.active { background: rgba(255,255,255,0.9); }
+.fe-dots span.active {
+  background: #6366f1;
+  transform: scale(1.3);
+}
+
+.fe-dots span:hover:not(.active) {
+  background: rgba(99,102,241,0.5);
+}
+
+/* Empty state */
+.future-events-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+}
+
+.fe-empty {
+  text-align: center;
+  padding: 10px;
+}
+
+.fe-empty-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.fe-empty-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5a7a;
+  margin-bottom: 4px;
+}
+
+.fe-empty-sub {
+  font-size: 11px;
+  color: #2a3a5a;
+}
 
 /* ── User Table ── */
 .table-scroll {
@@ -594,6 +732,16 @@ input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
 .status.active   { color: #34d399; }
 .status.inactive { color: #ef4444; }
 
+/* ── cricket-label reused for theory-practical header ── */
+.cricket-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6699cc;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
 /* ── Responsive: Large Laptop (≤ 1400px) ── */
 @media (max-width: 1400px) {
   .summary-grid { grid-template-columns: repeat(5, 1fr); }
@@ -611,7 +759,7 @@ input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
-  .cricket-card { height: 280px; }
+  .future-events-card { min-height: 260px; }
   .chart-container { height: 130px; }
 }
 
@@ -643,7 +791,7 @@ input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
   .middle-grid, .bottom-grid { grid-template-columns: 1fr; gap: 12px; }
   .panel { padding: 16px; }
   .right-column { display: flex; flex-direction: column; gap: 12px; }
-  .cricket-card { height: 260px; }
+  .future-events-card { min-height: 240px; }
   .chart-container { height: 130px; }
   .event-row { flex-wrap: wrap; gap: 8px; }
   .remove-btn { align-self: flex-end; }
@@ -666,9 +814,10 @@ input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
   .bottom-grid { gap: 10px; }
   .right-column { gap: 10px; }
   .temperature { font-size: 34px; }
-  .cricket-card { height: 240px; }
+  .future-events-card { min-height: 220px; }
+  .fe-event-name { font-size: 14px; }
+  .fe-days-num { font-size: 24px; }
   .chart-container { height: 120px; }
-  .teams { font-size: 13px; }
   .event-row { flex-direction: column; align-items: stretch; }
   .event-row input[type="checkbox"] { align-self: flex-start; }
   .buttons { gap: 8px; }
