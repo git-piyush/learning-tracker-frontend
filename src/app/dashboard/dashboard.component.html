@@ -16,13 +16,18 @@
 
   <!-- Summary Cards -->
   <div class="summary-grid">
-    <div class="summary-card" *ngFor="let card of summaryCards" (click)="onCardClick(card)" style="cursor:pointer">
-      <div class="card-icon" [style.background]="card.color">{{ card.icon }}</div>
-      <div class="card-info">
-        <p class="card-title">{{ card.title }}</p>
-        <h2 class="card-value">{{ card.value }}</h2>
+    <ng-container *ngFor="let card of summaryCards">
+      <div class="summary-card" 
+          *ngIf="card.title !== 'New Feedback' || isAdmin()"
+          (click)="onCardClick(card)" 
+          style="cursor:pointer">
+        <div class="card-icon" [style.background]="card.color">{{ card.icon }}</div>
+        <div class="card-info">
+          <p class="card-title">{{ card.title }}</p>
+          <h2 class="card-value">{{ card.value }}</h2>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 
   <!-- Middle Section -->
