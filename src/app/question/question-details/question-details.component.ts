@@ -41,7 +41,7 @@ export class QuestionDetailsComponent implements OnInit {
   currentText = '#cbd5e1';
   isSaving = false;
   saveSuccess = false;
-  imageErrored = false;
+  imageErrored: Set<number> = new Set();
 
   readonly DEFAULT_BG = '#0d0f1a';
   readonly DEFAULT_TEXT = '#cbd5e1';
@@ -121,9 +121,10 @@ export class QuestionDetailsComponent implements OnInit {
     return 'data:image/jpeg;base64,' + base64String;
   }
 
-  onImageError(event: Event) {
+
+  onImageError(event: Event, questionId: number) {
     (event.target as HTMLImageElement).src = 'defaultquestion.png';
-    this.imageErrored = true;
+    this.imageErrored.add(questionId);
   }
 
   editQuestion(id: string): void {

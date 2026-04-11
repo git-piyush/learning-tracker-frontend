@@ -380,7 +380,7 @@ input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
 
 .chart-container {
   position: relative;
-  height: 150px;
+  height: 180px;
   width: 100%;
 }
 
