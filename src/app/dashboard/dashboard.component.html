@@ -53,6 +53,7 @@
 
     <!-- Activities & Events -->
     <div class="panel events-panel">
+
       <!-- User Monthly Line graph -->
       <div *ngIf="!isAdmin()" style="margin-top: 16px;">
         <h3 class="panel-title">📊 Daily Revision – Current Month</h3>
@@ -60,92 +61,93 @@
       </div>
 
       <!-- User Table -->
-        <div *ngIf="isAdmin()">
-            <div class="panel user-table-panel">
-            <h3 class="panel-title">👥 Registered Users</h3>
-            <div class="table-scroll">
-              <table class="user-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Provider</th>
-                    <th>Joined</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let user of registeredUsers">
-                    <td>{{ user.id }}</td>
-                    <td>
-                      <div class="user-cell">
-                        <div class="avatar" [style.background]="getAvatarColor(user.name)">
-                          {{ getInitial(user.name) }}
-                        </div>
-                        {{ user.name }}
+      <div *ngIf="isAdmin()">
+        <div class="panel user-table-panel">
+          <h3 class="panel-title">👥 Registered Users</h3>
+          <div class="table-scroll">
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Provider</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of registeredUsers">
+                  <td>{{ user.id }}</td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="avatar" [style.background]="getAvatarColor(user.name)">
+                        {{ getInitial(user.name) }}
                       </div>
-                    </td>
-                    <td>{{ user.email }}</td>
-                    <td>
-                      <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'admin' : 'manager'">
-                        {{ user.role }}
-                      </span>
-                    </td>
-                    <td>
-                      <span class="badge" [ngClass]="user.provider === 'GOOGLE' ? 'google' : 'local'">
-                        {{ user.provider }}
-                      </span>
-                    </td>
-                    <td>{{ user.joined | date:'MMM d, yyyy' }}</td>
-                    <td>
-                      <span class="status" [ngClass]="user.online ? 'active' : 'inactive'">
-                        ● {{ user.online ? 'Active' : 'Inactive' }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      {{ user.name }}
+                    </div>
+                  </td>
+                  <td>{{ user.email }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'admin' : 'manager'">
+                      {{ user.role }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="user.provider === 'GOOGLE' ? 'google' : 'local'">
+                      {{ user.provider }}
+                    </span>
+                  </td>
+                  <td>{{ user.joined | date:'MMM d, yyyy' }}</td>
+                  <td>
+                    <span class="status" [ngClass]="user.online ? 'active' : 'inactive'">
+                      ● {{ user.online ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- User Table Ends here -->
+
+      <div class="panel user-table-panel">
+        <h3 class="panel-title">📋 Add Your Activities & Events</h3>
+        <div class="events-scroll">
+          <!-- Display mode -->
+          <ul class="events-list" *ngIf="!isEditing">
+            <ul *ngFor="let entry of toDoMap | keyvalue : dateDescOrder">
+              <label class="date-label">{{ entry.key | date:'MMM dd, yyyy' }}</label>
+              <li *ngFor="let todo of entry.value" class="todo-item">
+                <input type="checkbox" [checked]="todo.completed === 'Y'" class="readonly-check"/>
+                <span>{{ todo.task }}</span>
+              </li>
+            </ul>
+          </ul>
+
+          <!-- Edit mode -->
+          <div *ngIf="isEditing">
+            <div *ngFor="let todo of todos; let i = index" class="event-row">
+              <input type="checkbox" [(ngModel)]="todo.checked" />
+              <input type="text" [(ngModel)]="todo.task" placeholder="Edit event" class="edit-input" />
+              <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
             </div>
           </div>
         </div>
-      <!-- User Table Ends here -->
-      <div class="panel user-table-panel">  
-          <h3 class="panel-title">📋 Add Your Activities & Events</h3>
-          <div class="events-scroll">
-            <!-- Display mode -->
-            <ul class="events-list" *ngIf="!isEditing">
-              <ul *ngFor="let entry of toDoMap | keyvalue : dateDescOrder">
-                <label class="date-label">{{ entry.key | date:'MMM dd, yyyy' }}</label>
-                <li *ngFor="let todo of entry.value" class="todo-item">
-                  <input type="checkbox" [checked]="todo.completed === 'Y'" class="readonly-check"/>
-                  <span>{{ todo.task }}</span>
-                </li>
-              </ul>
-            </ul>
 
-            <!-- Edit mode -->
-            <div *ngIf="isEditing">
-              <div *ngFor="let todo of todos; let i = index" class="event-row">
-                <input type="checkbox" [(ngModel)]="todo.checked" />
-                <input type="text" [(ngModel)]="todo.task" placeholder="Edit event" class="edit-input" />
-                <button class="remove-btn" (click)="removeEvent(i)">Remove</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="buttons">
-            <button class="add-btn" *ngIf="isEditing" (click)="addEvent()">+ Add</button>
-            <button class="edit-btn" (click)="toggleEdit()">
-              {{ isEditing ? '💾 Save' : '✏️ Edit' }}
-            </button>
-          </div>
+        <div class="buttons">
+          <button class="add-btn" *ngIf="isEditing" (click)="addEvent()">+ Add</button>
+          <button class="edit-btn" (click)="toggleEdit()">
+            {{ isEditing ? '💾 Save' : '✏️ Edit' }}
+          </button>
+        </div>
       </div>
-    </div>
-    
 
-    <!-- Right Column: Weather + Cricket -->
+    </div>
+
+    <!-- Right Column: Weather + Theory/Practical + Next Matches -->
     <div class="right-column">
 
       <!-- Weather Card -->
@@ -163,50 +165,19 @@
         </div>
       </div>
 
-      <!-- No Subscription -->
-      <div class="panel no-sub-card" *ngIf="!livescore && subscribedMatches.length == 0">
-        <span>📭 No Subscription</span>
-      </div>
-
-      <!-- Live Score / Subscribed Matches Slider -->
-      <div class="panel cricket-card" *ngIf="slides.length > 0">
-        <div class="card-content">
-          <div class="slide" (mouseenter)="pauseAutoSlide2()" (mouseleave)="resumeAutoSlide2()">
-
-            <ng-container *ngIf="slides[currentIndex2].type === 'subscribed'">
-              <p class="cricket-label">📌 Subscribed Match</p>
-              <div class="teams">{{ slides[currentIndex2].data.teams }}</div>
-              <div class="datetime">
-                {{ slides[currentIndex2].data.dateTimeIST | date:'MMM d, y' }} •
-                {{ slides[currentIndex2].data.dateTimeIST | date:'hh:mm a' }}
-              </div>
-              <div class="match-type">{{ slides[currentIndex2].data.matchType }}</div>
-              <div class="match-type">{{ slides[currentIndex2].data.series }}</div>
-              <button class="subscribe-btn unsub" (click)="unsubscribeSubscription(slides[currentIndex2].data)">
-                Unsubscribe
-              </button>
-            </ng-container>
-
-            <ng-container *ngIf="slides[currentIndex2].type === 'live'">
-              <p class="cricket-label live-badge">🔴 Live Score</p>
-              <div class="teams">{{ slides[currentIndex2].data.name }}</div>
-              <div class="score-row"><span>{{ slides[currentIndex2].data.t1 }}</span></div>
-              <div class="score-row"><span>Run-W</span><span>{{ slides[currentIndex2].data.t1s }}-{{ slides[currentIndex2].data.t1w }}</span></div>
-              <div class="score-row"><span>Over</span><span>{{ slides[currentIndex2].data.t1o }}</span></div>
-              <hr>
-              <div class="score-row"><span>{{ slides[currentIndex2].data.t2 }}</span></div>
-              <div class="score-row"><span>Run-W</span><span>{{ slides[currentIndex2].data.t2s }}-{{ slides[currentIndex2].data.t2w }}</span></div>
-              <div class="score-row"><span>Over</span><span>{{ slides[currentIndex2].data.t2o }}</span></div>
-              <div class="datetime">Result: {{ slides[currentIndex2].data.status }}</div>
-              <button class="subscribe-btn unsub" (click)="unsubscribeSubscription(slides[currentIndex2].data)">
-                Unsubscribe
-              </button>
-            </ng-container>
-
-          </div>
-          <div class="dots">
-            <span *ngFor="let s of slides; let i = index" [class.active]="i === currentIndex2"></span>
-          </div>
+      <!-- Theory vs Practical Graph (non-admin only) -->
+      <div class="panel theory-practical-card">  <!--*ngIf="!isAdmin()"-->
+        <p class="cricket-label">📊 Theory vs Practical – This Month</p>
+        <div class="chart-container">
+          <canvas id="typeRevisionChart"></canvas>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item theory">
+            <span class="legend-dot"></span> Theory
+          </span>
+          <span class="legend-item practical">
+            <span class="legend-dot"></span> Practical
+          </span>
         </div>
       </div>
 

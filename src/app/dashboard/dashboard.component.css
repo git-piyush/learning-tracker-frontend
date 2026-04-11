@@ -180,14 +180,12 @@
 /* ── Bottom Grid ── */
 .bottom-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 500px);
   gap: 16px;
   min-width: 0;
 }
 
-
 /* Events */
-
 .events-panel {
   min-width: 0;
   overflow: hidden;
@@ -203,28 +201,13 @@
   padding-right: 4px;
 }
 
+.events-scroll::-webkit-scrollbar { width: 4px; }
+.events-scroll::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 2px; }
+.events-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-.events-scroll::-webkit-scrollbar {
-  width: 4px;
-}
+.events-list { list-style: none; }
 
-.events-scroll::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 2px;
-}
-
-.events-scroll::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 2px;
-}
-
-.events-list {
-  list-style: none;
-}
-
-input[type="checkbox"] {
-  accent-color: rgb(0, 100, 0);
-}
+input[type="checkbox"] { accent-color: rgb(0, 100, 0); }
 
 .readonly-check {
   accent-color: green;
@@ -252,9 +235,7 @@ input[type="checkbox"] {
   list-style: none;
 }
 
-.todo-item input[type="checkbox"] {
-  accent-color: #00380e;
-}
+.todo-item input[type="checkbox"] { accent-color: #00380e; }
 
 .event-row {
   display: flex;
@@ -276,9 +257,7 @@ input[type="checkbox"] {
   min-width: 0;
 }
 
-.edit-input:focus {
-  border-color: #6366f1;
-}
+.edit-input:focus { border-color: #6366f1; }
 
 .buttons {
   display: flex;
@@ -298,9 +277,7 @@ input[type="checkbox"] {
   transition: border-color 0.2s;
 }
 
-.edit-btn:hover {
-  border-color: #6366f1;
-}
+.edit-btn:hover { border-color: #6366f1; }
 
 .add-btn {
   background: #6366f1;
@@ -315,9 +292,7 @@ input[type="checkbox"] {
   transition: background 0.2s;
 }
 
-.add-btn:hover {
-  background: #5254cc;
-}
+.add-btn:hover { background: #5254cc; }
 
 .remove-btn {
   background: rgba(239, 68, 68, 0.1);
@@ -340,15 +315,14 @@ input[type="checkbox"] {
   overflow: hidden;
 }
 
-
-
 .weather-card,
 .cricket-card,
-.no-sub-card {
+.theory-practical-card {
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
 }
+
 /* Weather */
 .weather-card {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -368,9 +342,7 @@ input[type="checkbox"] {
   color: #aaaacc;
 }
 
-.weather-icon {
-  font-size: 22px;
-}
+.weather-icon { font-size: 22px; }
 
 .temperature {
   font-size: 42px;
@@ -401,17 +373,54 @@ input[type="checkbox"] {
   gap: 4px;
 }
 
-/* No sub */
-.no-sub-card {
-  text-align: center;
-  color: #555;
-  font-size: 13px;
-  padding: 16px;
+/* ── Theory vs Practical Card ── */
+.theory-practical-card {
+  padding: 18px 16px 14px;
 }
+
+.chart-container {
+  position: relative;
+  height: 150px;
+  width: 100%;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-item.theory .legend-dot { background: #818cf8; }
+.legend-item.theory { color: #818cf8; }
+
+.legend-item.practical .legend-dot { background: #2dd4bf; }
+.legend-item.practical { color: #2dd4bf; }
 
 /* Cricket Cards */
 .cricket-card {
-  height: 320px;
+  height: 280px;
   overflow: hidden;
 }
 
@@ -428,10 +437,6 @@ input[type="checkbox"] {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 10px;
-}
-
-.live-badge {
-  color: #f87171;
 }
 
 .teams {
@@ -454,14 +459,6 @@ input[type="checkbox"] {
   margin-bottom: 3px;
 }
 
-.score-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: #aaccee;
-  padding: 3px 0;
-}
-
 .subscribe-btn {
   margin-top: 12px;
   width: 100%;
@@ -477,19 +474,7 @@ input[type="checkbox"] {
   transition: background 0.2s;
 }
 
-.subscribe-btn:hover {
-  background: #5254cc;
-}
-
-.subscribe-btn.unsub {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-.subscribe-btn.unsub:hover {
-  background: rgba(239, 68, 68, 0.25);
-}
+.subscribe-btn:hover { background: #5254cc; }
 
 /* Dots indicator */
 .slide {
@@ -499,21 +484,9 @@ input[type="checkbox"] {
   padding-right: 4px;
 }
 
-.slide::-webkit-scrollbar {
-  width: 4px;
-}
-.slide::-webkit-scrollbar-track {
-  background: transparent;
-}
-.slide::-webkit-scrollbar-thumb {
-  background: rgba(225, 225, 225, 0.996);
-  border-radius: 2px;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
-}
+.slide::-webkit-scrollbar { width: 4px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: rgba(225,225,225,0.996); border-radius: 2px; }
 
 .dots {
   display: flex;
@@ -526,28 +499,39 @@ hr {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255,255,255,0.3);
   display: inline-block;
 }
 
-.dots span.active {
-  background: rgba(255, 255, 255, 0.9);
-}
+.dots span.active { background: rgba(255,255,255,0.9); }
 
-/* User Table */
-
+/* ── User Table ── */
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  max-height: 280px;
+  overflow-y: auto;
+  width: 100%;
 }
 
-.table-scroll::-webkit-scrollbar { height: 4px; }
+.table-scroll::-webkit-scrollbar { height: 4px; width: 4px; }
 .table-scroll::-webkit-scrollbar-track { background: #1a1a1a; }
 .table-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-.user-table thead tr {
-  border-bottom: 1px solid #222;
+.user-table-panel {
+  margin-top: 16px;
+  min-width: 0;
+  overflow: hidden;
 }
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 500px;
+}
+
+.user-table thead tr { border-bottom: 1px solid #222; }
 
 .user-table th {
   text-align: left;
@@ -558,32 +542,16 @@ hr {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: #111;
+  z-index: 1;
 }
 
 .user-table td {
   padding: 10px 14px;
   border-bottom: 1px solid #1a1a1a;
   white-space: nowrap;
-}
-
-.user-table-panel {
-  margin-top: 16px;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.table-scroll {
-  overflow-x: auto;
-  max-height: 280px;
-  overflow-y: auto;
-  width: 100%;
-}
-
-.user-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  min-width: 500px;
 }
 
 .user-table tbody tr:last-child td { border-bottom: none; }
@@ -626,299 +594,96 @@ hr {
 .status.active   { color: #34d399; }
 .status.inactive { color: #ef4444; }
 
-.user-table thead tr th {
-  position: sticky;
-  top: 0;
-  background: #111;
-  z-index: 1;
-}
-
 /* ── Responsive: Large Laptop (≤ 1400px) ── */
 @media (max-width: 1400px) {
-  .summary-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  .card-value {
-    font-size: 22px;
-  }
+  .summary-grid { grid-template-columns: repeat(5, 1fr); }
+  .card-value { font-size: 22px; }
 }
 
 /* ── Responsive: Medium Laptop (≤ 1200px) ── */
 @media (max-width: 1200px) {
-  .dashboard-wrapper {
-    padding: 20px 20px;
-  }
-
-  .summary-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .middle-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .bottom-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .dashboard-wrapper { padding: 20px; }
+  .summary-grid { grid-template-columns: repeat(3, 1fr); }
+  .middle-grid { grid-template-columns: 1fr; }
+  .bottom-grid { grid-template-columns: 1fr; }
   .right-column {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
-
-  .cricket-card {
-    height: 300px;
-  }
+  .cricket-card { height: 280px; }
+  .chart-container { height: 130px; }
 }
 
 /* ── Responsive: Small Laptop / Large Tablet (≤ 900px) ── */
 @media (max-width: 900px) {
-  .dashboard-wrapper {
-    padding: 16px;
-  }
-
-  .summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .middle-grid,
-  .bottom-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .dashboard-wrapper { padding: 16px; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .middle-grid, .bottom-grid { grid-template-columns: 1fr; }
   .right-column {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
-
-  .header h1 {
-    font-size: 18px;
-  }
-
-  .card-value {
-    font-size: 22px;
-  }
+  .header h1 { font-size: 18px; }
+  .card-value { font-size: 22px; }
 }
 
 /* ── Responsive: Tablet (≤ 768px) ── */
 @media (max-width: 768px) {
-  .dashboard-wrapper {
-    padding: 14px 12px;
-  }
-
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-
-  .header h1 {
-    font-size: 17px;
-  }
-
-  .brand-icon img {
-    width: 40px !important;
-    height: 48px !important;
-  }
-
-  .summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .summary-card {
-    padding: 14px 12px;
-    gap: 10px;
-  }
-
-  .card-icon {
-    width: 38px;
-    height: 38px;
-    font-size: 17px;
-  }
-
-  .card-value {
-    font-size: 20px;
-  }
-
-  .card-title {
-    font-size: 10px;
-  }
-
-  .middle-grid,
-  .bottom-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .panel {
-    padding: 16px;
-  }
-
-  .right-column {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .cricket-card {
-    height: 280px;
-  }
-
-  .event-row {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .remove-btn {
-    align-self: flex-end;
-  }
+  .dashboard-wrapper { padding: 14px 12px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+  .header h1 { font-size: 17px; }
+  .brand-icon img { width: 40px !important; height: 48px !important; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .summary-card { padding: 14px 12px; gap: 10px; }
+  .card-icon { width: 38px; height: 38px; font-size: 17px; }
+  .card-value { font-size: 20px; }
+  .card-title { font-size: 10px; }
+  .middle-grid, .bottom-grid { grid-template-columns: 1fr; gap: 12px; }
+  .panel { padding: 16px; }
+  .right-column { display: flex; flex-direction: column; gap: 12px; }
+  .cricket-card { height: 260px; }
+  .chart-container { height: 130px; }
+  .event-row { flex-wrap: wrap; gap: 8px; }
+  .remove-btn { align-self: flex-end; }
 }
 
 /* ── Responsive: Mobile (≤ 480px) ── */
 @media (max-width: 480px) {
-  .dashboard-wrapper {
-    padding: 12px 10px;
-  }
-
-  .header-left {
-    gap: 10px;
-  }
-
-  .header h1 {
-    font-size: 15px;
-    letter-spacing: -0.2px;
-  }
-
-  .under-dev {
-    font-size: 10px;
-  }
-
-  .summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-
-  .summary-card {
-    padding: 12px 10px;
-    gap: 8px;
-    border-radius: 10px;
-  }
-
-  .card-icon {
-    width: 34px;
-    height: 34px;
-    font-size: 15px;
-    border-radius: 8px;
-  }
-
-  .card-value {
-    font-size: 18px;
-  }
-
-  .card-title {
-    font-size: 9px;
-    letter-spacing: 0.3px;
-  }
-
-  .panel {
-    padding: 14px 12px;
-    border-radius: 12px;
-  }
-
-  .panel-title {
-    font-size: 11px;
-    margin-bottom: 12px;
-  }
-
-  .middle-grid {
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .bottom-grid {
-    gap: 10px;
-  }
-
-  .right-column {
-    gap: 10px;
-  }
-
-  .temperature {
-    font-size: 34px;
-  }
-
-  .cricket-card {
-    height: 260px;
-  }
-
-  .teams {
-    font-size: 13px;
-  }
-
-  .event-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .event-row input[type="checkbox"] {
-    align-self: flex-start;
-  }
-
-  .buttons {
-    gap: 8px;
-  }
-
-  .add-btn,
-  .edit-btn {
-    flex: 1;
-    text-align: center;
-    padding: 9px 12px;
-    font-size: 12px;
-  }
-
-  .user-table {
-    font-size: 12px;
-  }
-
-  .user-table th,
-  .user-table td {
-    padding: 8px 10px;
-  }
-
-  .weather-bottom {
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .stage-name {
-    font-size: 12px;
-  }
-
-  .stage-value {
-    font-size: 12px;
-  }
+  .dashboard-wrapper { padding: 12px 10px; }
+  .header-left { gap: 10px; }
+  .header h1 { font-size: 15px; letter-spacing: -0.2px; }
+  .under-dev { font-size: 10px; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+  .summary-card { padding: 12px 10px; gap: 8px; border-radius: 10px; }
+  .card-icon { width: 34px; height: 34px; font-size: 15px; border-radius: 8px; }
+  .card-value { font-size: 18px; }
+  .card-title { font-size: 9px; letter-spacing: 0.3px; }
+  .panel { padding: 14px 12px; border-radius: 12px; }
+  .panel-title { font-size: 11px; margin-bottom: 12px; }
+  .middle-grid { gap: 10px; margin-bottom: 14px; }
+  .bottom-grid { gap: 10px; }
+  .right-column { gap: 10px; }
+  .temperature { font-size: 34px; }
+  .cricket-card { height: 240px; }
+  .chart-container { height: 120px; }
+  .teams { font-size: 13px; }
+  .event-row { flex-direction: column; align-items: stretch; }
+  .event-row input[type="checkbox"] { align-self: flex-start; }
+  .buttons { gap: 8px; }
+  .add-btn, .edit-btn { flex: 1; text-align: center; padding: 9px 12px; font-size: 12px; }
+  .user-table { font-size: 12px; }
+  .user-table th, .user-table td { padding: 8px 10px; }
+  .weather-bottom { flex-direction: column; gap: 2px; }
+  .stage-name { font-size: 12px; }
+  .stage-value { font-size: 12px; }
+  .chart-legend { gap: 12px; }
 }
 
 /* ── Responsive: Very Small Mobile (≤ 360px) ── */
 @media (max-width: 360px) {
-  .summary-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-
-  .card-value {
-    font-size: 16px;
-  }
-
-  .header h1 {
-    font-size: 14px;
-  }
+  .summary-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .card-value { font-size: 16px; }
+  .header h1 { font-size: 14px; }
 }

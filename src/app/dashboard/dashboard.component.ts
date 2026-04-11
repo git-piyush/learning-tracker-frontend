@@ -1,16 +1,15 @@
-// Import necessary Angular modules and services
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NgxChartsModule } from '@swimlane/ngx-charts';  // Module for charts
-import { ApiService } from '../service/api.service'; // Service to interact with API
-import { FormsModule } from '@angular/forms'; // Forms module for two-way binding
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ApiService } from '../service/api.service';
+import { FormsModule } from '@angular/forms';
 import { DashboardService } from './service/dashboard.service';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { NotificationService } from '../shared/notificationService';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 
-interface Todo1 {id:string;completed:string;task:string};
+interface Todo1 { id: string; completed: string; task: string }
 
 interface WeatherCard {
   city: string;
@@ -23,41 +22,27 @@ interface WeatherCard {
   lastUpdated: string;
 }
 
-interface Match{
-    id:string;
-    dateTimeGMT:string;
-    dateTimeIST:string;
-    matchType:string;
-    status:string;
-    ms:string;
-    t1:string;
-    t2:string;
-    t1s:string;
-    t2s:string;
-    t1img:string;
-    t2img:string;
-    series:string;
-    date: string;
-    time: string;
-    strdate: string;
-    strtime: string;
-    teams: string;
-    flgMatchStarted: string;
-    flgMatchEnded: string;
-}
-
-interface LiveScore{
-    status:string;
-    name:string;
-    matchid:string;
-    t1:string;
-    t1s:string;
-    t1o:string;
-    t1w:string;
-    t2:string;
-    t2s:string;
-    t2o:string;
-    t2w:string;
+interface Match {
+  id: string;
+  dateTimeGMT: string;
+  dateTimeIST: string;
+  matchType: string;
+  status: string;
+  ms: string;
+  t1: string;
+  t2: string;
+  t1s: string;
+  t2s: string;
+  t1img: string;
+  t2img: string;
+  series: string;
+  date: string;
+  time: string;
+  strdate: string;
+  strtime: string;
+  teams: string;
+  flgMatchStarted: string;
+  flgMatchEnded: string;
 }
 
 interface RegisteredUser {
@@ -70,396 +55,258 @@ interface RegisteredUser {
   online: string;
 }
 
-// Define the component metadata
 @Component({
-  selector: 'app-dashboard', // The component selector
-  standalone: true, // Marks this component as standalone (no need for NgModule)
-  imports: [CommonModule, NgxChartsModule, FormsModule], // Import other modules required for this component
-  templateUrl: './dashboard.component.html', // HTML template
-  styleUrl: './dashboard.component.css', // CSS styles for the component
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [CommonModule, NgxChartsModule, FormsModule],
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css',
 })
-
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  subscribedMatches: Match[] = [];
-  liveScoreCards: LiveScore[] = [];
-
   nextFiveMatches: Match[] = [];
-
-  registeredUsers: RegisteredUser[]=[];
-
-  slides: any[] = [];
-  currentIndex2 = 0;
-  slideInterval2: any;
+  registeredUsers: RegisteredUser[] = [];
 
   currentIndex = 0;
-  currentIndex1 = 0;
   slideInterval: any;
-  slideInterval1: any;
 
   weatherCard: WeatherCard = {
-      city: '',
-      currentTemp: 0,
-      zone: '',
-      weatherType: '',
-      hTemp: 0,
-      lTemp: 0,
-      humidity: 0,
-      lastUpdated: ''
-    };
+    city: '',
+    currentTemp: 0,
+    zone: '',
+    weatherType: '',
+    hTemp: 0,
+    lTemp: 0,
+    humidity: 0,
+    lastUpdated: ''
+  };
 
-// Helper to get first letter for avatar
-getInitial(name: string): string {
-  return name ? name.charAt(0).toUpperCase() : '?';
-}
+  getInitial(name: string): string {
+    return name ? name.charAt(0).toUpperCase() : '?';
+  }
 
-// Helper to get avatar color based on name
-getAvatarColor(name: string): string {
-  const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316','#068d25','#f86300'];
-  const index = name.charCodeAt(0) % colors.length;
-  return colors[index];
-}
+  getAvatarColor(name: string): string {
+    const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#068d25', '#f86300'];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
+  }
 
- temperature!: number;
- city!: string;
- livescore:boolean=false;
+  userName: string | null = null;
+  dashboardData: any = '';
 
-
-
-  userName:string | null = null;
-  activeMonth: string = '';
-  dashboardData:any='';
-  
   subCategoryCountMap: Map<string, number> = new Map();
-
   dailyQuestionCountMap: Map<string, number> = new Map();
-
   userMonthlyRevisionReport: Map<string, number> = new Map();
 
   educationalStages: { name: string; value: number; color: string }[] = [];
 
-  constructor(private dashboardService: DashboardService, 
-    private router: Router, 
-    private apiService:ApiService, private notify: NotificationService){}
+  tenMinSub!: Subscription;
 
-    tenMinSub!: Subscription;
-    isTenMinEnabled = true;
+  constructor(
+    private dashboardService: DashboardService,
+    private router: Router,
+    private apiService: ApiService,
+    private notify: NotificationService
+  ) {}
 
-    ngOnInit(): void {
-      this.userName = localStorage.getItem("username");
-      this.loadDashboardData();
-      this.loadTemperature();
-
-      this.loadCricketData();
-
-      this.loadSubscribedMatches();
-
-      this.loadOnlineUsers();
-
-      
+  ngOnInit(): void {
+    this.userName = localStorage.getItem("username");
+    this.loadDashboardData();
+    this.loadTemperature();
+    this.loadCricketData();
+    this.loadOnlineUsers();
   }
 
-    loadOnlineUsers(): void {
-       this.apiService.loadOnlineUsers().subscribe(response => {
-         this.registeredUsers = response.users;  // ✅ replace dummy data with real data
-         console.log(this.registeredUsers);
-       });
-    }
+  ngOnDestroy(): void {
+    if (this.slideInterval) clearInterval(this.slideInterval);
+  }
 
-      stopTenMinTask(): void {
-        this.tenMinSub?.unsubscribe();
-        this.tenMinSub = undefined as any;
-      }
+  // ── Cricket ──────────────────────────────────────────────
 
-      executeEveryTenMinutes(): void {
-        console.log('Executed every 10 minutes', new Date());
-        this.loadSubscribedMatches();
-      }
-
-      ngOnDestroy(): void {
-        this.stopTenMinTask();
-      }
-
-      startAutoSlide(): void {
-        this.slideInterval = setInterval(() => {
-          this.currentIndex =
-            (this.currentIndex + 1) % this.nextFiveMatches.length;
-        }, 3000); // ⏱ 3 seconds
-      }
-
-      pauseAutoSlide(): void {
-        if (this.slideInterval) {
-          clearInterval(this.slideInterval);
-          this.slideInterval = null;
-        }
-      }
-
-      resumeAutoSlide(): void {
-        if (!this.slideInterval) {
+  loadCricketData(): void {
+    this.dashboardService.getNextFiveMatches().subscribe({
+      next: (res: any) => {
+        this.nextFiveMatches = res.matches;
+        if (this.nextFiveMatches.length > 0) {
+          this.currentIndex = 0;
           this.startAutoSlide();
         }
+      },
+      error: err => {
+        console.error('Cricket API error:', err);
+        this.nextFiveMatches = [];
       }
+    });
+  }
 
-      startAutoSlide2(): void {
-        if (this.slideInterval2) {
-          clearInterval(this.slideInterval2); // stop previous timer
-        }
+  startAutoSlide(): void {
+    this.slideInterval = setInterval(() => {
+      this.currentIndex = (this.currentIndex + 1) % this.nextFiveMatches.length;
+    }, 3000);
+  }
 
-        this.slideInterval2 = setInterval(() => {
-          this.currentIndex2 =
-            (this.currentIndex2 + 1) % this.slides.length;
-        }, 3000);
-      }
+  pauseAutoSlide(): void {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+      this.slideInterval = null;
+    }
+  }
 
-      pauseAutoSlide2(): void {
-        if (this.slideInterval2) {
-          clearInterval(this.slideInterval2);
-          this.slideInterval2 = null;
-        }
-      }
+  resumeAutoSlide(): void {
+    if (!this.slideInterval) this.startAutoSlide();
+  }
 
-      resumeAutoSlide2(): void {
-        if (!this.slideInterval2) {
-          this.startAutoSlide2();
-        }
-      }
+  saveSubscription(match: Match): void {
+    this.dashboardService.saveSubscription(match).subscribe({
+      next: res => this.notify.info(res.message),
+      error: err => this.notify.error(err.error.message)
+    });
+    setTimeout(() => this.reloadDashboard(), 3000);
+  }
 
+  // ── Users ─────────────────────────────────────────────────
 
+  loadOnlineUsers(): void {
+    this.apiService.loadOnlineUsers().subscribe(response => {
+      this.registeredUsers = response.users;
+    });
+  }
 
-      saveSubscription(match: Match): void {
-        console.log('Subscribed Match:', match);
-          this.dashboardService.saveSubscription(match).subscribe({
-            next: res => {
-              this.notify.info(res.message);
-            },
-            error: err => {
-              this.notify.error(err.error.message);
-            }
+  // ── Weather ───────────────────────────────────────────────
+
+  selectedCity: string = '';
+
+  loadTemperature(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.apiService.getCity(lat, lng).subscribe(res => {
+          this.selectedCity = res.city;
+          this.apiService.getCurrentWeather(this.selectedCity).subscribe(weather => {
+            const timeOnly = weather.current.last_updated.split(' ')[1];
+            this.weatherCard = {
+              city: weather.location.name + ',' + weather.location.region,
+              currentTemp: weather.current.temp_c,
+              zone: weather.location.tz_id,
+              weatherType: weather.current.condition.text,
+              hTemp: weather.current.temp_c,
+              lTemp: weather.current.temp_c,
+              humidity: weather.current.humidity,
+              lastUpdated: timeOnly
+            };
           });
-          setTimeout(() => this.reloadDashboard(), 3000);
-      }
+        });
+      });
+    }
+  }
 
-  
-      unsubscribeSubscription(match: Match): void {
-        console.log('Subscribed Match:', match);
-          this.dashboardService.unsubscribeSubscription(match).subscribe({
-            next: res => {
-              this.notify.info(res.message);
-            },
-            error: err => {
-              this.notify.error(err.error.message);
-            }
-          });
-          setTimeout(() => this.reloadDashboard(), 3000);
-      }
+  // ── Summary Cards ─────────────────────────────────────────
 
   summaryCards = [
-    { title: 'Total Questions', value: 0, color: '#f28b82', icon: '❓' },
+    { title: 'Total Questions',        value: 0, color: '#f28b82', icon: '❓' },
     { title: 'Questions Added by You', value: 0, color: '#5f63f2', icon: '❓' },
-    { title: 'Your Bookmarked', value: 0, color: '#34a853', icon: '⭐' },
-    { title: 'UpComing Events', value: 0, color: '#fbbc04', icon: '🗓️' },
-    { title: 'New Feedback', value: 0, color: '#cf7eb9', icon: '🗪' }
+    { title: 'Your Bookmarked',        value: 0, color: '#34a853', icon: '⭐' },
+    { title: 'UpComing Events',        value: 0, color: '#fbbc04', icon: '🗓️' },
+    { title: 'New Feedback',           value: 0, color: '#cf7eb9', icon: '🗪'  }
   ];
 
   months: string[] = [
-    'All','January', 'February', 'March', 
-    'April','May', 'June', 'July', 'August',
-    'September', 'October', 'November', 'December'
+    'All', 'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  todos: {id:string; task: string;completed:string; checked: boolean }[] = [];
+  // ── Todos ─────────────────────────────────────────────────
 
-  
+  todos: { id: string; task: string; completed: string; checked: boolean }[] = [];
   todo1list: Todo1[] = [];
   toDoMap!: { [date: string]: any[] };
-  selectedCity:string = '';
-  loadTemperature() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      this.apiService.getCity(lat, lng).subscribe(res => {
-        this.selectedCity = res.city;
-        this.apiService.getCurrentWeather(this.selectedCity)
-          .subscribe(weather => {
-              const location = weather.location;
-              const current = weather.current;
+  isEditing = false;
 
-              console.log('Location:', location);
-              console.log('Current:', current);
-              const lastUpdated = weather.current.last_updated;
-              const timeOnly = lastUpdated.split(' ')[1];
-              this.weatherCard = {
-                    city: weather.location.name+','+weather.location.region,
-                    currentTemp: weather.current.temp_c,
-                    zone: weather.location.tz_id,
-                    weatherType: weather.current.condition.text, // usually inside current.condition
-                    hTemp: weather.current.temp_c,   // or use max temp if API provides
-                    lTemp: weather.current.temp_c, // or use min temp if API provides
-                    humidity: weather.current.humidity,
-                    lastUpdated: timeOnly
-                  };
-                  console.log('weatherCard: '+this.weatherCard);
-          });
+  dateDescOrder = (a: any, b: any): number =>
+    new Date(b.key).getTime() - new Date(a.key).getTime();
+
+  toggleEdit(): void {
+    if (this.isEditing) {
+      this.todos = this.todos.map(e => ({ ...e, completed: e.checked ? 'Y' : 'N' }));
+      this.dashboardService.createTodos(this.todos).subscribe({
+        next: () => this.reloadDashboard(),
+        error: (err: any) => {
+          if (err.error.status === 401) {
+            alert('Need Access/Login!');
+            this.router.navigate(['/login']);
+          }
+          alert(err.error.message);
+        }
       });
-    });
-  }
-}
-
-loadCricketData() {
-  this.dashboardService.getNextFiveMatches().subscribe({
-    next: (res: any) => {
-
-      this.nextFiveMatches = res.matches;
-      if (this.nextFiveMatches.length > 0) {
-        this.currentIndex = 0;
-        this.startAutoSlide();
-      }
-    },
-    error: err => {
-      console.error('API error:', err);
-      this.nextFiveMatches = [];
     }
-  });
-}
+    this.isEditing = !this.isEditing;
+  }
 
+  addEvent(): void {
+    this.todos.push({ id: '', task: 'New Event', completed: 'N', checked: false });
+  }
 
-  loadSubscribedMatches(){
-  
-    this.dashboardService.getSubscribedMatch().subscribe(res => {
-        this.slides = [];
-        this.subscribedMatches = res.matches;
-        this.subscribedMatches.forEach(m => {
-        this.slides.push({
-            type: 'subscribed',
-            data: m
-            });
-        });
+  removeEvent(index: number): void {
+    this.todos.splice(index, 1);
+  }
 
-        this.liveScoreCards = res.liveScoreDetails;
-        this.liveScoreCards.forEach(m => {
-          this.slides.push({
-            type: 'live',
-            data: m
-          });
-        });
-      this.startAutoSlide2();           
+  // ── Dashboard Data ────────────────────────────────────────
+
+  loadDashboardData(): void {
+    this.dashboardService.getDashboardData().subscribe({
+      next: (res: any) => {
+        this.dashboardData = res.dashboard;
+
+        this.summaryCards[0].value = this.dashboardData.totalQuestion;
+        this.summaryCards[1].value = this.dashboardData.userTotalQuestion;
+        this.summaryCards[2].value = this.dashboardData.userTotalBookmark;
+        this.summaryCards[3].value = this.dashboardData.futureEvents;
+        this.summaryCards[4].value = this.dashboardData.unreadFeedback;
+
+        this.subCategoryCountMap = new Map(Object.entries(this.dashboardData.countMap));
+        this.educationalStages = Array.from(this.subCategoryCountMap.entries()).map(
+          ([key, value], index) => ({ name: key, value: value as number, color: this.getColor(index) })
+        );
+
+        this.todo1list = this.dashboardData.toDoList;
+        this.todos = this.todo1list.map((item: Todo1) => ({
+          id: item.id,
+          completed: item.completed,
+          task: item.task,
+          checked: item.completed === 'Y'
+        }));
+
+        this.toDoMap = this.dashboardData.toDoMap;
+
+        this.dailyQuestionCountMap = new Map(Object.entries(this.dashboardData.dailyQuestionCountMap));
+        this.loadDailyChart(this.dailyQuestionCountMap);
+
+        this.userMonthlyRevisionReport = new Map(Object.entries(this.dashboardData.userMonthlyRevisionReport));
+        this.loadRevisionChart(this.userMonthlyRevisionReport);
+
+        // Theory vs Practical chart
+        const theorayPracticalData: any[] = this.dashboardData.theorayPracticalData || [];
+        setTimeout(() => this.loadTypeRevisionChart(theorayPracticalData), 0);
+      },
+      error: () => {}
     });
   }
+
+  // ── Charts ────────────────────────────────────────────────
 
   getColor(index: number): string {
     const colors = ['#5f63f2', '#17a2b8', '#dc3545', '#ffc107', '#28a745'];
     return colors[index % colors.length];
   }
 
-  loadDashboardData():void{
-    this.dashboardService.getDashboardData().subscribe({
-      next: (res: any) => {
-          this.dashboardData = res.dashboard;
-          this.summaryCards[0].value = this.dashboardData.totalQuestion;
-          this.summaryCards[1].value = this.dashboardData.userTotalQuestion;
-          this.summaryCards[2].value = this.dashboardData.userTotalBookmark;
-          this.summaryCards[3].value = this.dashboardData.futureEvents;
-          this.summaryCards[4].value = this.dashboardData.unreadFeedback;
-          this.subCategoryCountMap = new Map(Object.entries(this.dashboardData.countMap));
-
-          this.educationalStages = Array.from(this.subCategoryCountMap.entries()).map(
-            ([key, value], index) => ({
-              name: key,
-              value: value,
-              color: this.getColor(index) // assign colors dynamically
-            })
-          );
-
-          this.todo1list = this.dashboardData.toDoList;
-          this.todos = this.todo1list.map((item: Todo1) => ({
-            id:item.id,
-            completed:item.completed,
-            task: item.task,
-            checked: item.completed === 'Y'
-          }));
-
-          this.toDoMap = this.dashboardData.toDoMap;
-          
-          this.dailyQuestionCountMap = new Map(Object.entries(this.dashboardData.dailyQuestionCountMap));
-          
-          this.loadDailyChart(this.dailyQuestionCountMap);
-
-          this.userMonthlyRevisionReport = new Map(Object.entries(this.dashboardData.userMonthlyRevisionReport));
-
-          this.loadRevisionChart(this.userMonthlyRevisionReport);
-        },
-        error: (error) => {
-        
-      },
-    });
-  }
-  dateDescOrder = (a: any, b: any): number => {
-    return new Date(b.key).getTime() - new Date(a.key).getTime();
-  };
-
-  onCardClick(card: any) {
-    if (card.title === 'New Feedback') {
-        this.router.navigate(['/feedback-list']);
-    }
-
-    if (card.title === 'Your Bookmarked') {
-        this.router.navigate(['/bookmarked-question']);
-    }
-
-    if (card.title === 'Questions Added by You') {
-        this.router.navigate(['/all-question']);
-    }
-  }
-
-  selected: boolean[] = [];
-  isEditing = false;
-  reloadDashboard(): void {
-    const currentUrl = this.router.url;
-    window.location.reload();
-
-  }
-
-  toggleEdit() {
-        if (this.isEditing) {
-          this.todos = this.todos.map(e => ({
-        ...e,
-          completed: e.checked ? 'Y' : 'N'
-         }));
-      console.log('Events saved:', this.todos);
-      this.dashboardService.createTodos(this.todos).subscribe({
-          next: (res:any) => {
-               // alert('Todos Added Sucessfully!');
-                this.reloadDashboard();
-              },
-              error: (err: any) => {
-              if(err.error.status===401){
-                alert('Need Access/Login!');
-                this.router.navigate(['/login']);
-              }
-              alert(err.error.message);
-            }
-        });
-    }
-    this.isEditing = !this.isEditing;
-  }
-
-  addEvent() {
-    this.todos.push({id:'', task: 'New Event',completed:'N', checked: false });
-  }
-
-  removeEvent(index: number) {
-    this.todos.splice(index, 1);
-  }
-
- loadDailyChart(dailyQuestionCountMap: Map<string, number>) {
+  loadDailyChart(dailyQuestionCountMap: Map<string, number>): void {
     const today = new Date();
-    const currentDay = today.getDate(); // e.g. 15
     const monthName = today.toLocaleString('default', { month: 'long' });
+    const currentDay = today.getDate();
 
     const labels = Array.from(dailyQuestionCountMap.keys());
     const data = Array.from(dailyQuestionCountMap.values());
-
     const colors = Array.from({ length: currentDay }, () =>
       `hsl(${Math.floor(Math.random() * 360)}, 70%, 55%)`
     );
@@ -477,95 +324,163 @@ loadCricketData() {
       },
       options: {
         responsive: true,
+        plugins: { legend: { display: true } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+  }
+
+  loadRevisionChart(revisionMap: Map<string, number>): void {
+    const today = new Date();
+    const monthName = today.toLocaleString('default', { month: 'long' });
+
+    const labels = Array.from(revisionMap.keys());
+    const data = Array.from(revisionMap.values());
+
+    new Chart('revisionChart', {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: `Questions Revised in ${monthName}`,
+          data,
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.15)',
+          borderWidth: 2,
+          pointBackgroundColor: '#3b82f6',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
         plugins: {
-          legend: {
-            display: true
-          }
+          legend: { display: true, labels: { color: '#a0aec0' } }
         },
         scales: {
+          x: { ticks: { color: '#a0aec0' }, grid: { color: 'rgba(255,255,255,0.05)' } },
           y: {
             beginAtZero: true,
-            ticks: {
-              stepSize: 1
-            }
+            ticks: { stepSize: 1, color: '#a0aec0' },
+            grid: { color: 'rgba(255,255,255,0.05)' }
           }
         }
       }
     });
   }
 
-  getDate(dateTime: string): string {
-    const d = new Date(dateTime);
-    return d.toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: 'short'
+  loadTypeRevisionChart(data: any[]): void {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Build day labels
+    const labels: string[] = [];
+    for (let d = 1; d <= daysInMonth; d++) {
+      labels.push(
+        new Date(year, month, d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+      );
+    }
+
+    // Build lookup maps keyed by 'YYYY-MM-DD'
+    const theoryMap: Record<string, number> = {};
+    const practicalMap: Record<string, number> = {};
+
+    data.forEach(row => {
+      const key = row['created_date']?.toString().substring(0, 10);
+      if (!key) return;
+      if (row['type'] === 'theory')    theoryMap[key]    = Number(row['count']);
+      else                             practicalMap[key] = Number(row['count']);
+    });
+
+    const theoryData: number[] = [];
+    const practicalData: number[] = [];
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      theoryData.push(theoryMap[key] ?? 0);
+      practicalData.push(practicalMap[key] ?? 0);
+    }
+
+    const ctx = document.getElementById('typeRevisionChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Theory',
+            data: theoryData,
+            borderColor: '#818cf8',
+            backgroundColor: 'rgba(129,140,248,0.08)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#818cf8',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'Practical',
+            data: practicalData,
+            borderColor: '#2dd4bf',
+            backgroundColor: 'rgba(45,212,191,0.08)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#2dd4bf',
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            ticks: { color: '#94a3b8', maxTicksLimit: 10, font: { size: 9 } },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#94a3b8', stepSize: 1, font: { size: 9 } },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          }
+        }
+      }
     });
   }
 
-  getTime(dateTime: string): string {
-    const d = new Date(dateTime);
-    return d.toLocaleTimeString('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  // ── Navigation ────────────────────────────────────────────
+
+  onCardClick(card: any): void {
+    if (card.title === 'New Feedback')           this.router.navigate(['/feedback-list']);
+    if (card.title === 'Your Bookmarked')        this.router.navigate(['/bookmarked-question']);
+    if (card.title === 'Questions Added by You') this.router.navigate(['/all-question']);
   }
 
-  isAdmin():boolean{
+  isAdmin(): boolean {
     return this.apiService.isAdmin();
   }
 
-  loadRevisionChart(revisionMap: Map<string, number>) {
-      const today = new Date();
-      const monthName = today.toLocaleString('default', { month: 'long' });
+  reloadDashboard(): void {
+    window.location.reload();
+  }
 
-      const labels = Array.from(revisionMap.keys());
-      const data = Array.from(revisionMap.values());
+  getDate(dateTime: string): string {
+    return new Date(dateTime).toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
+  }
 
-      new Chart('revisionChart', {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            label: `Questions Revised in ${monthName}`,
-            data,
-            borderColor: '#3b82f6',
-            backgroundColor: 'rgba(59, 130, 246, 0.15)',
-            borderWidth: 2,
-            pointBackgroundColor: '#3b82f6',
-            pointBorderColor: '#ffffff',
-            pointBorderWidth: 1.5,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            fill: true,
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: true,
-              labels: {
-                color: '#a0aec0'
-              }
-            }
-          },
-          scales: {
-            x: {
-              ticks: { color: '#a0aec0' },
-              grid: { color: 'rgba(255,255,255,0.05)' }
-            },
-            y: {
-              beginAtZero: true,
-              ticks: {
-                stepSize: 1,
-                color: '#a0aec0'
-              },
-              grid: { color: 'rgba(255,255,255,0.05)' }
-            }
-          }
-        }
-      });
-    }
-
+  getTime(dateTime: string): string {
+    return new Date(dateTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
 }
