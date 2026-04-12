@@ -269,6 +269,35 @@
   transform: translateY(0);
 }
 
+.textarea-wrapper {
+  position: relative;
+}
+
+.textarea-wrapper textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.open-editor-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 11px;
+  padding: 3px 8px;
+  background: transparent;
+  color: var(--accent-teal, #2dd4bf);
+  border: 1px solid var(--accent-teal, #2dd4bf);
+  border-radius: 4px;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.open-editor-btn:hover {
+  opacity: 1;
+}
+
 /* ── Animation ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }

@@ -78,7 +78,12 @@
     <!-- Answer -->
     <div class="form-group">
       <label>Answer</label>
-      <textarea [(ngModel)]="answer" name="answer" required placeholder="Write the answer here..."></textarea>
+      <div class="textarea-wrapper">
+        <textarea [(ngModel)]="answer" name="answer" required placeholder="Write the answer here..."></textarea>
+        <a href="https://www.onlinegdb.com/" target="_blank" rel="noopener noreferrer" class="open-editor-btn">
+          Open Editor ↗
+        </a>
+      </div>
     </div>
 
     <!-- Product Image -->
