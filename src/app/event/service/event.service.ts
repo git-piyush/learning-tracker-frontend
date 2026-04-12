@@ -21,6 +21,12 @@ saveEvent(event: any): Observable<any> {
     });
   }
 
+deleteEvent(id: string): Observable<any> {
+  return this.http.delete(
+    `${EventService.BASE_URL}/event/delete-event/` + id,
+    { headers: this.apiService.getHeader() }
+  );
+}
 
 getUserEvents():Observable<any>{
   return this.http.get(`${EventService.BASE_URL}/event/get-user-event`, {

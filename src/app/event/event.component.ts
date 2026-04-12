@@ -254,30 +254,32 @@ export class EventComponent extends BaseComponent implements OnInit {
   }
 
   // ── Form actions ─────────────────────────────────────────────
-  saveEvent(): void {
-    if (!this.isFormValid()) return;
+ saveEvent(): void {
+  this.closePopup();
+  if (!this.isFormValid()) return;
 
-    if (this.isEditMode) {
-      // TODO: Replace with backend PUT call
-      this.updateEvent(this.form);
-    } else {
-      this.eventService.saveEvent(this.form).subscribe({
-        next: (res: any) => {
-          this.notify.success(res.message);
-        },
-        error: (err: any) => {
-          if (err.error.status === 401) {
-            this.notify.error('Need Access/Login!');
-            this.router.navigate(['/login']);
-          }
-          this.notify.info(err.error.message);
-        }
-      });
-    }
-
+  if (this.isEditMode) {
+    // TODO: Replace with backend PUT call
+    this.updateEvent(this.form);
     this.buildCalendar();
     this.closePopup();
+    this.loadEvents();
+  } else {
+    this.eventService.saveEvent(this.form).subscribe({
+      next: (res: any) => {
+        this.notify.success(res.message);
+
+        // Refresh only after successful save
+        this.buildCalendar();
+        this.closePopup();
+        this.loadEvents();
+      },
+      error: (err: any) => {
+        this.notify.info("Some error occurred.");
+      }
+    });
   }
+}
 
   resetForm(): void {
     if (this.isEditMode) {
@@ -292,10 +294,17 @@ export class EventComponent extends BaseComponent implements OnInit {
   }
 
   deleteEvent(): void {
-    // TODO: Replace with backend DELETE call
-    this.allEvents = this.allEvents.filter(e => e.id !== this.form.id);
-    this.buildCalendar();
     this.closePopup();
+    this.eventService.deleteEvent(this.form.id).subscribe({
+        next: (res: any) => {
+          this.notify.success(res.message);
+              this.buildCalendar();           
+              this.loadEvents();
+        },
+        error: (err: any) => {
+          this.notify.info("Some error occured.");
+        }
+    });
   }
 
   isFormValid(): boolean {
@@ -338,6 +347,9 @@ export class EventComponent extends BaseComponent implements OnInit {
           this.notify.info(err.error.message);
         }
     });
+    this.buildCalendar();
+    this.closePopup();
+    this.loadEvents();
   }
 
   // ── Timezone-safe date string ────────────────────────────────
