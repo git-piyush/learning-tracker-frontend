@@ -135,7 +135,7 @@ export class QuestionDetailsComponent implements OnInit {
     this.questionService.getPrevQuestionById(id).subscribe({
       next: (res) => {
         this.question = res.question;
-        this.loadInterviewQuestions(id);
+        this.loadInterviewQuestions(this.question.id);
       },
       error: (err) => console.error(err)
     });
@@ -145,7 +145,7 @@ export class QuestionDetailsComponent implements OnInit {
     this.questionService.getNextQuestionById(id).subscribe({
       next: (res) => {
         this.question = res.question;
-        this.loadInterviewQuestions(id);
+        this.loadInterviewQuestions(this.question.id);
       },
       error: (err) => console.error(err)
     });
