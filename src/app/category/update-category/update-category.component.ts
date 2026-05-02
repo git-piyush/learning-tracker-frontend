@@ -32,12 +32,29 @@ export class UpdateCategoryComponent extends BaseComponent implements OnInit{
   subCategoryList: String[] = [];
   topicList: String[] = [];
 
+  isNewCat:boolean=false;
+  isNewSubCat:boolean=false;
+  isNewTopic:boolean=false;
+
 
 
   ngOnInit(): void {
     this.categoryId = this.route.snapshot.paramMap.get('catId') || '';
     this.loadDropdown();
     this.loadCategoryData(this.categoryId);
+  }
+
+    addSubCatInExistingCat():void{
+      this.isNewSubCat = !this.isNewSubCat;
+      this.isNewTopic = this.isNewSubCat;
+  }
+
+  addTopicInExistingSubCat():void{
+      this.isNewTopic = !this.isNewTopic;
+  }
+
+  addNewRefCodeInExistingCat():void{
+    this.isNewCat = !this.isNewCat;
   }
 
   loadDropdown():void{
